@@ -19,8 +19,8 @@ public class Launcher extends Application {
     @Override
     public void start(Stage stage) {
         Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
-        MainLayout mainLayout = new MainLayout();
-        Scene scene = new Scene(mainLayout, 800, 600);
+        MainLayout mainLayout = new MainLayout(stage);
+        Scene scene = new Scene(mainLayout, 1200, 800);
         stage.setTitle("数据库可视化工具");
         stage.setScene(scene);
         stage.show();

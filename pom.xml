@@ -20,13 +20,13 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${openjfx.version}</version>
-            <classifier>mac</classifier>
+            <classifier>win</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${openjfx.version}</version>
-            <classifier>mac</classifier>
+            <classifier>win</classifier>
         </dependency>
         <dependency>
             <groupId>io.github.mkpaz</groupId>
