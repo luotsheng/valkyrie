@@ -1,9 +1,6 @@
 package com.changhong.opendb.menu;
 
-import com.changhong.opendb.util.OS;
-import com.sun.javafx.PlatformUtil;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
+import com.changhong.opendb.utils.OS;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;

@@ -1,4 +1,4 @@
-package com.changhong.opendb.util;
+package com.changhong.opendb.utils;
 
 /**
  * @author Luo Tiansheng
