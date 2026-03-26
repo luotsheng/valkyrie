@@ -1,6 +1,7 @@
 package com.changhong.opendb;
 
 import atlantafx.base.theme.CupertinoLight;
+import com.changhong.opendb.dialog.ErrorDialog;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,9 +12,15 @@ import javafx.stage.Stage;
  */
 public class Launcher extends Application
 {
+        static void initialize()
+        {
+                ErrorDialog.initializeListener();
+        }
+
         @Override
         public void start(Stage stage)
         {
+                initialize();
                 Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
                 Scene scene = new Scene(new MainLayout(), 1200, 800);
                 stage.setTitle("数据库可视化工具");

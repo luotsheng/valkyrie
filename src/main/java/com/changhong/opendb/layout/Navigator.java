@@ -1,6 +1,6 @@
 package com.changhong.opendb.layout;
 
-import com.changhong.opendb.dialog.connect.ConnectDialog;
+import com.changhong.opendb.dialog.connection.ConnectingDialog;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
@@ -67,11 +67,6 @@ public class Navigator extends VBox
                 MenuItem postgreSQLItem =  new MenuItem("PostgreSQL");
                 connectMenu.getItems().addAll(mysqlItem, postgreSQLItem);
 
-                mysqlItem.setOnAction(event -> {
-                        ConnectDialog dialog = new ConnectDialog();
-                        dialog.showAndWait();
-                });
-
                 MenuItem openAllItem =  new MenuItem("打开所有连接");
                 MenuItem closeAllItem =  new MenuItem("关闭所有连接");
 
@@ -79,6 +74,9 @@ public class Navigator extends VBox
                         connectMenu,
                         openAllItem,
                         closeAllItem);
+
+                /* 设置事件 */
+                mysqlItem.setOnAction(event -> openMySQLConnectionDialog());
 
                 return rootContextMenu;
         }
@@ -111,5 +109,11 @@ public class Navigator extends VBox
 
                 getChildren().add(tabPane);
                 setVgrow(tabPane, Priority.ALWAYS);
+        }
+
+        private void openMySQLConnectionDialog()
+        {
+                ConnectingDialog dialog = new ConnectingDialog();
+                dialog.showAndWait();
         }
 }

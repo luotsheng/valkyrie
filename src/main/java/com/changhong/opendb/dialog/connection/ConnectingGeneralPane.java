@@ -1,4 +1,4 @@
-package com.changhong.opendb.dialog.connect;
+package com.changhong.opendb.dialog.connection;
 
 import com.changhong.opendb.model.ConnectionModel;
 import com.changhong.opendb.widgets.PropertyGridPane;
@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
  * @author Luo Tiansheng
  * @since 2026/3/26
  */
-class ConnectGeneralPane extends PropertyGridPane
+class ConnectingGeneralPane extends PropertyGridPane
 {
         private final ConnectionModel model;
 
@@ -22,7 +22,7 @@ class ConnectGeneralPane extends PropertyGridPane
         private final PasswordField password = new PasswordField();
         private final CheckBox savePassword = new CheckBox("保存密码");
 
-        public ConnectGeneralPane(ConnectionModel model)
+        public ConnectingGeneralPane(ConnectionModel model)
         {
                 super();
                 this.model = model;

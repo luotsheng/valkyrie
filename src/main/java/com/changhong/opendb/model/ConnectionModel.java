@@ -15,6 +15,7 @@ import java.util.Map;
  * @author Luo Tiansheng
  * @since 2026/3/26
  */
+@SuppressWarnings("unused")
 public class ConnectionModel
 {
         private final StringProperty name = new SimpleStringProperty();
@@ -78,6 +79,9 @@ public class ConnectionModel
 
                 String jqUseSSL = jdbcQuery.get("useSSL");
                 useSSL.set(jqUseSSL != null && jqUseSSL.equals("true"));
+
+                String jqTimezone = jdbcQuery.get("timezone");
+                timezone.set(jqTimezone);
         }
 
         private void update()
@@ -104,9 +108,11 @@ public class ConnectionModel
 
                         URI uri = URI.create(withUrl);
 
+                        String[] authority = uri.getAuthority().split(":");
+
                         type.set(uri.getScheme());
-                        host.set(uri.getHost());
-                        port.set(String.valueOf(uri.getPort()));
+                        host.set(authority[0]);
+                        port.set(String.valueOf(authority[1]));
 
                         String path = uri.getPath();
                         if (path != null && !path.isEmpty())
@@ -120,6 +126,7 @@ public class ConnectionModel
 
         }
 
+        /* property */
         public StringProperty nameProperty() { return name; }
         public StringProperty typeProperty() { return type; }
         public StringProperty hostProperty() { return host; }
@@ -131,4 +138,30 @@ public class ConnectionModel
         public StringProperty jdbcUrlProperty() { return jdbcUrl; }
         public StringProperty timezoneProperty() { return timezone; }
         public BooleanProperty useSSLProperty() { return useSSL; }
+
+        /* get */
+        public String getName() { return name.get();  }
+        public String getType() { return type.get();  }
+        public String getHost() { return host.get();  }
+        public String getPort() { return port.get();  }
+        public String getDb() { return db.get();  }
+        public String getUsername() { return username.get();  }
+        public String getPassword() { return password.get();  }
+        public Boolean getSavePassword() { return savePassword.get();  }
+        public String getJdbcUrl() { return jdbcUrl.get();  }
+        public String getTimezone() { return timezone.get();  }
+        public Boolean getUseSSL() { return useSSL.get();  }
+
+        /* get */
+        public void setName(String name) { this.name.set(name);  }
+        public void setType(String type) { this.type.set(type);  }
+        public void setHost(String host) { this.host.set(host);  }
+        public void setPort(String port) { this.port.set(port);  }
+        public void setDb(String db) { this.db.set(db);  }
+        public void setUsername(String username) { this.username.set(username);  }
+        public void setPassword(String password) { this.password.set(password);  }
+        public void setSavePassword(Boolean savePassword) { this.savePassword.set(savePassword);  }
+        public void setJdbcUrl(String jdbcUrl) { this.jdbcUrl.set(jdbcUrl);  }
+        public void setTimezone(String timezone) { this.timezone.set(timezone);  }
+        public void setUseSSL(Boolean useSSL) { this.useSSL.set(useSSL);  }
 }

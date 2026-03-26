@@ -1,6 +1,9 @@
-package com.changhong.opendb.dialog.connect;
+package com.changhong.opendb.dialog.connection;
 
+import com.changhong.opendb.Users;
 import com.changhong.opendb.model.ConnectionModel;
+import com.changhong.opendb.utils.JSONUtils;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,7 +19,7 @@ import javafx.stage.Stage;
  * @author Luo Tiansheng
  * @since 2026/3/26
  */
-public class ConnectDialog extends Stage
+public class ConnectingDialog extends Stage
 {
         private TabPane tabPane;
         private HBox buttonBar;
@@ -25,7 +28,7 @@ public class ConnectDialog extends Stage
         private static final int WW = 650;
         private static final int WH = 500;
 
-        public ConnectDialog()
+        public ConnectingDialog()
         {
                 setupTabPane();
                 setupButtonBar();
@@ -38,22 +41,27 @@ public class ConnectDialog extends Stage
 
                 Tab generalTab = new Tab("常规属性");
                 generalTab.setClosable(false);
-                generalTab.setContent(new ConnectGeneralPane(model));
+                generalTab.setContent(new ConnectingGeneralPane(model));
 
                 Tab advanceTab = new Tab("高级属性");
                 advanceTab.setClosable(false);
-                advanceTab.setContent(new ConnectAdvancePane(model));
+                advanceTab.setContent(new ConnectingAdvancePane(model));
 
                 tabPane.getTabs().addAll(generalTab, advanceTab);
         }
 
         private void setupButtonBar()
         {
-                Button btnTest = new Button("测试链接");
-                Button btnSave = new Button("保存");
-                Button btnCancel = new Button("取消");
+                Button test = new Button("测试链接");
+                test.setOnAction(event -> testConnection());
 
-                buttonBar = new HBox(10, btnTest, btnSave, btnCancel);
+                Button save = new Button("保存");
+                save.setOnAction(event -> saveConnection());
+
+                Button cancel = new Button("取消");
+                cancel.setOnAction(event -> close());
+
+                buttonBar = new HBox(10, test, save, cancel);
                 buttonBar.setAlignment(Pos.CENTER_RIGHT);
                 buttonBar.setPadding(new Insets(10, 10, 10, 10));
         }
@@ -67,5 +75,17 @@ public class ConnectDialog extends Stage
 
                 Scene scene = new Scene(vbox, WW, WH);
                 setScene(scene);
+        }
+
+        public void testConnection()
+        {
+
+        }
+
+        private void saveConnection()
+        {
+                String content = JSONUtils.toJSONString(model, SerializationFeature.INDENT_OUTPUT);
+                Users.saveConnection(model.getName(), content);
+                close();
         }
 }
