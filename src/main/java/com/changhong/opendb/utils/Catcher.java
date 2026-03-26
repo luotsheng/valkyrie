@@ -1,8 +1,8 @@
 package com.changhong.opendb.utils;
 
-import com.changhong.opendb.bus.EventBus;
-import com.changhong.opendb.bus.event.CatcherEvent;
-import com.changhong.opendb.exception.CatcherException;
+import com.changhong.opendb.core.event.EventBus;
+import com.changhong.opendb.core.event.ExceptionEvent;
+import com.changhong.opendb.core.exception.CatcherException;
 
 /**
  * @author Luo Tiansheng
@@ -34,7 +34,7 @@ public class Catcher
                         e = new CatcherException(throwable);
                 }
 
-                EventBus.publish(new CatcherEvent(e.getCause().getMessage()));
+                EventBus.publish(new ExceptionEvent(e.getCause().getMessage()));
 
                 throw e;
         }
