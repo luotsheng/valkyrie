@@ -1,5 +1,6 @@
 package com.changhong.opendb.dialog.connect;
 
+import com.changhong.opendb.model.ConnectionModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ public class ConnectDialog extends Stage
 {
         private TabPane tabPane;
         private HBox buttonBar;
+        private final ConnectionModel model = new ConnectionModel("mysql");
 
         private static final int WW = 650;
         private static final int WH = 500;
@@ -36,12 +38,11 @@ public class ConnectDialog extends Stage
 
                 Tab generalTab = new Tab("常规属性");
                 generalTab.setClosable(false);
-                generalTab.setContent(new ConnectGeneralPane());
+                generalTab.setContent(new ConnectGeneralPane(model));
 
                 Tab advanceTab = new Tab("高级属性");
                 advanceTab.setClosable(false);
-                advanceTab.setContent(new ConnectAdvancePane());
-
+                advanceTab.setContent(new ConnectAdvancePane(model));
 
                 tabPane.getTabs().addAll(generalTab, advanceTab);
         }

@@ -1,6 +1,6 @@
 package com.changhong.opendb.dialog.connect;
 
-import com.changhong.opendb.dialog.connect.layout.ConnectGridPane;
+import com.changhong.opendb.model.ConnectionModel;
 import com.changhong.opendb.widgets.PropertyGridPane;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -13,24 +13,36 @@ import javafx.scene.control.TextField;
  */
 class ConnectGeneralPane extends PropertyGridPane
 {
-        private final TextField connectName = new TextField("本地数据库");
-        private final TextField hostAddress = new TextField("127.0.0.1");
-        private final TextField port = new TextField("3306");
-        private final TextField username = new TextField("root");
+        private final ConnectionModel model;
+
+        private final TextField name = new TextField();
+        private final TextField host = new TextField();
+        private final TextField port = new TextField();
+        private final TextField username = new TextField();
         private final PasswordField password = new PasswordField();
         private final CheckBox savePassword = new CheckBox("保存密码");
 
-        public ConnectGeneralPane()
+        public ConnectGeneralPane(ConnectionModel model)
         {
                 super();
+                this.model = model;
+                bindModelProperty();
                 setupPaneLayout();
+        }
+
+        private void bindModelProperty()
+        {
+                name.textProperty().bindBidirectional(model.nameProperty());
+                host.textProperty().bindBidirectional(model.hostProperty());
+                port.textProperty().bindBidirectional(model.portProperty());
+                username.textProperty().bindBidirectional(model.usernameProperty());
         }
 
         private void setupPaneLayout()
         {
-                addRow("连接名称：", connectName);
+                addRow("连接名称：", name);
                 addRow(null, new Label()); /* separator */
-                addRow("主机地址：", hostAddress);
+                addRow("主机地址：", host);
                 addRow("端口号：", port);
                 addRow("用户名：", username);
                 addRow("密码：", password);
