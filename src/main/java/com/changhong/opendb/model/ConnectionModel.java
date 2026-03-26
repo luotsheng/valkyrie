@@ -64,22 +64,28 @@ public class ConnectionModel
         private void updateQuery(StringBuilder builder)
         {
                 jdbcQuery.forEach((k, v) -> {
+
                         builder.append(k)
                                 .append("=")
                                 .append(v)
                                 .append("&");
+
                 });
+
                 builder.deleteCharAt(builder.length() - 1);
         }
 
         private void parseQuery(String uriQuery)
         {
                 if (uriQuery != null) {
+
                         String[] queries = uriQuery.split("&");
+
                         for (String query : queries) {
                                 String[] entry = query.split("=");
                                 jdbcQuery.put(entry[0], entry[1]);
                         }
+
                 }
 
                 String jqUseSSL = jdbcQuery.get("useSSL");
@@ -126,7 +132,9 @@ public class ConnectionModel
                         parseQuery(uri.getQuery());
 
                 } catch (Exception e) {
+
                         /* ignore exception */
+
                 }
 
         }

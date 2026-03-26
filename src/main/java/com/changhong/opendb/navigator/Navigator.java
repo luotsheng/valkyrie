@@ -120,9 +120,10 @@ public class Navigator extends VBox implements EventListener
                                 node = node.getParent();
 
                         if (node instanceof TreeCell<?> cell) {
-                                if (cell.getTreeItem() == treeView.getRoot()) {
+
+                                if (cell.getTreeItem() == treeView.getRoot())
                                         rootContextMenu.show(cell, event.getScreenX(), event.getScreenY());
-                                }
+
                         }
 
                         event.consume();
