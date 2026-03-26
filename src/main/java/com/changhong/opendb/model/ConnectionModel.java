@@ -33,6 +33,11 @@ public class ConnectionModel
         /* jdbc url 属性 */
         private final Map<String, String> jdbcQuery = new HashMap<>();
 
+        public ConnectionModel()
+        {
+                /* DO NOTHING */
+        }
+
         public ConnectionModel(String type)
         {
                 this.name.set("本地数据库");

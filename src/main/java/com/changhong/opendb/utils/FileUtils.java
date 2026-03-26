@@ -1,10 +1,12 @@
 package com.changhong.opendb.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 /**
  * @author Luo Tiansheng
@@ -12,6 +14,27 @@ import java.util.Comparator;
  */
 public class FileUtils
 {
+        public static boolean isDeepEmptyDirectory(File file)
+        {
+                return isDeepEmptyDirectory(file.toPath());
+        }
+
+        public static boolean isDeepEmptyDirectory(Path path)
+        {
+                try (Stream<Path> stream = Files.walk(path)) {
+
+                        return stream
+                                .filter(p -> !Files.isDirectory(p))
+                                .findFirst()
+                                .isEmpty();
+
+                } catch (IOException e) {
+                        Catcher.ithrow(e);
+                }
+
+                return false;
+        }
+
         public static void forceDelete(File file)
         {
                 forceDelete(file.getPath());

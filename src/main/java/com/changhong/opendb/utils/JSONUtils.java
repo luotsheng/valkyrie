@@ -12,6 +12,9 @@ public class JSONUtils
 {
         private static final ObjectMapper objectMapper = new ObjectMapper();
 
+        /**
+         * 转 JSON 字符串
+         */
         public static String toJSONString(Object object, SerializationFeature...features)
         {
                 try {
@@ -25,6 +28,17 @@ public class JSONUtils
                                 objectMapper.disable(feature);
 
                         return ret;
+
+                } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                }
+        }
+
+        public static <T> T toJavaObject(String json, Class<T> aClass)
+        {
+                try {
+
+                        return (T) objectMapper.readValue(json, aClass);
 
                 } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
