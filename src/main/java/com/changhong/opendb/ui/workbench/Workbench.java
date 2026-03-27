@@ -12,16 +12,18 @@ import javafx.scene.layout.VBox;
 public class Workbench extends VBox
 {
         private final TabPane tabPane = new TabPane();
-        private final Tab objectTab;
+        private final Tab detailTab = new Tab("详情");
 
         public Workbench()
         {
                 setStyle("-fx-background-color: #ffffff;");
-
-                objectTab = new Tab("对象");
-                objectTab.setClosable(false);
-
-                tabPane.getTabs().addAll(objectTab);
                 getChildren().add(tabPane);
+                setupDetailTab();
+        }
+
+        private void setupDetailTab()
+        {
+                detailTab.setClosable(false);
+                tabPane.getTabs().add(detailTab);
         }
 }
