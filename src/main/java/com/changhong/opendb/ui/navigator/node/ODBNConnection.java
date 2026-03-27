@@ -47,6 +47,7 @@ public class ODBNConnection extends ODBNode
                 try {
                         dataSource = new MySQLDataSourceProvider(info);
                         setupDatabases(dataSource.getDatabases());
+                        setExpanded(true);
                         openFlag = true;
                 } catch (Exception e) {
                         EventBus.publish(e);

@@ -6,6 +6,7 @@ import com.changhong.opendb.resource.ResourceManager;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
 
 import java.util.List;
@@ -14,11 +15,18 @@ import java.util.List;
  * @author Luo Tiansheng
  * @since 2026/3/25
  */
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({
+        "FieldCanBeLocal",
+        "unchecked"
+})
 public class ODBNDatabase extends ODBNode
 {
         private final DataSourceProvider dataSource;
         private boolean openFlag = false;
+
+        // Tree Items
+        private TreeItem<String> tableItem;
+        private TreeItem<String> queryItem;
 
         // Menu Items
         private MenuItem openMenuItem;
@@ -37,9 +45,15 @@ public class ODBNDatabase extends ODBNode
                 if (openFlag)
                         return;
 
+                tableItem = new TreeItem<>("数据表", ResourceManager.use("table"));
+                queryItem = new TreeItem<>("查询脚本", ResourceManager.use("sql"));
+                getChildren().addAll(tableItem, queryItem);
+
                 List<Table> tables = dataSource.getTables(name);
                 for (Table table : tables)
-                        getChildren().add(new ODBNTable(dataSource, table));
+                        tableItem.getChildren().add(new ODBNTable(dataSource, table));
+
+                setExpanded(true);
 
                 openFlag = true;
         }
