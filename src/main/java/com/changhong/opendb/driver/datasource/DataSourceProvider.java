@@ -1,16 +1,20 @@
 package com.changhong.opendb.driver.datasource;
 
+import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.model.ConnectionInfo;
+import com.changhong.opendb.utils.Catcher;
+import com.changhong.opendb.utils.JSONUtils;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
+import java.lang.reflect.Constructor;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -51,7 +55,36 @@ public abstract class DataSourceProvider
         /**
          * 获取表
          */
-        public abstract List<String> getTables(String database);
+        public abstract List<Table> getTables(String database);
+
+        /**
+         * 结果集转Java对象
+         */
+        public static <T> List<T> toJavaList(ResultSet rs, Class<T> aClass)
+        {
+                try {
+                        List<Map<String, Object>> rows = new ArrayList<>();
+
+                        ResultSetMetaData metaData = rs.getMetaData();
+                        int columnCount = metaData.getColumnCount();
+
+                        while (rs.next()) {
+                                Map<String, Object> row = new HashMap<>();
+
+                                for (int i = 1; i < columnCount + 1; i++)
+                                        row.put(metaData.getColumnLabel(i), rs.getObject(i));
+
+                                rows.add(row);
+                        }
+
+                        String jsonArray = JSONUtils.toJSONString(rows);
+
+                        return JSONUtils.toJavaList(jsonArray, aClass);
+                } catch (Exception e) {
+                        Catcher.ithrow(e);
+                        return null;
+                }
+        }
 
         /* ============================== DataSource proxy ============================= */
 

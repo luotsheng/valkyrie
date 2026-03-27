@@ -49,6 +49,7 @@ public class Navigator extends VBox implements EventListener
 
                 setupContextMenu();
                 setupMouseClickListener();
+                setupTreeNodeSelectedEvent();
                 initializeLayout();
                 refreshODBNConnection();
         }
@@ -146,6 +147,19 @@ public class Navigator extends VBox implements EventListener
 
                         event.consume();
                 });
+        }
+
+        private void setupTreeNodeSelectedEvent()
+        {
+                treeView.getSelectionModel().selectedIndexProperty()
+                        .addListener((observable, oldVal, newVal) -> {
+                                TreeItem<String> treeItem = treeView.getTreeItem(newVal.intValue());
+
+                                if (!(treeItem instanceof ODBNode odbNode))
+                                        return;
+
+                                odbNode.onSelectedEvent();
+                        });
         }
 
         private void setupMouseClickListener()

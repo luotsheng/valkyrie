@@ -55,4 +55,9 @@ public abstract class ODBNode extends TreeItem<String>
          */
         public abstract void onMouseDoubleClickEvent(MouseEvent event);
 
+        /**
+         * 节点选中事件
+         */
+        public abstract void onSelectedEvent();
+
 }

@@ -1,5 +1,6 @@
 package com.changhong.opendb.navigator.node;
 
+import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.driver.datasource.DataSourceProvider;
 import com.changhong.opendb.resource.ResourceManager;
 import javafx.scene.Node;
@@ -36,8 +37,8 @@ public class ODBNDatabase extends ODBNode
                 if (openFlag)
                         return;
 
-                List<String> tables = dataSource.getTables(name);
-                for (String table : tables)
+                List<Table> tables = dataSource.getTables(name);
+                for (Table table : tables)
                         getChildren().add(new ODBNTable(dataSource, table));
 
                 openFlag = true;
@@ -81,6 +82,12 @@ public class ODBNDatabase extends ODBNode
                 }
 
                 super.showContextMenu(node, x, y);
+        }
+
+        @Override
+        public void onSelectedEvent()
+        {
+                /* DO NOTHING */
         }
 
         @Override

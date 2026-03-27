@@ -3,6 +3,9 @@ package com.changhong.opendb.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.CollectionType;
+
+import java.util.List;
 
 /**
  * @author Luo Tiansheng
@@ -18,7 +21,6 @@ public class JSONUtils
         public static String toJSONString(Object object, SerializationFeature...features)
         {
                 try {
-
                         for (SerializationFeature feature : features)
                                 objectMapper.enable(feature);
 
@@ -28,7 +30,6 @@ public class JSONUtils
                                 objectMapper.disable(feature);
 
                         return ret;
-
                 } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                 }
@@ -37,11 +38,23 @@ public class JSONUtils
         public static <T> T toJavaObject(String json, Class<T> aClass)
         {
                 try {
-
-                        return (T) objectMapper.readValue(json, aClass);
-
+                        return objectMapper.readValue(json, aClass);
                 } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
+                        Catcher.ithrow(e);
+                        return null;
+                }
+        }
+
+        public static <T> List<T> toJavaList(String jsonArray, Class<T> aClass)
+        {
+                try {
+                        CollectionType collectionType = objectMapper.getTypeFactory()
+                                .constructCollectionType(List.class, aClass);
+
+                        return objectMapper.readValue(jsonArray, collectionType);
+                } catch (JsonProcessingException e) {
+                        Catcher.ithrow(e);
+                        return null;
                 }
         }
 }

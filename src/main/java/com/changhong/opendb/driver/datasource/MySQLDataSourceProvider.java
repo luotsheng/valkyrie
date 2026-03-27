@@ -1,6 +1,7 @@
 package com.changhong.opendb.driver.datasource;
 
 import com.changhong.opendb.core.event.EventBus;
+import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.model.ConnectionInfo;
 
 import java.sql.Connection;
@@ -9,6 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.changhong.opendb.utils.StringUtils.strfmt;
 
 /**
  * @author Luo Tiansheng
@@ -55,20 +58,30 @@ public class MySQLDataSourceProvider extends DataSourceProvider
         }
 
         @Override
-        public List<String> getTables(String database)
+        public List<Table> getTables(String database)
         {
-                String sql = "SHOW TABLES;";
+                String sql = strfmt("""
+                    SELECT
+                    	`TABLE_NAME` AS `name`,
+                    	`CREATE_TIME` AS `createTime`,
+                    	`UPDATE_TIME` AS `updateTime`,
+                    	`ENGINE` AS `engine`,
+                    	ROUND((DATA_LENGTH + INDEX_LENGTH) / 1024, 2) AS `size`,
+                    	`TABLE_ROWS` AS `rows`,
+                    	`TABLE_COMMENT` AS `comment`
+                    FROM
+                    	information_schema.TABLES
+                    WHERE
+                    	TABLE_SCHEMA = '%s'
+                """, database);
 
                 try (Connection connection = getConnection();
                      Statement statement = use(connection, database);) {
                         List<String> ret = new ArrayList<>();
 
-                        ResultSet resultSet = statement.executeQuery(sql);
+                        ResultSet rs = statement.executeQuery(sql);
 
-                        while (resultSet.next())
-                                ret.add(resultSet.getString(1));
-
-                        return ret;
+                        return toJavaList(rs, Table.class);
                 } catch (SQLException e) {
                         EventBus.publish(e);
                 }

@@ -5,6 +5,7 @@ import com.changhong.opendb.driver.datasource.DataSourceProvider;
 import com.changhong.opendb.driver.datasource.MySQLDataSourceProvider;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.utils.Catcher;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -54,6 +55,7 @@ public class ODBNConnection extends ODBNode
                         return;
 
                 getChildren().clear();
+                Catcher.tryCall(dataSource::close);
 
                 openFlag = false;
         }
@@ -92,6 +94,12 @@ public class ODBNConnection extends ODBNode
         public void onMouseDoubleClickEvent(MouseEvent event)
         {
                 openConnection();
+        }
+
+        @Override
+        public void onSelectedEvent()
+        {
+                /* DO NOTHING */
         }
 
         private void setupDatabases(List<String> databaseNames)
