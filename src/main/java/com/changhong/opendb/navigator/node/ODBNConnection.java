@@ -5,6 +5,7 @@ import com.changhong.opendb.driver.datasource.DataSourceProvider;
 import com.changhong.opendb.driver.datasource.MySQLDataSourceProvider;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.resource.ResourceManager;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
@@ -21,6 +22,10 @@ public class ODBNConnection extends ODBNode
         private final ConnectionInfo info;
         private boolean openFlag = false;
         private DataSourceProvider dataSource;
+
+        // Menu Items
+        private MenuItem openMenuItem;
+        private MenuItem closeMenuItem;
 
         public ODBNConnection(ConnectionInfo info)
         {
@@ -58,15 +63,29 @@ public class ODBNConnection extends ODBNode
         {
                 ContextMenu menu = new ContextMenu();
 
-                MenuItem openItem = new MenuItem("打开连接");
-                openItem.setOnAction(event -> openConnection());
+                openMenuItem = new MenuItem("打开连接");
+                openMenuItem.setOnAction(event -> openConnection());
 
-                MenuItem closeItem = new MenuItem("关闭连接");
-                closeItem.setOnAction(event -> closeConnection());
+                closeMenuItem = new MenuItem("关闭连接");
+                closeMenuItem.setOnAction(event -> closeConnection());
 
-                menu.getItems().addAll(openItem, closeItem);
+                menu.getItems().addAll(openMenuItem, closeMenuItem);
 
                 return menu;
+        }
+
+        @Override
+        public void showContextMenu(Node node, double x, double y)
+        {
+                if (openFlag) {
+                        openMenuItem.setDisable(true);
+                        closeMenuItem.setDisable(false);
+                } else {
+                        openMenuItem.setDisable(false);
+                        closeMenuItem.setDisable(true);
+                }
+
+                super.showContextMenu(node, x, y);
         }
 
         @Override

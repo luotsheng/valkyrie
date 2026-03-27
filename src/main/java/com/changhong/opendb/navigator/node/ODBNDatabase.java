@@ -2,6 +2,7 @@ package com.changhong.opendb.navigator.node;
 
 import com.changhong.opendb.driver.datasource.DataSourceProvider;
 import com.changhong.opendb.resource.ResourceManager;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
@@ -17,6 +18,10 @@ public class ODBNDatabase extends ODBNode
 {
         private final DataSourceProvider dataSource;
         private boolean openFlag = false;
+
+        // Menu Items
+        private MenuItem openMenuItem;
+        private MenuItem closeMenuItem;
 
         public ODBNDatabase(DataSourceProvider dataSource,
                             String name)
@@ -53,15 +58,29 @@ public class ODBNDatabase extends ODBNode
         {
                 ContextMenu menu = new ContextMenu();
 
-                MenuItem openItem = new MenuItem("打开数据库");
-                openItem.setOnAction(event -> openDatabase());
+                openMenuItem = new MenuItem("打开数据库");
+                openMenuItem.setOnAction(event -> openDatabase());
 
-                MenuItem closeItem = new MenuItem("关闭数据库");
-                closeItem.setOnAction(event -> closeDatabase());
+                closeMenuItem = new MenuItem("关闭数据库");
+                closeMenuItem.setOnAction(event -> closeDatabase());
 
-                menu.getItems().addAll(openItem, closeItem);
+                menu.getItems().addAll(openMenuItem, closeMenuItem);
 
                 return menu;
+        }
+
+        @Override
+        public void showContextMenu(Node node, double x, double y)
+        {
+                if (openFlag) {
+                        openMenuItem.setDisable(true);
+                        closeMenuItem.setDisable(false);
+                } else {
+                        openMenuItem.setDisable(false);
+                        closeMenuItem.setDisable(true);
+                }
+
+                super.showContextMenu(node, x, y);
         }
 
         @Override
