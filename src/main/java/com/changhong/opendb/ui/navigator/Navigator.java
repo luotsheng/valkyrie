@@ -7,7 +7,6 @@ import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.EventListener;
 import com.changhong.opendb.core.event.RefreshConnectionEvent;
 import com.changhong.opendb.resource.ResourceManager;
-import com.changhong.opendb.ui.dialog.connection.ConnectionDialog;
 import com.changhong.opendb.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.model.ConnectionInfo;
 import javafx.collections.ObservableList;
@@ -95,23 +94,16 @@ public class Navigator extends VBox implements EventListener
         {
                 ContextMenu rootContextMenu = new ContextMenu();
 
-                Menu connectMenu = new Menu("新建连接");
-                MenuItem mysqlItem =  new MenuItem("MySQL");
-                MenuItem postgreSQLItem =  new MenuItem("PostgreSQL");
-                connectMenu.getItems().addAll(mysqlItem, postgreSQLItem);
-
                 MenuItem openAllItem =  new MenuItem("打开所有连接");
                 MenuItem closeAllItem =  new MenuItem("关闭所有连接");
                 MenuItem refreshAllItem =  new MenuItem("刷新连接");
 
                 rootContextMenu.getItems().addAll(
-                        connectMenu,
                         openAllItem,
                         closeAllItem,
                         refreshAllItem);
 
                 /* 设置事件 */
-                mysqlItem.setOnAction(event -> openMySQLConnectionDialog());
                 refreshAllItem.setOnAction(event -> refreshODBNConnection());
 
                 return rootContextMenu;
@@ -230,9 +222,4 @@ public class Navigator extends VBox implements EventListener
                 }
         }
 
-        private void openMySQLConnectionDialog()
-        {
-                ConnectionDialog dialog = new ConnectionDialog();
-                dialog.showAndWait();
-        }
 }

@@ -1,6 +1,6 @@
 package com.changhong.opendb.ui.layout;
 
-import com.changhong.opendb.ui.menu.ODBMenuBar;
+import com.changhong.opendb.ui.menu.AppMenuBar;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -12,7 +12,7 @@ public class MainLayout extends BorderPane
 {
         public MainLayout()
         {
-                setTop(new ODBMenuBar());
+                setTop(new AppMenuBar());
                 setCenter(new ContainerLayout());
         }
 }

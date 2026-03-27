@@ -1,5 +1,6 @@
 package com.changhong.opendb.ui.menu;
 
+import com.changhong.opendb.ui.dialog.connection.ConnectionDialog;
 import com.changhong.opendb.utils.OS;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -10,9 +11,9 @@ import javafx.scene.control.SeparatorMenuItem;
  * @author Luo Tiansheng
  * @since 2026/3/25
  */
-public class ODBMenuBar extends MenuBar
+public class AppMenuBar extends MenuBar
 {
-        public ODBMenuBar()
+        public AppMenuBar()
         {
                 if (OS.isMac()) {
                         setUseSystemMenuBar(true);
@@ -23,10 +24,21 @@ public class ODBMenuBar extends MenuBar
 
                 // 文件菜单
                 Menu fileMenu = new Menu("文件");
-                MenuItem newItem = new MenuItem("新建");
+
+                Menu newConnectionMenu = new Menu("新建连接");
+                MenuItem mysqlItem =  new MenuItem("MySQL");
+                MenuItem postgreSQLItem =  new MenuItem("PostgreSQL");
+                newConnectionMenu.getItems().addAll(
+                        mysqlItem,
+                        postgreSQLItem
+                );
+
+                /* bind event */
+                mysqlItem.setOnAction(event -> new ConnectionDialog().showAndWait());
+
                 MenuItem openItem = new MenuItem("打开");
                 MenuItem exitItem = new MenuItem("退出");
-                fileMenu.getItems().addAll(newItem, openItem, new SeparatorMenuItem(), exitItem);
+                fileMenu.getItems().addAll(newConnectionMenu, openItem, new SeparatorMenuItem(), exitItem);
 
                 // 编辑菜单
                 Menu editMenu = new Menu("编辑");
