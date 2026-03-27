@@ -1,0 +1,7 @@
+.no-line-table .table-row-cell {
+    -fx-border-width: 0;
+}
+
+.no-line-table .table-cell {
+    -fx-border-width: 0 1 0 0;
+}

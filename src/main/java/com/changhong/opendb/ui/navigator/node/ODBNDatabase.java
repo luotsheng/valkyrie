@@ -1,12 +1,16 @@
 package com.changhong.opendb.ui.navigator.node;
 
+import com.changhong.opendb.core.event.EventBus;
+import com.changhong.opendb.core.event.OpenWorkbenchPaneEvent;
 import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.driver.datasource.DataSourceProvider;
 import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.ui.pane.DatabaseDetailPane;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.util.List;
@@ -23,6 +27,7 @@ public class ODBNDatabase extends ODBNode
 {
         private final DataSourceProvider dataSource;
         private boolean openFlag = false;
+        private List<Table> tables;
 
         // Tree Items
         private TreeItem<String> tableItem;
@@ -31,6 +36,27 @@ public class ODBNDatabase extends ODBNode
         // Menu Items
         private MenuItem openMenuItem;
         private MenuItem closeMenuItem;
+
+        private final DatabaseDetailPane detailPane = new DatabaseDetailPane();
+        private final OpenWorkbenchPaneEvent openWorkbenchPaneEvent = new OpenWorkbenchPaneEvent(detailPane);
+
+        public static class ODBInternalNode extends ODBNode
+        {
+                private final ODBNDatabase parent;
+
+                public ODBInternalNode(ODBNDatabase parent, String name, ImageView icon)
+                {
+                        super(name);
+                        setGraphic(icon);
+                        this.parent = parent;
+                }
+
+                @Override
+                public void onSelectedEvent()
+                {
+                        parent.onSelectedEvent();
+                }
+        }
 
         public ODBNDatabase(DataSourceProvider dataSource,
                             String name)
@@ -45,15 +71,17 @@ public class ODBNDatabase extends ODBNode
                 if (openFlag)
                         return;
 
-                tableItem = new TreeItem<>("数据表", ResourceManager.use("table"));
-                queryItem = new TreeItem<>("查询脚本", ResourceManager.use("sql"));
+                tableItem = new ODBInternalNode(this, "数据表", ResourceManager.use("table"));
+                queryItem = new ODBInternalNode(this, "查询脚本", ResourceManager.use("sql"));
                 getChildren().addAll(tableItem, queryItem);
 
-                List<Table> tables = dataSource.getTables(name);
+                tables = dataSource.getTables(name);
                 for (Table table : tables)
                         tableItem.getChildren().add(new ODBNTable(dataSource, table));
 
                 setExpanded(true);
+                detailPane.update(tables);
+                onSelectedEvent();
 
                 openFlag = true;
         }
@@ -101,7 +129,8 @@ public class ODBNDatabase extends ODBNode
         @Override
         public void onSelectedEvent()
         {
-                /* DO NOTHING */
+               if (tables != null)
+                       EventBus.publish(openWorkbenchPaneEvent);
         }
 
         @Override
