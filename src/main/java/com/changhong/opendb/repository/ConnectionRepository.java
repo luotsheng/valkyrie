@@ -33,7 +33,7 @@ public class ConnectionRepository
                 File dir = new File(ODB_CONN_DIR, name);
                 File odbc = new File(dir, ".odbc");
 
-                if (dir.exists())
+                if (odbc.exists())
                         Catcher.ithrow(new FileAlreadyExistsException(name + "已存在！"));
 
                 dir.mkdirs();
@@ -50,6 +50,16 @@ public class ConnectionRepository
                         FileUtils.forceDelete(dir);
                         Catcher.ithrow(e);
                 }
+        }
+
+        public static void updateConnection(String name, String content)
+        {
+                File dir = new File(ODB_CONN_DIR, name);
+                File odbc = new File(dir, ".odbc");
+
+                FileUtils.forceDelete(odbc);
+
+                saveConnection(name, content);
         }
 
         public static List<ConnectionInfo> loadConnections()

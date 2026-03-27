@@ -22,7 +22,7 @@ public abstract class ODBNode extends TreeItem<String>
         /**
          * 节点菜单
          */
-        private final ContextMenu contextMenu;
+        protected final ContextMenu contextMenu;
 
         public ODBNode(String name)
         {

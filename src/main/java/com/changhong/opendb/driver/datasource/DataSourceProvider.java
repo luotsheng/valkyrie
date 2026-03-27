@@ -36,7 +36,7 @@ public abstract class DataSourceProvider
 
                 conf.setMaximumPoolSize(16);
                 conf.setMinimumIdle(1);
-                conf.setConnectionTimeout(15000);
+                conf.setConnectionTimeout(5000);
 
                 ds = new HikariDataSource(conf);
         }

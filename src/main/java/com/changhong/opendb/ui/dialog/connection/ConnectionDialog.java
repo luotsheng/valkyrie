@@ -30,7 +30,8 @@ public class ConnectionDialog extends Stage
 {
         private TabPane tabPane;
         private HBox buttonBar;
-        private final ConnectionInfo info = new ConnectionInfo("mysql");
+        private final boolean isUpdate;
+        private final ConnectionInfo info;
         private final Label status = new Label();
 
         private static final int WW = 650;
@@ -38,6 +39,17 @@ public class ConnectionDialog extends Stage
 
         public ConnectionDialog()
         {
+                this(null);
+        }
+
+        public ConnectionDialog(ConnectionInfo info)
+        {
+                this.isUpdate = info != null;
+
+                this.info = isUpdate
+                        ? info
+                        : new ConnectionInfo("MySQL");
+
                 setupTabPane();
                 setupButtonBar();
                 setupScene();
@@ -107,7 +119,12 @@ public class ConnectionDialog extends Stage
         private void saveConnection()
         {
                 String content = JSONUtils.toJSONString(info, SerializationFeature.INDENT_OUTPUT);
-                ConnectionRepository.saveConnection(info.getName(), content);
+
+                if (isUpdate) {
+                        ConnectionRepository.updateConnection(info.getName(), content);
+                } else {
+                        ConnectionRepository.saveConnection(info.getName(), content);
+                }
 
                 close();
 

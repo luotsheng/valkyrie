@@ -1,4 +1,4 @@
-package com.changhong.opendb.ui.dialog;
+package com.changhong.opendb.ui.widgets;
 
 import com.changhong.opendb.core.event.Event;
 import com.changhong.opendb.core.event.EventBus;
@@ -35,22 +35,22 @@ public class ErrorDialog
                 @Override
                 public void onEvent(Event event)
                 {
-                        showError(((ExceptionEvent) event).message);
+                        showDialog(((ExceptionEvent) event).message);
                 }
         }
 
-        public static void showError(String message) {
+        public static void showDialog(String message) {
                 Toolkit.getDefaultToolkit().beep();
 
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setResizable(false);
-                stage.setTitle("数据库管理工具 - 错误提示");
+                stage.setTitle("数据库管理工具");
 
                 Label label = new Label(message);
                 label.setWrapText(true);
 
-                Button ok = new Button("OK");
+                Button ok = new Button("确认");
                 ok.setDefaultButton(true);
                 ok.setOnAction(e -> stage.close());
 

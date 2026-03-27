@@ -5,10 +5,14 @@ import com.changhong.opendb.driver.datasource.DataSourceProvider;
 import com.changhong.opendb.driver.datasource.MySQLDataSourceProvider;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.ui.dialog.connection.ConnectionDialog;
+import com.changhong.opendb.ui.widgets.ConfirmDialog;
 import com.changhong.opendb.utils.Catcher;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseEvent;
 
 import java.util.List;
@@ -25,8 +29,8 @@ public class ODBNConnection extends ODBNode
         private DataSourceProvider dataSource;
 
         // Menu Items
-        private MenuItem openMenuItem;
-        private MenuItem closeMenuItem;
+        private MenuItem openOrCloseMenuItem;
+        private MenuItem editMenuItem;
 
         public ODBNConnection(ConnectionInfo info)
         {
@@ -60,31 +64,44 @@ public class ODBNConnection extends ODBNode
                 openFlag = false;
         }
 
+        private void editConnection()
+        {
+                if (openFlag) {
+                        if (ConfirmDialog.showDialog("编辑需要关闭当前连接，是否关闭？")) {
+                                closeConnection();
+                                new ConnectionDialog(info).showAndWait();
+                        }
+                }
+        }
+
         @Override
         protected ContextMenu registerContextMenu()
         {
-                ContextMenu menu = new ContextMenu();
+                ContextMenu contextMenu = new ContextMenu();
 
-                openMenuItem = new MenuItem("打开连接");
-                openMenuItem.setOnAction(event -> openConnection());
+                openOrCloseMenuItem = new MenuItem();
 
-                closeMenuItem = new MenuItem("关闭连接");
-                closeMenuItem.setOnAction(event -> closeConnection());
+                editMenuItem = new MenuItem("编辑连接");
+                editMenuItem.setOnAction(event -> editConnection());
 
-                menu.getItems().addAll(openMenuItem, closeMenuItem);
+                contextMenu.getItems().addAll(
+                        openOrCloseMenuItem,
+                        new SeparatorMenuItem(),
+                        editMenuItem
+                );
 
-                return menu;
+                return contextMenu;
         }
 
         @Override
         public void showContextMenu(Node node, double x, double y)
         {
                 if (openFlag) {
-                        openMenuItem.setDisable(true);
-                        closeMenuItem.setDisable(false);
+                        openOrCloseMenuItem.setText("关闭连接");
+                        openOrCloseMenuItem.setOnAction(event -> closeConnection());
                 } else {
-                        openMenuItem.setDisable(false);
-                        closeMenuItem.setDisable(true);
+                        openOrCloseMenuItem.setText("打开连接");
+                        openOrCloseMenuItem.setOnAction(event -> openConnection());
                 }
 
                 super.showContextMenu(node, x, y);

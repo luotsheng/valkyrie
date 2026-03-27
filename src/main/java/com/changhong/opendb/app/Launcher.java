@@ -2,7 +2,7 @@ package com.changhong.opendb.app;
 
 import atlantafx.base.theme.CupertinoLight;
 import com.changhong.opendb.ui.layout.MainLayout;
-import com.changhong.opendb.ui.dialog.ErrorDialog;
+import com.changhong.opendb.ui.widgets.ErrorDialog;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

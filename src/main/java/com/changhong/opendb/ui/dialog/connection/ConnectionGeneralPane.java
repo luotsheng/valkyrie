@@ -37,6 +37,7 @@ class ConnectionGeneralPane extends PropertyGridPane
                 port.textProperty().bindBidirectional(info.portProperty());
                 password.textProperty().bindBidirectional(info.passwordProperty());
                 username.textProperty().bindBidirectional(info.usernameProperty());
+                savePassword.selectedProperty().bindBidirectional(info.savePasswordProperty());
         }
 
         private void setupPaneLayout()
