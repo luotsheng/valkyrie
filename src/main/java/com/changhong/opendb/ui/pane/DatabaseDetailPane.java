@@ -85,12 +85,13 @@ public class DatabaseDetailPane extends BorderPane
                         rows,
                         comment
                 );
+
+                table.getColumns().forEach(col -> col.setReorderable(false));
         }
 
         private void setupCellFactory()
         {
-                name.setCellFactory(col -> new TableCell<>()
-                {
+                name.setCellFactory(col -> new TableCell<>() {
                         @Override
                         protected void updateItem(String item, boolean empty)
                         {
@@ -110,13 +111,18 @@ public class DatabaseDetailPane extends BorderPane
                                 super.updateItem(item, empty);
 
                                 if (item != null) {
+                                        String unit = "K";
+                                        double value = item;
+
                                         if (item > (1024 * 1024)) {
-                                                setText((item / 1024 / 1024) + "G");
+                                                value = (item / 1024 / 1024);
+                                                unit = "G";
                                         } else if (item > 1024) {
-                                                setText((item / 1024) + "M");
-                                        } else {
-                                                setText(item + "K");
+                                                value = (item / 1024);
+                                                unit = "M";
                                         }
+
+                                        setText(((int) value) + unit);
                                 }
                         }
                 });

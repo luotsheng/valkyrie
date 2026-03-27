@@ -9,8 +9,9 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
-import java.lang.reflect.Constructor;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,8 +72,18 @@ public abstract class DataSourceProvider
                         while (rs.next()) {
                                 Map<String, Object> row = new HashMap<>();
 
-                                for (int i = 1; i < columnCount + 1; i++)
-                                        row.put(metaData.getColumnLabel(i), rs.getObject(i));
+                                for (int i = 1; i < columnCount + 1; i++) {
+                                        Object object = rs.getObject(i);
+
+                                        if (object instanceof LocalDateTime localDateTime) {
+                                                java.util.Date date =
+                                                        Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                                                row.put(metaData.getColumnLabel(i), date);
+                                        } else {
+                                                row.put(metaData.getColumnLabel(i), object);
+                                        }
+
+                                }
 
                                 rows.add(row);
                         }
