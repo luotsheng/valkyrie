@@ -1,7 +1,7 @@
 package com.changhong.opendb.ui.layout;
 
-import com.changhong.opendb.navigator.Navigator;
-import com.changhong.opendb.workbench.Workbench;
+import com.changhong.opendb.ui.navigator.Navigator;
+import com.changhong.opendb.ui.workbench.Workbench;
 import javafx.application.Platform;
 import javafx.scene.control.SplitPane;
 

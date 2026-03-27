@@ -1,6 +1,6 @@
-package com.changhong.opendb.navigator;
+package com.changhong.opendb.ui.navigator;
 
-import com.changhong.opendb.navigator.node.ODBNode;
+import com.changhong.opendb.ui.navigator.node.ODBNode;
 import com.changhong.opendb.repository.ConnectionRepository;
 import com.changhong.opendb.core.event.Event;
 import com.changhong.opendb.core.event.EventBus;
@@ -8,7 +8,7 @@ import com.changhong.opendb.core.event.EventListener;
 import com.changhong.opendb.core.event.RefreshConnectionEvent;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.dialog.connection.ConnectionDialog;
-import com.changhong.opendb.navigator.node.ODBNConnection;
+import com.changhong.opendb.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.model.ConnectionInfo;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;

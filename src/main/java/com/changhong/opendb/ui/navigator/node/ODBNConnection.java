@@ -1,8 +1,11 @@
-package com.changhong.opendb.navigator.node;
+package com.changhong.opendb.ui.navigator.node;
 
-import com.changhong.opendb.driver.Table;
+import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.driver.datasource.DataSourceProvider;
+import com.changhong.opendb.driver.datasource.MySQLDataSourceProvider;
+import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.utils.Catcher;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -15,41 +18,44 @@ import java.util.List;
  * @since 2026/3/25
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ODBNDatabase extends ODBNode
+public class ODBNConnection extends ODBNode
 {
-        private final DataSourceProvider dataSource;
+        private final ConnectionInfo info;
         private boolean openFlag = false;
+        private DataSourceProvider dataSource;
 
         // Menu Items
         private MenuItem openMenuItem;
         private MenuItem closeMenuItem;
 
-        public ODBNDatabase(DataSourceProvider dataSource,
-                            String name)
+        public ODBNConnection(ConnectionInfo info)
         {
-                super(name);
-                setGraphic(ResourceManager.use("database1"));
-                this.dataSource = dataSource;
+                super(info.getName());
+                setGraphic(ResourceManager.use("database0"));
+                this.info = info;
         }
 
-        private void openDatabase()
+        private void openConnection()
         {
                 if (openFlag)
                         return;
 
-                List<Table> tables = dataSource.getTables(name);
-                for (Table table : tables)
-                        getChildren().add(new ODBNTable(dataSource, table));
-
-                openFlag = true;
+                try {
+                        dataSource = new MySQLDataSourceProvider(info);
+                        setupDatabases(dataSource.getDatabases());
+                        openFlag = true;
+                } catch (Exception e) {
+                        EventBus.publish(e);
+                }
         }
 
-        private void closeDatabase()
+        private void closeConnection()
         {
                 if (!openFlag)
                         return;
 
                 getChildren().clear();
+                Catcher.tryCall(dataSource::close);
 
                 openFlag = false;
         }
@@ -59,11 +65,11 @@ public class ODBNDatabase extends ODBNode
         {
                 ContextMenu menu = new ContextMenu();
 
-                openMenuItem = new MenuItem("打开数据库");
-                openMenuItem.setOnAction(event -> openDatabase());
+                openMenuItem = new MenuItem("打开连接");
+                openMenuItem.setOnAction(event -> openConnection());
 
-                closeMenuItem = new MenuItem("关闭数据库");
-                closeMenuItem.setOnAction(event -> closeDatabase());
+                closeMenuItem = new MenuItem("关闭连接");
+                closeMenuItem.setOnAction(event -> closeConnection());
 
                 menu.getItems().addAll(openMenuItem, closeMenuItem);
 
@@ -85,14 +91,20 @@ public class ODBNDatabase extends ODBNode
         }
 
         @Override
+        public void onMouseDoubleClickEvent(MouseEvent event)
+        {
+                openConnection();
+        }
+
+        @Override
         public void onSelectedEvent()
         {
                 /* DO NOTHING */
         }
 
-        @Override
-        public void onMouseDoubleClickEvent(MouseEvent event)
+        private void setupDatabases(List<String> databaseNames)
         {
-                openDatabase();
+                for (String name : databaseNames)
+                        getChildren().add(new ODBNDatabase(dataSource, name));
         }
 }

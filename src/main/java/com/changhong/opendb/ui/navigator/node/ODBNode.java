@@ -1,4 +1,4 @@
-package com.changhong.opendb.navigator.node;
+package com.changhong.opendb.ui.navigator.node;
 
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;

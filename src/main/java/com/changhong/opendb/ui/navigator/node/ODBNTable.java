@@ -1,4 +1,4 @@
-package com.changhong.opendb.navigator.node;
+package com.changhong.opendb.ui.navigator.node;
 
 import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.driver.datasource.DataSourceProvider;

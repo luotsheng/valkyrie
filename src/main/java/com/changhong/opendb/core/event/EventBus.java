@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 事件总线管理器
@@ -13,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EventBus
 {
-        private static final Map<Class<? extends Event>, List<EventListener>> eventListeners
+        private static final Map<Class<? extends Event>, CopyOnWriteArrayList<EventListener>> eventListeners
                 = new ConcurrentHashMap<>();
 
         /**
@@ -21,7 +22,8 @@ public class EventBus
          */
         public static void subscribe(Class<? extends Event> event, EventListener listener)
         {
-                eventListeners.computeIfAbsent(event, k -> new ArrayList<>()).add(listener);
+                eventListeners.computeIfAbsent(event, k -> new CopyOnWriteArrayList<>())
+                        .add(listener);
         }
 
         /**
