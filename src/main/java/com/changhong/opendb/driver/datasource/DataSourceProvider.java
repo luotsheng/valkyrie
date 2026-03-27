@@ -1,7 +1,5 @@
-package com.changhong.opendb.driver;
+package com.changhong.opendb.driver.datasource;
 
-import com.changhong.opendb.core.event.EventBus;
-import com.changhong.opendb.core.event.ExceptionEvent;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -11,6 +9,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -18,11 +17,12 @@ import java.util.logging.Logger;
  * @author Luo Tiansheng
  * @since 2026/3/27
  */
-public abstract class ODBDataSource implements DataSource, AutoCloseable
+public abstract class DataSourceProvider
+        implements DataSource, AutoCloseable
 {
         private final HikariDataSource ds;
 
-        public ODBDataSource(ConnectionInfo info)
+        public DataSourceProvider(ConnectionInfo info)
         {
                 HikariConfig conf = new HikariConfig();
 
@@ -38,6 +38,12 @@ public abstract class ODBDataSource implements DataSource, AutoCloseable
         }
 
         /**
+         * 选择数据库
+         */
+        protected abstract Statement use(Connection connection, String database)
+                throws SQLException;
+
+        /**
          * 获取数据库列表
          */
         public abstract List<String> getDatabases();
@@ -46,6 +52,8 @@ public abstract class ODBDataSource implements DataSource, AutoCloseable
          * 获取表
          */
         public abstract List<String> getTables(String database);
+
+        /* ============================== DataSource proxy ============================= */
 
         @Override
         public Connection getConnection() throws SQLException

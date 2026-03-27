@@ -6,12 +6,14 @@ import com.changhong.opendb.core.event.Event;
 import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.EventListener;
 import com.changhong.opendb.core.event.RefreshConnectionEvent;
+import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.dialog.connection.ConnectionDialog;
 import com.changhong.opendb.navigator.node.ODBNConnection;
 import com.changhong.opendb.model.ConnectionInfo;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -79,7 +81,8 @@ public class Navigator extends VBox implements EventListener
 
         private TreeView<String> createTreeView()
         {
-                TreeItem<String> rootItem = new TreeItem<>("我的连接");
+                ImageView chain = ResourceManager.use("chain");
+                TreeItem<String> rootItem = new TreeItem<>("我的连接", chain);
 
                 TreeView<String> treeView = new TreeView<>(rootItem);
                 treeView.setShowRoot(true);
@@ -118,12 +121,27 @@ public class Navigator extends VBox implements EventListener
                 treeView.setOnContextMenuRequested(event -> {
                         Node node = event.getPickResult().getIntersectedNode();
 
+                        double x = event.getScreenX();
+                        double y = event.getScreenY();
+
                         while (node != null && !(node instanceof TreeCell<?>))
                                 node = node.getParent();
 
                         if (node instanceof TreeCell<?> cell) {
-                                if (cell.getTreeItem() == treeView.getRoot())
-                                        rootContextMenu.show(cell, event.getScreenX(), event.getScreenY());
+                                TreeItem<?> item = cell.getTreeItem();
+
+                                if (item == null)
+                                        return;
+
+                                if (item == treeView.getRoot()) {
+                                        rootContextMenu.show(cell, x, y);
+                                        return;
+                                }
+
+                                if (item instanceof ODBNode odbNode) {
+                                        odbNode.showContextMenu(cell, x, y);
+                                        return;
+                                }
                         }
 
                         event.consume();
