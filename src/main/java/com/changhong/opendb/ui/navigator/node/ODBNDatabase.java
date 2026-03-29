@@ -1,6 +1,7 @@
 package com.changhong.opendb.ui.navigator.node;
 
 import com.changhong.opendb.core.event.EventBus;
+import com.changhong.opendb.core.event.NewQueryScriptEvent;
 import com.changhong.opendb.core.event.OpenWorkbenchPaneEvent;
 import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.driver.datasource.DataSourceProvider;
@@ -36,6 +37,7 @@ public class ODBNDatabase extends ODBNode
         // Menu Items
         private MenuItem openMenuItem;
         private MenuItem closeMenuItem;
+        private MenuItem newQueryMenuItem;
 
         private final DatabaseDetailPane detailPane = new DatabaseDetailPane();
         private final OpenWorkbenchPaneEvent openWorkbenchPaneEvent = new OpenWorkbenchPaneEvent(detailPane);
@@ -106,6 +108,11 @@ public class ODBNDatabase extends ODBNode
                         EventBus.publish(openWorkbenchPaneEvent);
         }
 
+        private void newQueryScript()
+        {
+                EventBus.publish(new NewQueryScriptEvent());
+        }
+
         public void setupListenerEvent()
         {
                 setSelectedEvent(this::openWorkbenchPane);
@@ -123,7 +130,10 @@ public class ODBNDatabase extends ODBNode
                 closeMenuItem = new MenuItem("关闭数据库");
                 closeMenuItem.setOnAction(event -> closeDatabase());
 
-                menu.getItems().addAll(openMenuItem, closeMenuItem);
+                newQueryMenuItem = new MenuItem("新建查询");
+                newQueryMenuItem.setOnAction(event -> newQueryScript());
+
+                menu.getItems().addAll(openMenuItem, closeMenuItem, newQueryMenuItem);
 
                 return menu;
         }
