@@ -118,6 +118,21 @@ public class DatabaseDetailPane extends DetailPane
                         comment
                 );
 
+                table.setRowFactory(tv -> {
+                        TableRow<TableInfo> row = new TableRow<>();
+
+                        row.setOnMouseClicked(e -> {
+
+                                if (e.getClickCount() == 2 && !row.isEmpty()) {
+                                        TableInfo data = row.getItem();
+                                        System.out.println(data);
+                                }
+
+                        });
+
+                        return row;
+                });
+
                 table.getColumns().forEach(col -> col.setReorderable(false));
         }
 
