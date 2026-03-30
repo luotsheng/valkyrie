@@ -78,6 +78,8 @@ public class ODBNConnection extends ODBNode
                                 closeConnection();
                                 new ConnectionDialog(info).showAndWait();
                         }
+                } else {
+                        new ConnectionDialog(info).showAndWait();
                 }
         }
 
