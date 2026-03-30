@@ -8,6 +8,7 @@ import com.changhong.opendb.ui.widgets.VFX;
 import com.changhong.opendb.ui.widgets.VSeparator;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 import javafx.util.StringConverter;
 
 /**
@@ -65,7 +66,7 @@ public class SqlEditor extends BorderPane
 
         public void setupTextArea()
         {
-                /* DO NOTHING */
+                textArea.setFont(Font.font("Consolas", 19));
         }
 
         private ComboBox<ODBNConnection> newConnectionComboBox()
