@@ -8,9 +8,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.changhong.opendb.utils.StringUtils.strfmt;
 
 /**
@@ -23,8 +20,6 @@ public class Workbench extends VBox implements EventListener
         private final TabPane tabPane = VFX.newTabPane();
         private final Tab detailTab = new Tab("详情");
 
-        private final List<Tab> queryTabs = new ArrayList<>();
-
         public Workbench()
         {
                 setStyle("-fx-background-color: #ffffff;");
@@ -36,6 +31,7 @@ public class Workbench extends VBox implements EventListener
                 EventBus.subscribe(OpenWorkbenchPaneEvent.class, this);
                 EventBus.subscribe(CloseWorkbenchPaneEvent.class, this);
                 EventBus.subscribe(NewQueryScriptEvent.class, this);
+                EventBus.subscribe(NewQueryResultSetPaneEvent.class, this);
         }
 
         private void setupDetailTab()
@@ -52,9 +48,6 @@ public class Workbench extends VBox implements EventListener
 
                 Tab queryTab = new Tab(strfmt("查询脚本@%s_%d.sql", info == null ? "[ N/A ]" : info.getName(), (idx++)));
                 queryTab.setContent(new SqlEditor());
-                queryTab.setOnCloseRequest(e -> queryTabs.remove(queryTab));
-
-                queryTabs.add(queryTab);
                 tabPane.getTabs().add(queryTab);
                 tabPane.getSelectionModel().select(queryTab);
         }
@@ -72,6 +65,19 @@ public class Workbench extends VBox implements EventListener
 
                 if (event instanceof NewQueryScriptEvent e) {
                         openNewQueryScriptPane(e);
+                }
+
+                if (event instanceof NewQueryResultSetPaneEvent e) {
+                        ResultSetTableViewPane pane = new ResultSetTableViewPane(
+                                e.jdbcTemplate,
+                                e.database,
+                                e.info
+                        );
+
+                        Tab tab = new Tab(strfmt("%s@%s", e.info.getName(), e.database));
+                        tab.setContent(pane);
+                        tabPane.getTabs().add(tab);
+                        tabPane.getSelectionModel().select(tab);
                 }
         }
 }

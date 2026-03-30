@@ -1,20 +1,19 @@
 package com.changhong.opendb.ui.navigator.node;
 
 import com.changhong.opendb.core.event.EventBus;
-import com.changhong.opendb.driver.datasource.DataSourceProvider;
-import com.changhong.opendb.driver.datasource.MySQLDataSourceProvider;
+import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.datasource.DataSourceProxy;
+import com.changhong.opendb.driver.datasource.MySQLDataSourceProxy;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.model.ODBNStatus;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.dialog.connection.ConnectionDialog;
 import com.changhong.opendb.ui.widgets.ConfirmDialog;
 import com.changhong.opendb.utils.Catcher;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -31,7 +30,8 @@ public class ODBNConnection extends ODBNode
         private final ConnectionInfo info;
 
         private boolean openFlag = false;
-        private DataSourceProvider dataSource;
+        private DataSourceProxy dataSource;
+        private JdbcTemplate jdbcTemplate;
 
         // Menu Items
         private MenuItem openOrCloseMenuItem;
@@ -56,8 +56,9 @@ public class ODBNConnection extends ODBNode
                         return;
 
                 try {
-                        dataSource = new MySQLDataSourceProvider(info);
-                        setupDatabases(dataSource.getDatabases());
+                        dataSource = new MySQLDataSourceProxy(info);
+                        jdbcTemplate = dataSource.newJdbcTemplate();
+                        setupDatabases(jdbcTemplate.getDatabases());
                         setExpanded(true);
                         openFlag = true;
                 } catch (Exception e) {
@@ -140,7 +141,7 @@ public class ODBNConnection extends ODBNode
         private void setupDatabases(List<String> databaseNames)
         {
                 for (String name : databaseNames)
-                        databases.add(new ODBNDatabase(this, dataSource, name));
+                        databases.add(new ODBNDatabase(this, jdbcTemplate, name));
                 getChildren().addAll(databases);
         }
 

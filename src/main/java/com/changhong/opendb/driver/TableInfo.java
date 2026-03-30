@@ -11,7 +11,7 @@ import java.util.Date;
  * @since 2026/3/27
  */
 @Data
-public class Table
+public class TableInfo
 {
         /**
          * 数据库名字

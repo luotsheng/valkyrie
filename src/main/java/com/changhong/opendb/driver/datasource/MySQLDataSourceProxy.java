@@ -1,7 +1,7 @@
 package com.changhong.opendb.driver.datasource;
 
 import com.changhong.opendb.core.event.EventBus;
-import com.changhong.opendb.driver.Table;
+import com.changhong.opendb.driver.TableInfo;
 import com.changhong.opendb.model.ConnectionInfo;
 
 import java.sql.Connection;
@@ -21,15 +21,15 @@ import static com.changhong.opendb.utils.StringUtils.strfmt;
         "SqlNoDataSourceInspection",
         "SqlSourceToSinkFlow"
 })
-public class MySQLDataSourceProvider extends DataSourceProvider
+public class MySQLDataSourceProxy extends DataSourceProxy
 {
-        public MySQLDataSourceProvider(ConnectionInfo info)
+        public MySQLDataSourceProxy(ConnectionInfo info)
         {
                 super(info);
         }
 
         @Override
-        protected Statement use(Connection connection, String database) throws SQLException
+        public Statement use(Connection connection, String database) throws SQLException
         {
                 Statement statement = connection.createStatement();
                 statement.execute("USE " + database + ";");
@@ -58,7 +58,7 @@ public class MySQLDataSourceProvider extends DataSourceProvider
         }
 
         @Override
-        public List<Table> getTables(String database)
+        public List<TableInfo> getTables(String database)
         {
                 String sql = strfmt("""
                     SELECT
@@ -81,7 +81,7 @@ public class MySQLDataSourceProvider extends DataSourceProvider
 
                         ResultSet rs = statement.executeQuery(sql);
 
-                        return toJavaList(rs, Table.class);
+                        return toJavaList(rs, TableInfo.class);
                 } catch (SQLException e) {
                         EventBus.publish(e);
                 }

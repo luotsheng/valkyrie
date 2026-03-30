@@ -2,8 +2,8 @@ package com.changhong.opendb.ui.dialog.connection;
 
 import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.RefreshConnectionEvent;
-import com.changhong.opendb.driver.datasource.MySQLDataSourceProvider;
-import com.changhong.opendb.driver.datasource.DataSourceProvider;
+import com.changhong.opendb.driver.datasource.MySQLDataSourceProxy;
+import com.changhong.opendb.driver.datasource.DataSourceProxy;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.repository.ConnectionRepository;
 import com.changhong.opendb.utils.JSONUtils;
@@ -106,7 +106,7 @@ public class ConnectionDialog extends Stage
         })
         public void testConnection()
         {
-                try (DataSourceProvider dataSource = new MySQLDataSourceProvider(info);
+                try (DataSourceProxy dataSource = new MySQLDataSourceProxy(info);
                      Connection connection = dataSource.getConnection()) {
                         status.setText("Connected successfully...");
                         status.setStyle("-fx-text-fill: #28a745;");

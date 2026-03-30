@@ -1,6 +1,6 @@
 package com.changhong.opendb.ui.pane;
 
-import com.changhong.opendb.driver.Table;
+import com.changhong.opendb.driver.TableInfo;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.widgets.DateCell;
 import com.changhong.opendb.ui.widgets.DetailPane;
@@ -25,16 +25,16 @@ import java.util.List;
 @SuppressWarnings("FieldCanBeLocal")
 public class DatabaseDetailPane extends DetailPane
 {
-        private final TableView<Table> table;
+        private final TableView<TableInfo> table;
         private final ToolBar toolBar;
 
-        private TableColumn<Table, String> name;
-        private TableColumn<Table, Date> createTime;
-        private TableColumn<Table, Date> updateTime;
-        private TableColumn<Table, String> engine;
-        private TableColumn<Table, Float> size;
-        private TableColumn<Table, String> rows;
-        private TableColumn<Table, String> comment;
+        private TableColumn<TableInfo, String> name;
+        private TableColumn<TableInfo, Date> createTime;
+        private TableColumn<TableInfo, Date> updateTime;
+        private TableColumn<TableInfo, String> engine;
+        private TableColumn<TableInfo, Float> size;
+        private TableColumn<TableInfo, String> rows;
+        private TableColumn<TableInfo, String> comment;
 
         public DatabaseDetailPane()
         {
@@ -165,7 +165,7 @@ public class DatabaseDetailPane extends DetailPane
                 updateTime.setCellFactory(col -> new DateCell<>());
         }
 
-        public void update(List<Table> tables)
+        public void update(List<TableInfo> tables)
         {
                 table.setItems(FXCollections.observableArrayList(tables));
         }

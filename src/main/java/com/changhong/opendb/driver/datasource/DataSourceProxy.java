@@ -1,6 +1,7 @@
 package com.changhong.opendb.driver.datasource;
 
-import com.changhong.opendb.driver.Table;
+import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.TableInfo;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.utils.Catcher;
 import com.changhong.opendb.utils.JSONUtils;
@@ -22,12 +23,12 @@ import java.util.logging.Logger;
  * @author Luo Tiansheng
  * @since 2026/3/27
  */
-public abstract class DataSourceProvider
+public abstract class DataSourceProxy
         implements DataSource, AutoCloseable
 {
         private final HikariDataSource ds;
 
-        public DataSourceProvider(ConnectionInfo info)
+        public DataSourceProxy(ConnectionInfo info)
         {
                 HikariConfig conf = new HikariConfig();
 
@@ -45,7 +46,7 @@ public abstract class DataSourceProvider
         /**
          * 选择数据库
          */
-        protected abstract Statement use(Connection connection, String database)
+        public abstract Statement use(Connection connection, String database)
                 throws SQLException;
 
         /**
@@ -56,7 +57,12 @@ public abstract class DataSourceProvider
         /**
          * 获取表
          */
-        public abstract List<Table> getTables(String database);
+        public abstract List<TableInfo> getTables(String database);
+
+        public JdbcTemplate newJdbcTemplate()
+        {
+                return new JdbcTemplate(this);
+        }
 
         /**
          * 结果集转Java对象

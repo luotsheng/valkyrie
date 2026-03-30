@@ -4,18 +4,16 @@ import com.changhong.opendb.core.event.CloseWorkbenchPaneEvent;
 import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.NewQueryScriptEvent;
 import com.changhong.opendb.core.event.OpenWorkbenchPaneEvent;
-import com.changhong.opendb.driver.Table;
-import com.changhong.opendb.driver.datasource.DataSourceProvider;
+import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.TableInfo;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.pane.DatabaseDetailPane;
-import com.changhong.opendb.ui.widgets.HSeparator;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 import java.util.List;
 
@@ -30,9 +28,9 @@ import java.util.List;
 public class ODBNDatabase extends ODBNode
 {
         private final ODBNConnection connection;
-        private final DataSourceProvider dataSource;
+        private final JdbcTemplate jdbcTemplate;
         private boolean openFlag = false;
-        private List<Table> tables;
+        private List<TableInfo> tables;
 
         // Tree Items
         private TreeItem<String> tableItem;
@@ -69,13 +67,13 @@ public class ODBNDatabase extends ODBNode
         }
 
         public ODBNDatabase(ODBNConnection connection,
-                            DataSourceProvider dataSource,
+                            JdbcTemplate jdbcTemplate,
                             String name)
         {
                 super(name);
                 this.connection = connection;
                 setGraphic(ResourceManager.use("database1"));
-                this.dataSource = dataSource;
+                this.jdbcTemplate = jdbcTemplate;
                 setupListenerEvent();
         }
 
@@ -88,9 +86,9 @@ public class ODBNDatabase extends ODBNode
                 queryItem = new ODBInternalNode(this, "查询脚本", ResourceManager.use("sql"));
                 getChildren().addAll(tableItem, queryItem);
 
-                tables = dataSource.getTables(name);
-                for (Table table : tables) {
-                        ODBNTable tableNode = new ODBNTable(dataSource, table);
+                tables = jdbcTemplate.getTables(name);
+                for (TableInfo table : tables) {
+                        ODBNTable tableNode = new ODBNTable(jdbcTemplate, this, table);
                         tableNode.setSelectedEvent(this::onSelected);
                         tableItem.getChildren().add(tableNode);
                 }

@@ -60,6 +60,7 @@ public class Launcher extends Application
                 initializeVFX(scene);
                 stage.setTitle("数据库可视化工具");
                 stage.setScene(scene);
+                stage.setMaximized(true);
                 stage.show();
         }
 
