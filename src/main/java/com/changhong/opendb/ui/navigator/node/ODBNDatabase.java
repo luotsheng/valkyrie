@@ -94,12 +94,13 @@ public class ODBNDatabase extends ODBNode
                 openFlag = true;
         }
 
-        private void closeDatabase()
+        public void closeDatabase()
         {
                 if (!openFlag)
                         return;
 
                 getChildren().clear();
+                detailPane.close();
 
                 openFlag = false;
         }

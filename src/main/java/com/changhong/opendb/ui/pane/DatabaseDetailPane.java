@@ -14,6 +14,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,8 @@ import java.util.List;
 @SuppressWarnings("FieldCanBeLocal")
 public class DatabaseDetailPane extends BorderPane
 {
+        private Tab owner;
+
         private final TableView<Table> table;
         private final ToolBar toolBar;
 
@@ -168,5 +172,19 @@ public class DatabaseDetailPane extends BorderPane
         public void update(List<Table> tables)
         {
                 table.setItems(FXCollections.observableArrayList(tables));
+        }
+
+        public void attach(Tab owner)
+        {
+                this.owner = owner;
+                this.owner.setContent(this);
+        }
+
+        public void close()
+        {
+                if (owner != null) {
+                        if (owner.getContent() == this)
+                                owner.setContent(null);
+                }
         }
 }

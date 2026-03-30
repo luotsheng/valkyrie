@@ -1,6 +1,7 @@
 package com.changhong.opendb.ui.workbench;
 
 import com.changhong.opendb.core.event.*;
+import com.changhong.opendb.ui.pane.DatabaseDetailPane;
 import com.changhong.opendb.ui.widgets.SqlEditor;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
@@ -45,7 +46,7 @@ public class Workbench extends VBox implements EventListener
         public void onEvent(Event event)
         {
                 if (event instanceof OpenWorkbenchPaneEvent e)
-                        detailTab.setContent(e.pane);
+                        ((DatabaseDetailPane) e.pane).attach(detailTab);
 
                 if (event instanceof NewQueryScriptEvent) {
                         Tab queryTab = new Tab("查询脚本");
