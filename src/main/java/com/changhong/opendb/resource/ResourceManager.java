@@ -2,7 +2,6 @@ package com.changhong.opendb.resource;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.SVGPath;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +23,23 @@ public class ResourceManager
 
         public static ImageView use(String name)
         {
-                ImageView imageView = new ImageView(IMAGES.get(name));
+                String[] split = name.split("@");
 
-                imageView.setFitWidth(16);
-                imageView.setFitHeight(16);
+                ImageView imageView = new ImageView(IMAGES.get(split[0]));
+
+                String scale = split.length > 1 ? split[1] : "1x";
+
+                int size = switch (scale) {
+                        case "2x" -> 24;
+                        case "3x" -> 32;
+                        case "4x" -> 40;
+                        case "5x" -> 50;
+                        case "6x" -> 64;
+                        default   -> 16;
+                };
+
+                imageView.setFitWidth(size);
+                imageView.setFitHeight(size);
                 imageView.setPreserveRatio(true);
                 imageView.setSmooth(true);
 

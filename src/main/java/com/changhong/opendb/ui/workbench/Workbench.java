@@ -47,7 +47,7 @@ public class Workbench extends VBox implements EventListener
         {
                 ConnectionInfo info = event.info;
 
-                Tab queryTab = new Tab(strfmt("查询脚本@%s.sql", info.getName()));
+                Tab queryTab = new Tab(strfmt("查询脚本@%s.sql", info == null ? "[ N/A ]" : info.getName()));
                 queryTab.setContent(new SqlEditor());
                 queryTab.setOnCloseRequest(e -> queryTabs.remove(queryTab));
 

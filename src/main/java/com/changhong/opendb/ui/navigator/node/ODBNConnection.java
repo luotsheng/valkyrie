@@ -50,7 +50,7 @@ public class ODBNConnection extends ODBNode
                 setupListenerEvent();
         }
 
-        private void openConnection()
+        public void openConnection()
         {
                 if (openFlag)
                         return;
@@ -65,7 +65,7 @@ public class ODBNConnection extends ODBNode
                 }
         }
 
-        private void closeConnection()
+        public void closeConnection()
         {
                 if (!openFlag)
                         return;
@@ -147,5 +147,10 @@ public class ODBNConnection extends ODBNode
         public void setSelectedDatabase(ODBNDatabase database)
         {
                 selectedDatabase = database;
+        }
+
+        public boolean isOpen()
+        {
+                return openFlag;
         }
 }
