@@ -25,7 +25,7 @@ public class VFX
         {
                 TableView<S> table = new TableView<>();
                 table.getStyleClass().add("vfx-table-view");
-                table.setFixedCellSize(28);
+                table.setFixedCellSize(26);
                 return table;
         }
 
