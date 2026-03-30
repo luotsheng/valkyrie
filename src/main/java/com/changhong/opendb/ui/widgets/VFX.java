@@ -1,10 +1,11 @@
 package com.changhong.opendb.ui.widgets;
 
 import com.changhong.opendb.resource.ResourceManager;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
+import javafx.event.EventTarget;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.layout.Pane;
 
 /**
  * @author Luo Tiansheng
@@ -12,6 +13,13 @@ import javafx.scene.control.Tooltip;
  */
 public class VFX
 {
+        public static ContextMenu tabPaneContextMenu = null;
+
+        private static MenuItem closeLeft = null;
+        private static MenuItem closeRight = null;
+        private static MenuItem closeOther = null;
+        private static MenuItem closeAll = null;
+
         public static <S> TableView<S> newTableView()
         {
                 TableView<S> table = new TableView<>();
@@ -33,5 +41,65 @@ public class VFX
                 button.setGraphic(ResourceManager.use(icon));
 
                 return button;
+        }
+
+        public static TabPane newTabPane()
+        {
+                TabPane tabPane = new TabPane();
+
+                tabPane.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
+                        Node node = (Node) event.getTarget();
+
+                        while (node != null && !(node instanceof TabPane)) {
+                                if (node.getStyleClass().contains("tab")) {
+                                        Tab tab = (Tab) node.getProperties().get(Tab.class);
+                                        showTabContextMenu(tabPane, tab, event);
+                                        break;
+                                }
+                                node = node.getParent();
+                        }
+                });
+
+                return tabPane;
+        }
+
+        private static void showTabContextMenu(TabPane tabPane, Tab tab, ContextMenuEvent e)
+        {
+                if (tabPaneContextMenu == null) {
+                        tabPaneContextMenu = new ContextMenu();
+                        tabPaneContextMenu.setAutoHide(true);
+                        tabPaneContextMenu.setConsumeAutoHidingEvents(false);
+
+                        closeLeft = new MenuItem("关闭左侧");
+                        closeRight = new MenuItem("关闭右侧");
+                        closeOther = new MenuItem("关闭其他");
+                        closeAll = new MenuItem("关闭所有");
+
+                        tabPaneContextMenu.getItems().addAll(closeLeft, closeRight, closeOther, closeAll);
+                }
+
+                closeLeft.setOnAction(ev -> {
+                        int index = tabPane.getTabs().indexOf(tab);
+                        tabPane.getTabs().remove(1, index);
+                        tabPane.getSelectionModel().select(tab);
+                });
+
+                closeRight.setOnAction(ev -> {
+                        int index = tabPane.getTabs().indexOf(tab);
+                        tabPane.getTabs().remove(index + 1, tabPane.getTabs().size());
+                        tabPane.getSelectionModel().select(tab);
+                });
+
+                closeOther.setOnAction(ev -> {
+                        tabPane.getTabs().remove(1, tabPane.getTabs().size());
+                        tabPane.getTabs().add(tab);
+                        tabPane.getSelectionModel().select(tab);
+                });
+
+                closeAll.setOnAction(ev -> {
+                        tabPane.getTabs().remove(1, tabPane.getTabs().size());
+                });
+
+                tabPaneContextMenu.show(tabPane, e.getScreenX(), e.getScreenY());
         }
 }

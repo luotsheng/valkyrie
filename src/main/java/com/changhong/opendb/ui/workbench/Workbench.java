@@ -2,6 +2,7 @@ package com.changhong.opendb.ui.workbench;
 
 import com.changhong.opendb.core.event.*;
 import com.changhong.opendb.model.ConnectionInfo;
+import com.changhong.opendb.ui.widgets.VFX;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Priority;
@@ -19,7 +20,7 @@ import static com.changhong.opendb.utils.StringUtils.strfmt;
 @SuppressWarnings("FieldCanBeLocal")
 public class Workbench extends VBox implements EventListener
 {
-        private final TabPane tabPane = new TabPane();
+        private final TabPane tabPane = VFX.newTabPane();
         private final Tab detailTab = new Tab("详情");
 
         private final List<Tab> queryTabs = new ArrayList<>();
@@ -43,11 +44,13 @@ public class Workbench extends VBox implements EventListener
                 tabPane.getTabs().add(detailTab);
         }
 
+        static int idx = 0;
+
         private void openNewQueryScriptPane(NewQueryScriptEvent event)
         {
                 ConnectionInfo info = event.info;
 
-                Tab queryTab = new Tab(strfmt("查询脚本@%s.sql", info == null ? "[ N/A ]" : info.getName()));
+                Tab queryTab = new Tab(strfmt("查询脚本@%s_%d.sql", info == null ? "[ N/A ]" : info.getName(), (idx++)));
                 queryTab.setContent(new SqlEditor());
                 queryTab.setOnCloseRequest(e -> queryTabs.remove(queryTab));
 

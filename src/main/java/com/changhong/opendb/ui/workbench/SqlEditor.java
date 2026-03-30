@@ -131,6 +131,11 @@ public class SqlEditor extends BorderPane
                 ComboBox<ODBNDatabase> database = new ComboBox<>();
                 database.setPrefWidth(200);
 
+                database.valueProperty().addListener((obs, oldVal, newVal) -> {
+                        if (!newVal.isOpen())
+                                newVal.openDatabase();
+                });
+
                 database.setButtonCell(new ListCell<>() {
                         @Override
                         protected void updateItem(ODBNDatabase item, boolean empty)

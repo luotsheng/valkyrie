@@ -79,7 +79,7 @@ public class ODBNDatabase extends ODBNode
                 setupListenerEvent();
         }
 
-        private void openDatabase()
+        public void openDatabase()
         {
                 if (openFlag)
                         return;
@@ -167,5 +167,10 @@ public class ODBNDatabase extends ODBNode
                 }
 
                 super.showContextMenu(node, x, y);
+        }
+
+        public boolean isOpen()
+        {
+                return openFlag;
         }
 }
