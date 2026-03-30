@@ -4,11 +4,16 @@ import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.widgets.DateCell;
 import com.changhong.opendb.ui.widgets.VFX;
+import com.changhong.opendb.ui.widgets.VerticalSeparator;
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 
 import java.util.Date;
 import java.util.List;
@@ -53,7 +58,23 @@ public class DatabaseDetailPane extends BorderPane
                 Button newTable = VFX.newIconButton("创建表", "plus");
                 Button delTable = VFX.newIconButton("删除表", "minus");
 
-                toolBar.getItems().addAll(modifyTable, newTable, delTable);
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                TextField search = new TextField();
+                search.setPromptText("搜索...");
+                search.setPrefWidth(300);
+
+                HBox searchBox = new HBox(5, ResourceManager.use("search"), search);
+                searchBox.setAlignment(Pos.CENTER_LEFT);
+
+                toolBar.getItems().addAll(
+                        modifyTable,
+                        newTable,
+                        delTable,
+                        new VerticalSeparator(),
+                        spacer,
+                        searchBox);
         }
 
         @SuppressWarnings("unchecked")

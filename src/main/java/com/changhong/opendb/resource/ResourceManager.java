@@ -47,6 +47,7 @@ public class ResourceManager
                 IMAGES.put("modify", load("/assets/icons/modify.png"));
                 IMAGES.put("plus", load("/assets/icons/plus.png"));
                 IMAGES.put("minus", load("/assets/icons/minus.png"));
+                IMAGES.put("search", load("/assets/icons/search.png"));
 
         }
 
