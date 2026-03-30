@@ -7,9 +7,11 @@ import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.driver.datasource.DataSourceProvider;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.pane.DatabaseDetailPane;
+import com.changhong.opendb.ui.widgets.HSeparator;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -133,7 +135,12 @@ public class ODBNDatabase extends ODBNode
                 newQueryMenuItem = new MenuItem("新建查询");
                 newQueryMenuItem.setOnAction(event -> newQueryScript());
 
-                menu.getItems().addAll(openMenuItem, closeMenuItem, newQueryMenuItem);
+                menu.getItems().addAll(
+                        openMenuItem,
+                        closeMenuItem,
+                        new SeparatorMenuItem(),
+                        newQueryMenuItem
+                );
 
                 return menu;
         }

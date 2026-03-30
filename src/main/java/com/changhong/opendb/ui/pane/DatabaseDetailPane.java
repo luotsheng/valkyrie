@@ -4,7 +4,7 @@ import com.changhong.opendb.driver.Table;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.widgets.DateCell;
 import com.changhong.opendb.ui.widgets.VFX;
-import com.changhong.opendb.ui.widgets.VerticalSeparator;
+import com.changhong.opendb.ui.widgets.VSeparator;
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -72,7 +72,7 @@ public class DatabaseDetailPane extends BorderPane
                         modifyTable,
                         newTable,
                         delTable,
-                        new VerticalSeparator(),
+                        new VSeparator(),
                         spacer,
                         searchBox);
         }
