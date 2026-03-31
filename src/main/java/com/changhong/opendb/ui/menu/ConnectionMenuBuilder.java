@@ -25,9 +25,8 @@ public class ConnectionMenuBuilder
                 return newConnectionMenu;
         }
 
+        @SuppressWarnings("unused")
         private static void openConnectionDialog(String dbType) {
-                ConnectionInfo info = new ConnectionInfo();
-                info.setType(dbType);
-                new ConnectionDialog(info).showAndWait();
+                new ConnectionDialog(null).showAndWait();
         }
 }
