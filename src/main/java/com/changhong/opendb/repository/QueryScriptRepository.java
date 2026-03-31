@@ -1,11 +1,15 @@
 package com.changhong.opendb.repository;
 
 import com.changhong.opendb.Users;
+import com.changhong.opendb.model.QueryInfo;
+import com.changhong.opendb.ui.navigator.node.ODBNConnection;
+import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
 import com.changhong.opendb.utils.Catcher;
-import com.changhong.opendb.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.changhong.opendb.utils.StringUtils.strfmt;
 
@@ -44,5 +48,26 @@ public class QueryScriptRepository
                 });
 
                 return sqlFile;
+        }
+
+        public static List<QueryInfo> loadQueryInfo(ODBNConnection connection, ODBNDatabase database)
+        {
+                List<QueryInfo> queryInfos = new ArrayList<>();
+
+                File sqlDir = new File(
+                        strfmt("%s/%s/%s/%s.sql",
+                                Users.connectionDir,
+                                connection.getName(),
+                                database.getName())
+                );
+
+                File[] files = sqlDir.listFiles();
+                if (files == null)
+                        return queryInfos;
+
+                for (File file : files)
+                        queryInfos.add(new QueryInfo(connection, database, file));
+
+                return queryInfos;
         }
 }
