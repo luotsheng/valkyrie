@@ -27,4 +27,10 @@ public class QueryInfo
         {
                 return sqlFile.getName();
         }
+
+        @SuppressWarnings("ResultOfMethodCallIgnored")
+        public void delete()
+        {
+                sqlFile.delete();
+        }
 }

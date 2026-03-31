@@ -31,9 +31,9 @@ public class ODBNDatabase extends ODBNode implements EventListener
         private List<TableInfo> tables;
 
         // Tree Items
-        private final TreeItem<String> tableItem
+        final TreeItem<String> tableItem
                 = new ODBInternalNode(this, "数据表", ResourceManager.use("table"));;
-        private final TreeItem<String> queryItem
+        final TreeItem<String> queryItem
                 = new ODBInternalNode(this, "查询脚本", ResourceManager.use("sql"));;
 
         // Menu Items
@@ -124,7 +124,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
         {
                 queryItem.getChildren().clear();
                 List<QueryInfo> queryInfos = QueryScriptRepository.loadQueryInfo(connection, this);
-                queryInfos.forEach(query -> queryItem.getChildren().add(new ODBNQuery(query)));
+                queryInfos.forEach(query -> queryItem.getChildren().add(new ODBNQuery(this, query)));
         }
 
         private void onSelected()

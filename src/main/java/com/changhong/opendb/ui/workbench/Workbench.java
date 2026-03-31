@@ -9,7 +9,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.changhong.opendb.utils.StringUtils.strfmt;
@@ -23,6 +25,7 @@ public class Workbench extends VBox implements EventListener
 {
         private final TabPane tabPane = VFX.newTabPane();
         private final Tab detailTab = new Tab("详情");
+        private final List<SqlEditor> editors = new ArrayList<>();
         private final Map<String, Tab> queryResultTab = new HashMap<>();
 
         public Workbench()
@@ -37,6 +40,7 @@ public class Workbench extends VBox implements EventListener
                 EventBus.subscribe(CloseWorkbenchPaneEvent.class, this);
                 EventBus.subscribe(NewQueryScriptEvent.class, this);
                 EventBus.subscribe(NewQueryResultSetPaneEvent.class, this);
+                EventBus.subscribe(RemoveSqlEditorTabEvent.class, this);
         }
 
         private void setupDetailTab()
@@ -65,6 +69,7 @@ public class Workbench extends VBox implements EventListener
                 }
 
                 queryTab.setContent(sqlEditor);
+                editors.add(sqlEditor);
                 tabPane.getTabs().add(queryTab);
                 tabPane.getSelectionModel().select(queryTab);
         }
@@ -78,6 +83,13 @@ public class Workbench extends VBox implements EventListener
                 if (event instanceof CloseWorkbenchPaneEvent e &&
                         detailTab.getContent() == e.getPane()) {
                         detailTab.setContent(null);
+                }
+
+                if (event instanceof RemoveSqlEditorTabEvent e) {
+                        for (SqlEditor editor : editors) {
+                                if (editor.sqlFileEquals(e.sqlFile))
+                                        tabPane.getTabs().remove(editor.getOwnerTab());
+                        }
                 }
 
                 if (event instanceof NewQueryScriptEvent e) {

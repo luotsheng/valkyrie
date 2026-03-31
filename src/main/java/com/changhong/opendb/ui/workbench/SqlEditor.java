@@ -1,5 +1,7 @@
 package com.changhong.opendb.ui.workbench;
 
+import com.changhong.opendb.core.event.EventBus;
+import com.changhong.opendb.core.event.RemoveSqlEditorTabEvent;
 import com.changhong.opendb.driver.JdbcTemplate;
 import com.changhong.opendb.driver.QueryResultSet;
 import com.changhong.opendb.model.ODBNStatus;
@@ -11,35 +13,22 @@ import com.changhong.opendb.ui.widgets.SaveQueryScriptDialog;
 import com.changhong.opendb.ui.widgets.VFX;
 import com.changhong.opendb.ui.widgets.VSeparator;
 import com.changhong.opendb.utils.Catcher;
-import com.changhong.opendb.utils.OS;
-import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
 import javafx.util.StringConverter;
 import lombok.Getter;
-import lombok.Setter;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.Statements;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.io.File;
 import java.io.FileReader;
-import java.nio.CharBuffer;
-import java.sql.SQLFeatureNotSupportedException;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +39,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("FieldCanBeLocal")
 public class SqlEditor extends SplitPane
 {
+        @Getter
         private final Tab ownerTab;
         private final ToolBar toolBar;
         private final CodeArea codeArea;
@@ -399,6 +389,14 @@ public class SqlEditor extends SplitPane
                         codeArea.appendText(builder.toString());
                         applyHighlighting(codeArea);
                 }
+        }
+
+        public boolean sqlFileEquals(File file)
+        {
+                if (sqlFile == null || file == null)
+                        return false;
+
+                return sqlFile.getAbsolutePath().equals(file.getAbsolutePath());
         }
 }
 
