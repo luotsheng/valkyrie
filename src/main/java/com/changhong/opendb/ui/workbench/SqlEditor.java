@@ -12,6 +12,8 @@ import com.changhong.opendb.utils.Catcher;
 import com.changhong.opendb.utils.OS;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.util.StringConverter;
@@ -91,6 +93,14 @@ public class SqlEditor extends SplitPane
                 } else {
                         textArea.setFont(Font.font("Consolas", 19));
                 }
+
+                textArea.setOnKeyPressed(event -> {
+                        if (event.isControlDown() && event.getCode() == KeyCode.R) {
+                                System.out.println("Ctrl+R");
+                                runSelectedScript();
+                                event.consume();
+                        }
+                });
 
                 textArea.setText("select * from tra_schedule_from_ai;");
         }
