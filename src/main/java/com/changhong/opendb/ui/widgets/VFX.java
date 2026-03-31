@@ -45,6 +45,15 @@ public class VFX
                 return button;
         }
 
+        public static <T> ComboBox<T> copyComboBox(ComboBox<T> src)
+        {
+                ComboBox<T> dst = new ComboBox<>();
+                dst.getItems().addAll(src.getItems());
+                dst.getSelectionModel().select(
+                        src.getSelectionModel().getSelectedIndex());
+                return dst;
+        }
+
         public static TabPane newTabPane()
         {
                 TabPane tabPane = new TabPane();

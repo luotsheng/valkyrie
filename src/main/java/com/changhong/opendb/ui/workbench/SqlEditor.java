@@ -6,6 +6,7 @@ import com.changhong.opendb.model.ODBNStatus;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
+import com.changhong.opendb.ui.widgets.SaveQueryScriptDialog;
 import com.changhong.opendb.ui.widgets.VFX;
 import com.changhong.opendb.ui.widgets.VSeparator;
 import com.changhong.opendb.utils.Catcher;
@@ -18,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.util.StringConverter;
+import lombok.Getter;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -29,6 +31,7 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,6 +51,10 @@ public class SqlEditor extends SplitPane
         private final BorderPane topBorderPane;
         private final ResultSetViewPane resultSetTableViewPane;
 
+        @Getter
+        private String name;
+        @Getter
+        private File sqlFile;
         private ComboBox<ODBNConnection> connectionComboBox;
         private ComboBox<ODBNDatabase> databaseComboBox;
 
@@ -59,8 +66,10 @@ public class SqlEditor extends SplitPane
                 Pattern.CASE_INSENSITIVE
         );
 
-        public SqlEditor()
+        public SqlEditor(String name)
         {
+                this.name = name;
+
                 setOrientation(Orientation.VERTICAL);
 
                 topBorderPane = new BorderPane();
@@ -72,11 +81,22 @@ public class SqlEditor extends SplitPane
                 topBorderPane.setTop(toolBar);
                 topBorderPane.setCenter(virtualizedScrollPane);
 
+                setupPane();
                 setupToolbar();
                 setupCodeArea();
                 setupResultSetCloseEvent();
 
                 getItems().addAll(topBorderPane);
+        }
+
+        private void setupPane()
+        {
+                addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+                        if ((event.isControlDown() || event.isShortcutDown())
+                                && event.getCode() == KeyCode.S) {
+                                SaveQueryScriptDialog.showDialog(this);
+                        }
+                });
         }
 
         public void setupToolbar()
@@ -311,5 +331,28 @@ public class SqlEditor extends SplitPane
                         }
                 }
         }
+
+        public ComboBox<ODBNConnection> copyConnectionComboBox()
+        {
+                ComboBox<ODBNConnection> dst = VFX.copyComboBox(connectionComboBox);
+
+                dst.setButtonCell(connectionComboBox.getButtonCell());
+                dst.setCellFactory(connectionComboBox.getCellFactory());
+                dst.setConverter(connectionComboBox.getConverter());
+
+                return dst;
+        }
+
+        public ComboBox<ODBNDatabase> copyDatabaseComboBox()
+        {
+                ComboBox<ODBNDatabase> dst = VFX.copyComboBox(databaseComboBox);
+
+                dst.setButtonCell(databaseComboBox.getButtonCell());
+                dst.setCellFactory(databaseComboBox.getCellFactory());
+                dst.setConverter(databaseComboBox.getConverter());
+
+                return dst;
+        }
+
 }
 

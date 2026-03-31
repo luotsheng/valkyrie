@@ -1,5 +1,6 @@
 package com.changhong.opendb.repository;
 
+import com.changhong.opendb.Users;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.utils.Catcher;
 import com.changhong.opendb.utils.FileUtils;
@@ -15,22 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用户数据
+ * 连接信息
  *
  * @author Luo Tiansheng
  * @since 2026/3/25
  */
 public class ConnectionRepository
 {
-        public static final String USER_HOME = System.getProperty("user.home");
-
-        private static final File ODB_BASE_DIR = new File(USER_HOME + "/.odb");
-        private static final File ODB_CONN_DIR = new File(ODB_BASE_DIR + "/C");
-
         @SuppressWarnings("ResultOfMethodCallIgnored")
         public static void saveConnection(String name, String content)
         {
-                File dir = new File(ODB_CONN_DIR, name);
+                File dir = new File(Users.connectionDir, name);
                 File odbc = new File(dir, ".odbc");
 
                 if (odbc.exists())
@@ -54,7 +50,7 @@ public class ConnectionRepository
 
         public static void updateConnection(String name, String content)
         {
-                File dir = new File(ODB_CONN_DIR, name);
+                File dir = new File(Users.connectionDir, name);
                 File odbc = new File(dir, ".odbc");
 
                 FileUtils.forceDelete(odbc);
@@ -64,7 +60,7 @@ public class ConnectionRepository
 
         public static List<ConnectionInfo> loadConnections()
         {
-                File[] files = ODB_CONN_DIR.listFiles();
+                File[] files = Users.connectionDir.listFiles();
                 List<ConnectionInfo> ret = new ArrayList<>();
 
                 if (files == null)

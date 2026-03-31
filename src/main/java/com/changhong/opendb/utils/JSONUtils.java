@@ -1,5 +1,6 @@
 package com.changhong.opendb.utils;
 
+import com.changhong.opendb.model.ConnectionInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -56,5 +57,11 @@ public class JSONUtils
                         Catcher.ithrow(e);
                         return null;
                 }
+        }
+
+        @SuppressWarnings("unchecked")
+        public static <T> T deepCopy(T src)
+        {
+                return (T) toJavaObject(toJSONString(src), src.getClass());
         }
 }

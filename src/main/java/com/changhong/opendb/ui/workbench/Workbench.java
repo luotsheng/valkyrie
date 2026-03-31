@@ -46,12 +46,18 @@ public class Workbench extends VBox implements EventListener
 
         static int idx = 0;
 
+        private static String queryName(ConnectionInfo info)
+        {
+                return strfmt("查询脚本@%s_%d.sql", info == null ? "[ N/A ]" : info.getName(), (idx++));
+        }
+
         private void openNewQueryScriptPane(NewQueryScriptEvent event)
         {
                 ConnectionInfo info = event.info;
 
-                Tab queryTab = new Tab(strfmt("查询脚本@%s_%d.sql", info == null ? "[ N/A ]" : info.getName(), (idx++)));
-                queryTab.setContent(new SqlEditor());
+                String name = queryName(info);
+                Tab queryTab = new Tab(name);
+                queryTab.setContent(new SqlEditor(name));
                 tabPane.getTabs().add(queryTab);
                 tabPane.getSelectionModel().select(queryTab);
         }

@@ -4,6 +4,8 @@ import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.ExceptionEvent;
 import com.changhong.opendb.core.exception.CatcherException;
 
+import static com.changhong.opendb.utils.StringUtils.strfmt;
+
 /**
  * @author Luo Tiansheng
  * @since 2026/3/25
@@ -16,9 +18,9 @@ public class Catcher
                 void run() throws Throwable;
         }
 
-        public static void ithrow(String msg)
+        public static void ithrow(String msg, Object... args)
         {
-                ithrow(new CatcherException(msg));
+                ithrow(new CatcherException(strfmt(msg, args)));
         }
 
         /**

@@ -31,7 +31,8 @@ public class ConnectionDialog extends Stage
         private TabPane tabPane;
         private HBox buttonBar;
         private final boolean isUpdate;
-        private final ConnectionInfo info;
+        private final ConnectionInfo oldInfo;
+        private final ConnectionInfo newInfo;
         private final Label status = new Label();
 
         private static final int WW = 650;
@@ -42,13 +43,15 @@ public class ConnectionDialog extends Stage
                 this(null);
         }
 
-        public ConnectionDialog(ConnectionInfo info)
+        public ConnectionDialog(ConnectionInfo newInfo)
         {
-                this.isUpdate = info != null;
+                this.isUpdate = newInfo != null;
 
-                this.info = isUpdate
-                        ? info
+                this.newInfo = isUpdate
+                        ? newInfo
                         : new ConnectionInfo("MySQL");
+
+                this.oldInfo = JSONUtils.deepCopy(newInfo);
 
                 setupTabPane();
                 setupButtonBar();
@@ -61,11 +64,11 @@ public class ConnectionDialog extends Stage
 
                 Tab generalTab = new Tab("常规属性");
                 generalTab.setClosable(false);
-                generalTab.setContent(new ConnectionGeneralPane(info));
+                generalTab.setContent(new ConnectionGeneralPane(newInfo));
 
                 Tab advanceTab = new Tab("高级属性");
                 advanceTab.setClosable(false);
-                advanceTab.setContent(new ConnectionAdvancedPane(info));
+                advanceTab.setContent(new ConnectionAdvancedPane(newInfo));
 
                 tabPane.getTabs().addAll(generalTab, advanceTab);
         }
@@ -106,7 +109,7 @@ public class ConnectionDialog extends Stage
         })
         public void testConnection()
         {
-                try (DataSourceProxy dataSource = new MySQLDataSourceProxy(info);
+                try (DataSourceProxy dataSource = new MySQLDataSourceProxy(newInfo);
                      Connection connection = dataSource.getConnection()) {
                         status.setText("Connected successfully...");
                         status.setStyle("-fx-text-fill: #28a745;");
@@ -118,12 +121,12 @@ public class ConnectionDialog extends Stage
 
         private void saveConnection()
         {
-                String content = JSONUtils.toJSONString(info, SerializationFeature.INDENT_OUTPUT);
+                String content = JSONUtils.toJSONString(newInfo, SerializationFeature.INDENT_OUTPUT);
 
                 if (isUpdate) {
-                        ConnectionRepository.updateConnection(info.getName(), content);
+                        ConnectionRepository.updateConnection(newInfo.getName(), content);
                 } else {
-                        ConnectionRepository.saveConnection(info.getName(), content);
+                        ConnectionRepository.saveConnection(newInfo.getName(), content);
                 }
 
                 close();
