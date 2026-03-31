@@ -128,36 +128,8 @@ public class SqlEditor extends SplitPane
                 });
 
                 codeArea.multiPlainChanges()
-                        .successionEnds(Duration.ofMillis(100))
+                        .successionEnds(Duration.ofMillis(200))
                         .subscribe(ignore -> applyHighlighting(codeArea));
-
-                codeArea.replaceText("""
-                        -- 每日运维数据统计 --
-                        SET @V_IOS      = '1.1.12';
-                        SET @V_ANDROIID = '7.1.22';
-                        SET @V_PC       = '6.5.55';
-                        SET @V_MAC      = '6.5.55';
-                        
-                        SELECT
-                          (SELECT NOW()) AS DT,
-                          (SELECT COUNT(*) FROM ZK_USER_BASIC_INFO WHERE USERSTATUS = '1') AS A_REG,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL) AS A_INSTALL,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DATE(UPDATE_TIME) = CURRENT_DATE()) AS A_ACTIVE,
-                          (SELECT CONCAT(ROUND(A_ACTIVE / A_INSTALL * 100, 2), '%')) AS ACTIVE_RATIO,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DEVICEAGENT LIKE '%iOS%') AS A_IOS,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DEVICEAGENT LIKE '%iOS%' AND APPVERSION = @V_IOS) AS A_IOS_UPGRADE,
-                          (SELECT CONCAT(ROUND(A_IOS_UPGRADE / A_IOS * 100, 2), '%')) AS IOS_UPGRADE_RATIO,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DEVICEAGENT LIKE '%Android%') AS A_ANDROID,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DEVICEAGENT LIKE '%Android%' AND APPVERSION = @V_ANDROIID) AS A_ANDROID_UPGRADE,
-                          (SELECT CONCAT(ROUND(A_ANDROID_UPGRADE / A_ANDROID * 100, 2), '%')) AS ANDROID_UPGRADE_RATIO,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DEVICEAGENT LIKE '%Win%') AS A_PC,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DEVICEAGENT LIKE '%Win%' AND APPVERSION = @V_PC) AS A_PC_UPGRADE,
-                          (SELECT CONCAT(ROUND(A_PC_UPGRADE / A_PC * 100, 2), '%')) AS PC_UPGRADE_RATIO,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DEVICEAGENT LIKE '%Mac%') AS A_MAC,
-                          (SELECT COUNT(DISTINCT USERACC) FROM YTX_USER_DEVICE_DETAIL WHERE DEVICEAGENT LIKE '%Mac%' AND APPVERSION = @V_MAC) AS A_MAC_UPGRADE,
-                          (SELECT CONCAT(ROUND(A_MAC_UPGRADE / A_MAC * 100, 2), '%')) AS MAC_UPGRADE_RATIO
-                        ;
-                        """);
         }
 
         private void setupResultSetCloseEvent()
@@ -173,10 +145,11 @@ public class SqlEditor extends SplitPane
                 connection.setPrefWidth(200);
 
                 connection.valueProperty().addListener((obs, oldVal, newVal) -> {
-                        if (!newVal.isOpen()) {
+                        if (!newVal.isOpen())
                                 newVal.openConnection();
-                                databaseComboBox.getItems().addAll(newVal.getDatabases());
-                        }
+
+                        databaseComboBox.getItems().clear();
+                        databaseComboBox.getItems().addAll(newVal.getDatabases());
                 });
 
                 connection.setButtonCell(new ListCell<>()
@@ -313,8 +286,8 @@ public class SqlEditor extends SplitPane
 
                         resultSetTableViewPane.refresh(qrs);
 
-                        getItems().remove(resultSetTableViewPane);
-                        getItems().add(resultSetTableViewPane);
+                        if (!getItems().contains(resultSetTableViewPane))
+                                getItems().add(resultSetTableViewPane);
                 } catch (Throwable e) {
                         Catcher.ithrow(e);
                 }
