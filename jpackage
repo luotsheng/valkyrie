@@ -1,0 +1,1 @@
+jpackage --type app-image --name opendb --input target --main-jar opendb-202603.jar --main-class "com.changhong.opendb.app.Launcher" --module-path "D:\dev\sdk\javafx-jmods-21.0.10" --add-modules javafx.controls,javafx.fxml,java.sql,java.naming,jdk.crypto.ec --win-console --dest build
