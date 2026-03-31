@@ -95,8 +95,8 @@ public class SqlEditor extends SplitPane
                 }
 
                 textArea.setOnKeyPressed(event -> {
-                        if (event.isControlDown() && event.getCode() == KeyCode.R) {
-                                System.out.println("Ctrl+R");
+                        if ((event.isControlDown() || event.isShortcutDown())
+                                && event.getCode() == KeyCode.R) {
                                 runSelectedScript();
                                 event.consume();
                         }
