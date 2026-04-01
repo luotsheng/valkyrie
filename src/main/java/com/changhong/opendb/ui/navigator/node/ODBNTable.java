@@ -1,10 +1,13 @@
 package com.changhong.opendb.ui.navigator.node;
 
+import com.changhong.opendb.app.Application;
 import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.NewQueryResultSetPaneEvent;
 import com.changhong.opendb.driver.JdbcTemplate;
 import com.changhong.opendb.driver.TableInfo;
 import com.changhong.opendb.resource.Assets;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -33,6 +36,21 @@ public class ODBNTable extends ODBNode
         public void onSelectedEvent()
         {
                 database.onSelected();
+        }
+
+        @Override
+        protected ContextMenu registerContextMenu()
+        {
+                ContextMenu contextMenu = new ContextMenu();
+
+                MenuItem copyTableNameItem = new MenuItem("复制表名");
+                copyTableNameItem.setOnAction(event -> {
+                        Application.copyToClipboard(getName());
+                });
+
+                contextMenu.getItems().addAll(copyTableNameItem);
+
+                return contextMenu;
         }
 
         @Override

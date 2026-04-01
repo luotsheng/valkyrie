@@ -1,8 +1,7 @@
 package com.changhong.opendb.ui.workbench;
 
-import com.changhong.opendb.app.Launcher;
+import com.changhong.opendb.app.Application;
 import com.changhong.opendb.core.event.*;
-import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.widgets.VTabPane;
 import javafx.scene.Node;
@@ -86,7 +85,7 @@ public class Workbench extends VBox implements EventListener
                         closeRight,
                         closeOther);
 
-                Launcher.runLater((stage, scene) -> {
+                Application.runLater((stage, scene) -> {
                         scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
                                 if (tabPaneContextMenu.isShowing())
                                         tabPaneContextMenu.hide();

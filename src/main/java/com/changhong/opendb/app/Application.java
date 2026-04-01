@@ -3,11 +3,10 @@ package com.changhong.opendb.app;
 import atlantafx.base.theme.CupertinoLight;
 import com.changhong.opendb.ui.layout.MainLayout;
 import com.changhong.opendb.ui.widgets.ErrorDialog;
-import com.changhong.opendb.ui.widgets.VFX;
-import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -18,18 +17,27 @@ import java.util.List;
  * @author Luo Tiansheng
  * @since 2026/3/23
  */
-public class Launcher extends Application
+public class Application extends javafx.application.Application
 {
-        private static final Class<Launcher> aClass = Launcher.class;
+        private static final Class<Application> aClass = Application.class;
         private static final List<LauncherRunnable> runnables = new ArrayList<>();
 
-        public interface LauncherRunnable {
+        public interface LauncherRunnable
+        {
                 void run(Stage stage, Scene scene);
         }
 
         public static void runLater(LauncherRunnable runnable)
         {
                 runnables.add(runnable);
+        }
+
+        public static void copyToClipboard(String text)
+        {
+                Clipboard clipboard = Clipboard.getSystemClipboard();
+                ClipboardContent clipboardContent = new ClipboardContent();
+                clipboardContent.putString(text);
+                clipboard.setContent(clipboardContent);
         }
 
         private static void addVFXStylesheet(Scene scene, String path)
@@ -58,7 +66,7 @@ public class Launcher extends Application
         public void start(Stage stage)
         {
                 initialize();
-                Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
+                javafx.application.Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
                 Scene scene = new Scene(new MainLayout(), 1200, 800);
                 initializeVFX(scene);
                 stage.setTitle("数据库可视化工具");
