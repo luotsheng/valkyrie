@@ -1,11 +1,7 @@
 package com.changhong.opendb.ui.widgets;
 
-import com.changhong.opendb.resource.ResourceManager;
-import javafx.event.EventTarget;
-import javafx.scene.Node;
+import com.changhong.opendb.resource.Assets;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.Pane;
 
 /**
  * @author Luo Tiansheng
@@ -32,7 +28,7 @@ public class VFX
 
                 button.getStyleClass().add("vfx-icon-button");
                 button.setTooltip(new Tooltip(tip));
-                button.setGraphic(ResourceManager.use(icon));
+                button.setGraphic(Assets.use(icon));
 
                 return button;
         }

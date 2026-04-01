@@ -1,8 +1,8 @@
 package com.changhong.opendb.ui.navigator.node;
 
+import com.changhong.opendb.resource.Assets;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
@@ -53,9 +53,7 @@ public abstract class ODBNode extends TreeItem<String>
         protected void setLoadingIndicator()
         {
                 oldGraphic = getGraphic();
-                ProgressIndicator progressIndicator = new ProgressIndicator();
-                progressIndicator.setMaxSize(16, 16);
-                setGraphic(progressIndicator);
+                setGraphic(Assets.newProgressIndicator());
         }
 
         protected void removeLoadingIndicator()

@@ -4,7 +4,7 @@ import com.changhong.opendb.driver.JdbcTemplate;
 import com.changhong.opendb.driver.QueryResultSet;
 import com.changhong.opendb.model.ODBNStatus;
 import com.changhong.opendb.model.QueryInfo;
-import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
 import com.changhong.opendb.ui.widgets.ConfirmDialog;
@@ -230,7 +230,7 @@ public class SqlEditor extends SplitPane
                                         return;
 
                                 setText(item.getName());
-                                setGraphic(ResourceManager.use("chain"));
+                                setGraphic(Assets.use("chain"));
                         }
                 });
 
@@ -245,7 +245,7 @@ public class SqlEditor extends SplitPane
                                         return;
 
                                 setText(item.getName());
-                                setGraphic(ResourceManager.use("chain"));
+                                setGraphic(Assets.use("chain"));
                         }
                 });
 
@@ -278,7 +278,7 @@ public class SqlEditor extends SplitPane
                                         return;
 
                                 setText(item.getName());
-                                setGraphic(ResourceManager.use("database1"));
+                                setGraphic(Assets.use("database1"));
                         }
                 });
 
@@ -294,7 +294,7 @@ public class SqlEditor extends SplitPane
                                         return;
 
                                 setText(item.getName());
-                                setGraphic(ResourceManager.use("database1"));
+                                setGraphic(Assets.use("database1"));
                         }
                 });
 

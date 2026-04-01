@@ -4,7 +4,7 @@ import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.NewQueryResultSetPaneEvent;
 import com.changhong.opendb.driver.JdbcTemplate;
 import com.changhong.opendb.driver.TableInfo;
-import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.widgets.DateCell;
 import com.changhong.opendb.ui.widgets.DetailPane;
 import com.changhong.opendb.ui.widgets.VFX;
@@ -71,7 +71,7 @@ public class DatabaseDetailPane extends DetailPane
                 search.setPromptText("搜索...");
                 search.setPrefWidth(300);
 
-                HBox searchBox = new HBox(5, ResourceManager.use("search"), search);
+                HBox searchBox = new HBox(5, Assets.use("search"), search);
                 searchBox.setAlignment(Pos.CENTER_LEFT);
 
                 toolBar.getItems().addAll(
@@ -153,7 +153,7 @@ public class DatabaseDetailPane extends DetailPane
 
                                 if (item != null) {
                                         setText(item);
-                                        setGraphic(ResourceManager.use("table"));
+                                        setGraphic(Assets.use("table"));
                                 }
                         }
                 });

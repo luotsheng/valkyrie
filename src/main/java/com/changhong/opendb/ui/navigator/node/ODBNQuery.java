@@ -5,7 +5,7 @@ import com.changhong.opendb.core.event.NewQueryScriptEvent;
 import com.changhong.opendb.core.event.RefreshQueryNodeEvent;
 import com.changhong.opendb.core.event.RemoveSqlEditorTabEvent;
 import com.changhong.opendb.model.QueryInfo;
-import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.resource.Assets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
@@ -24,7 +24,7 @@ public class ODBNQuery extends ODBNode
         {
                 super(queryInfo.getName());
                 this.database = database;
-                setGraphic(ResourceManager.use("sql"));
+                setGraphic(Assets.use("sql"));
                 this.queryInfo = queryInfo;
         }
 

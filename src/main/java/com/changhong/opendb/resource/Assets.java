@@ -1,5 +1,6 @@
 package com.changhong.opendb.resource;
 
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -13,12 +14,19 @@ import java.util.Objects;
  * @author Luo Tiansheng
  * @since 2026/3/27
  */
-public class ResourceManager
+public class Assets
 {
         private static final Map<String, Image> IMAGES = new HashMap<>();
 
         static {
                 loadImages();
+        }
+
+        public static ProgressIndicator newProgressIndicator()
+        {
+                ProgressIndicator progressIndicator = new ProgressIndicator();
+                progressIndicator.setMaxSize(16, 16);
+                return progressIndicator;
         }
 
         public static ImageView use(String name)
@@ -66,7 +74,7 @@ public class ResourceManager
 
         private static Image load(String path)
         {
-                return new Image(Objects.requireNonNull(ResourceManager.class
+                return new Image(Objects.requireNonNull(Assets.class
                                 .getResource(path))
                                 .toExternalForm());
         }

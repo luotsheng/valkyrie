@@ -6,7 +6,7 @@ import com.changhong.opendb.driver.datasource.DataSourceProxy;
 import com.changhong.opendb.driver.datasource.MySQLDataSourceProxy;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.changhong.opendb.model.ODBNStatus;
-import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.dialog.connection.ConnectionDialog;
 import com.changhong.opendb.ui.widgets.ConfirmDialog;
 import com.changhong.opendb.utils.Catcher;
@@ -51,7 +51,7 @@ public class ODBNConnection extends ODBNode
         public ODBNConnection(ConnectionInfo info)
         {
                 super(info.getName());
-                setGraphic(ResourceManager.use("database0"));
+                setGraphic(Assets.use("database0"));
                 this.info = info;
                 setupListenerEvent();
         }

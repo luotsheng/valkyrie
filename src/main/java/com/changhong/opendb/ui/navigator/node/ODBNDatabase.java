@@ -3,10 +3,9 @@ package com.changhong.opendb.ui.navigator.node;
 import com.changhong.opendb.core.event.*;
 import com.changhong.opendb.driver.JdbcTemplate;
 import com.changhong.opendb.driver.TableInfo;
-import com.changhong.opendb.driver.datasource.MySQLDataSourceProxy;
 import com.changhong.opendb.model.QueryInfo;
 import com.changhong.opendb.repository.QueryScriptRepository;
-import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.pane.DatabaseDetailPane;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -34,9 +33,9 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
         // Tree Items
         final TreeItem<String> tableItem
-                = new ODBInternalNode(this, "数据表", ResourceManager.use("table"));;
+                = new ODBInternalNode(this, "数据表", Assets.use("table"));;
         final TreeItem<String> queryItem
-                = new ODBInternalNode(this, "查询脚本", ResourceManager.use("sql"));;
+                = new ODBInternalNode(this, "查询脚本", Assets.use("sql"));;
 
         // Menu Items
         private MenuItem openMenuItem;
@@ -74,7 +73,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
         {
                 super(name);
                 this.connection = connection;
-                setGraphic(ResourceManager.use("database1"));
+                setGraphic(Assets.use("database1"));
                 this.jdbcTemplate = jdbcTemplate;
                 setupListenerEvent();
 

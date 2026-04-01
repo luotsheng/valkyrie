@@ -8,7 +8,7 @@ import com.changhong.opendb.core.event.Event;
 import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.EventListener;
 import com.changhong.opendb.core.event.RefreshConnectionEvent;
-import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.model.ConnectionInfo;
 import javafx.collections.ObservableList;
@@ -83,7 +83,7 @@ public class Navigator extends VBox implements EventListener
 
         private TreeView<String> createTreeView()
         {
-                ImageView chain = ResourceManager.use("chain");
+                ImageView chain = Assets.use("chain");
                 TreeItem<String> rootItem = new TreeItem<>("我的连接", chain);
 
                 TreeView<String> treeView = new TreeView<>(rootItem);

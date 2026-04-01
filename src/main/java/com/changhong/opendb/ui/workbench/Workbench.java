@@ -3,9 +3,8 @@ package com.changhong.opendb.ui.workbench;
 import com.changhong.opendb.app.Launcher;
 import com.changhong.opendb.core.event.*;
 import com.changhong.opendb.model.ConnectionInfo;
-import com.changhong.opendb.resource.ResourceManager;
+import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.widgets.VTabPane;
-import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
@@ -175,7 +174,7 @@ public class Workbench extends VBox implements EventListener
         private void handleNewQueryScriptEvent(NewQueryScriptEvent event)
         {
                 Tab queryTab = new Tab();
-                queryTab.setGraphic(ResourceManager.use("sql"));
+                queryTab.setGraphic(Assets.use("sql"));
                 ConnectionInfo info = event.connectionInfo;
                 SqlEditor sqlEditor;
 
@@ -199,25 +198,29 @@ public class Workbench extends VBox implements EventListener
 
         private void handleNewQueryResultSetPaneEvent(NewQueryResultSetPaneEvent event)
         {
-                PreviewTableDataPane pane = new PreviewTableDataPane(
-                        event.jdbcTemplate,
-                        event.database,
-                        event.info
-                );
-
                 String id = strfmt("%s@%s (%s)",
                         event.info.getName(),
                         event.database,
                         event.jdbcTemplate.getConnectionName());
 
+                Tab tab;
+
                 if (queryResultTab.containsKey(id)) {
-                        Tab tab = queryResultTab.get(id);
+                        tab = queryResultTab.get(id);
                         tabPane.select(tab);
                         return;
+                } else {
+                        tab = new Tab(id);
                 }
 
-                Tab tab = new Tab(id);
-                tab.setGraphic(ResourceManager.use("table"));
+                PreviewTableDataPane pane = new PreviewTableDataPane(
+                        tab,
+                        event.jdbcTemplate,
+                        event.database,
+                        event.info
+                );
+
+                tab.setGraphic(Assets.use("table"));
                 tab.setContent(pane);
                 tab.setOnCloseRequest(closeEvent -> {
                         Tab closeTab = (Tab) closeEvent.getTarget();
