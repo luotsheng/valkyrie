@@ -32,7 +32,7 @@ public class SqlKeyWordDefine
                 // 日期/时间函数
                 "now", "current_date", "current_time", "current_timestamp", "date", "time", "timestamp",
                 "curdate", "curtime", "sysdate", "localtime", "localtimestamp", "datediff", "dateadd",
-                "extract", "year", "month", "day", "hour", "minute", "second",
+                "extract", "year", "month", "day", "hour", "minute", "second", "date_sub",
                 // 字符串函数
                 "char", "varchar", "text", "concat", "substr", "substring", "length", "trim", "ltrim", "rtrim",
                 "upper", "lower", "initcap", "replace", "instr", "position", "left", "right", "repeat", "reverse",
@@ -54,7 +54,7 @@ public class SqlKeyWordDefine
                 "close", "cursor", "loop", "while", "repeat", "return", "call", "raise",
                 // 额外常用关键字
                 "as", "into", "values", "set", "from", "to", "by", "using", "with", "without", "off",
-                "only", "type", "like", "escape", "dual", "dummy", "connect", "level", "prior",
+                "only", "type", "like", "escape", "dual", "dummy", "connect", "level", "prior", "sleep",
                 "start", "stop", "skip", "first", "last", "sample", "seed", "parallel", "nologging",
                 "flashback", "purge", "recyclebin", "edition", "visible", "invisible", "compress", "nocompress"
         };
