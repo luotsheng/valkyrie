@@ -57,6 +57,7 @@ public class ErrorDialog
                 HBox hbox = new HBox(ok);
                 hbox.setPadding(new Insets(10));
                 hbox.setAlignment(Pos.CENTER_RIGHT);
+                hbox.setSpacing(10);
 
                 BorderPane root = new BorderPane();
                 root.setCenter(label);
