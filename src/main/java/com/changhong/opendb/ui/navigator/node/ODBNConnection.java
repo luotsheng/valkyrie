@@ -83,6 +83,8 @@ public class ODBNConnection extends ODBNode
                 if (!openFlag)
                         return;
 
+                setExpanded(false);
+
                 getChildren().forEach(db -> {
                         if (db instanceof ODBNDatabase odb)
                                 odb.closeDatabase();

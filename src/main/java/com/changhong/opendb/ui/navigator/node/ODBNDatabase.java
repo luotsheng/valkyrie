@@ -3,10 +3,12 @@ package com.changhong.opendb.ui.navigator.node;
 import com.changhong.opendb.core.event.*;
 import com.changhong.opendb.driver.JdbcTemplate;
 import com.changhong.opendb.driver.TableInfo;
+import com.changhong.opendb.driver.datasource.MySQLDataSourceProxy;
 import com.changhong.opendb.model.QueryInfo;
 import com.changhong.opendb.repository.QueryScriptRepository;
 import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.pane.DatabaseDetailPane;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -86,16 +88,28 @@ public class ODBNDatabase extends ODBNode implements EventListener
                 if (openFlag)
                         return;
 
-                getChildren().addAll(tableItem, queryItem);
+                setLoadingIndicator();
 
-                refreshTableNode();
-                refreshQueryNode();
+                new Thread(() -> {
+                        try {
+                                getChildren().addAll(tableItem, queryItem);
 
-                setExpanded(true);
-                detailPane.update(jdbcTemplate, getName(), tables);
-                onSelectedEvent();
+                                refreshTableNode();
+                                refreshQueryNode();
 
-                openFlag = true;
+                                setExpanded(true);
+                                detailPane.update(jdbcTemplate, getName(), tables);
+                                onSelectedEvent();
+
+                                openFlag = true;
+
+                                Platform.runLater(this::onSelected);
+                        } catch (Throwable e) {
+                                Platform.runLater(() -> EventBus.publish(e));
+                        } finally {
+                                Platform.runLater(this::removeLoadingIndicator);
+                        }
+                }).start();
         }
 
         public void closeDatabase()
@@ -103,6 +117,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
                 if (!openFlag)
                         return;
 
+                setExpanded(false);
                 getChildren().clear();
                 EventBus.publish(closeWorkbenchPaneEvent);
 
@@ -129,7 +144,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
         private void onSelected()
         {
-                if (tables != null)
+                if (tables != null && openFlag)
                         EventBus.publish(openWorkbenchPaneEvent);
                 connection.setSelectedDatabase(this);
         }
