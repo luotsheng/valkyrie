@@ -2,6 +2,7 @@ package com.changhong.opendb.ui.navigator.node;
 
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public abstract class ODBNode extends TreeItem<String>
          */
         protected final ContextMenu contextMenu;
 
+        private Node oldGraphic;
+
         public interface MouseDoubleClickEvent
         {
                 void call(MouseEvent event);
@@ -45,6 +48,19 @@ public abstract class ODBNode extends TreeItem<String>
                 super(name);
                 this.name = name;
                 this.contextMenu = registerContextMenu();
+        }
+
+        protected void setLoadingIndicator()
+        {
+                oldGraphic = getGraphic();
+                ProgressIndicator progressIndicator = new ProgressIndicator();
+                progressIndicator.setMaxSize(16, 16);
+                setGraphic(progressIndicator);
+        }
+
+        protected void removeLoadingIndicator()
+        {
+                setGraphic(oldGraphic);
         }
 
         /**

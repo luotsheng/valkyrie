@@ -10,6 +10,7 @@ import com.changhong.opendb.resource.ResourceManager;
 import com.changhong.opendb.ui.dialog.connection.ConnectionDialog;
 import com.changhong.opendb.ui.widgets.ConfirmDialog;
 import com.changhong.opendb.utils.Catcher;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -60,15 +61,21 @@ public class ODBNConnection extends ODBNode
                 if (openFlag)
                         return;
 
-                try {
-                        dataSource = new MySQLDataSourceProxy(info);
-                        jdbcTemplate = dataSource.newJdbcTemplate(getName());
-                        setupDatabases(jdbcTemplate.getDatabases());
-                        setExpanded(true);
-                        openFlag = true;
-                } catch (Exception e) {
-                        EventBus.publish(e);
-                }
+                setLoadingIndicator();
+
+                new Thread(() -> {
+                        try {
+                                dataSource = new MySQLDataSourceProxy(info);
+                                jdbcTemplate = dataSource.newJdbcTemplate(getName());
+                                setupDatabases(jdbcTemplate.getDatabases());
+                                setExpanded(true);
+                                openFlag = true;
+                        } catch (Throwable e) {
+                                Platform.runLater(() -> EventBus.publish(e));
+                        } finally {
+                                Platform.runLater(this::removeLoadingIndicator);
+                        }
+                }).start();
         }
 
         public void closeConnection()
@@ -81,6 +88,7 @@ public class ODBNConnection extends ODBNode
                                 odb.closeDatabase();
                 });
 
+                databases.clear();
                 getChildren().clear();
                 Catcher.tryCall(dataSource::close);
 
