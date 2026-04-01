@@ -21,19 +21,12 @@
     -fx-background-color: #f5f5f5;
 }
 
-.vfx-table-view .table-row-cell:selected {
-    -fx-background-color: #007AFF;
-}
-
 .vfx-table-view .table-row-cell:selected .table-cell {
+    -fx-background-color: #007AFF;
     -fx-text-fill: white;
 }
 
-.vfx-table-view .table-row-cell:selected {
+/* .vfx-table-view .table-cell:selected {
     -fx-background-color: #007AFF;
-    -fx-table-cell-border-color: transparent;
-}
-
-.vfx-table-view .table-row-cell:selected .table-cell {
     -fx-text-fill: white;
-}
+} */
