@@ -6,11 +6,11 @@ package com.changhong.opendb.core.event;
  * @author Luo Tiansheng
  * @since 2026/3/26
  */
-public class ExceptionEvent extends Event
+public class CauseEvent extends Event
 {
         public final String message;
 
-        public ExceptionEvent(Throwable e)
+        public CauseEvent(Throwable e)
         {
                 this.message = e.getCause().getMessage();
         }

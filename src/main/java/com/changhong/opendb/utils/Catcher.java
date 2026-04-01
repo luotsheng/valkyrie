@@ -1,7 +1,6 @@
 package com.changhong.opendb.utils;
 
 import com.changhong.opendb.core.event.EventBus;
-import com.changhong.opendb.core.event.ExceptionEvent;
 import com.changhong.opendb.core.exception.CatcherException;
 
 import static com.changhong.opendb.utils.StringUtils.strfmt;
