@@ -91,18 +91,20 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
                 new Thread(() -> {
                         try {
-                                getChildren().addAll(tableItem, queryItem);
+                                tables = jdbcTemplate.getTables(name);
 
-                                refreshTableNode();
-                                refreshQueryNode();
+                                Platform.runLater(() -> {
+                                        getChildren().addAll(tableItem, queryItem);
 
-                                setExpanded(true);
-                                detailPane.update(jdbcTemplate, getName(), tables);
-                                onSelectedEvent();
+                                        refreshTableNode(tables);
+                                        refreshQueryNode();
 
-                                openFlag = true;
+                                        setExpanded(true);
+                                        detailPane.update(jdbcTemplate, getName(), tables);
+                                        onSelectedEvent();
 
-                                Platform.runLater(this::onSelected);
+                                        openFlag = true;
+                                });
                         } catch (Throwable e) {
                                 Platform.runLater(() -> EventBus.publish(e));
                         } finally {
@@ -125,7 +127,11 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
         private void refreshTableNode()
         {
-                tables = jdbcTemplate.getTables(name);
+                refreshTableNode(tables);
+        }
+
+        private void refreshTableNode(List<TableInfo> tables)
+        {
                 tableItem.getChildren().clear();
                 for (TableInfo table : tables) {
                         ODBNTable tableNode = new ODBNTable(jdbcTemplate, this, table);
