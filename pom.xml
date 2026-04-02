@@ -19,6 +19,7 @@
         <richtextfx.version>0.11.7</richtextfx.version>
         <slf4j.version>2.0.16</slf4j.version>
         <logback.version>1.5.32</logback.version>
+        <sqlformat.version>2.0.5</sqlformat.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <java.version>21</java.version>
@@ -85,6 +86,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.vertical-blank</groupId>
+            <artifactId>sql-formatter</artifactId>
+            <version>${sqlformat.version}</version>
         </dependency>
     </dependencies>
 

@@ -69,6 +69,7 @@ public class Assets
                 IMAGES.put("minus", load("/assets/icons/minus.png"));
                 IMAGES.put("search", load("/assets/icons/search.png"));
                 IMAGES.put("stop", load("/assets/icons/stop.png"));
+                IMAGES.put("beautify", load("/assets/icons/beautify.png"));
 
         }
 

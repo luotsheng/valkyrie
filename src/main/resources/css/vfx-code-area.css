@@ -28,10 +28,8 @@
 
 .vfx-code-area .info {
     -fx-fill: #17af12;
-    -fx-font-style: italic;
 }
 
 .vfx-code-area .fail {
     -fx-fill: #ff0b0b;
-    -fx-font-style: italic;
 }

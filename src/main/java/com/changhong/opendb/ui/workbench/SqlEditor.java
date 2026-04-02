@@ -10,6 +10,7 @@ import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
 import com.changhong.opendb.ui.widgets.*;
 import com.changhong.opendb.utils.Catcher;
 import com.changhong.opendb.utils.StringUtils;
+import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -69,6 +70,7 @@ public class SqlEditor extends SplitPane
 
         private Button run;
         private Button stop;
+        private Button beautify;
 
 
         public SqlEditor(QueryInfo queryInfo, Tab ownerTab)
@@ -139,6 +141,10 @@ public class SqlEditor extends SplitPane
                 stop.setDisable(true);
                 stop.setOnAction(event -> stopTask());
 
+                beautify = VFX.newIconButton("美化 SQL", "beautify");
+                beautify.setText("美化 SQL");
+                beautify.setOnAction(event -> beautifySQL());
+
                 connectionComboBox = newConnectionComboBox();
                 databaseComboBox = newDatabaseComboBox();
 
@@ -156,7 +162,9 @@ public class SqlEditor extends SplitPane
                         databaseComboBox,
                         new VSeparator(),
                         run,
-                        stop);
+                        stop,
+                        new VSeparator(),
+                        beautify);
 
         }
 
@@ -422,6 +430,11 @@ public class SqlEditor extends SplitPane
         {
                 if (jdbcTemplate != null)
                         jdbcTemplate.cancel(currentTaskId);
+        }
+
+        private void beautifySQL()
+        {
+                codeArea.replaceText(SqlFormatter.format(codeArea.getText()));
         }
 
         public String getCodeAreaContent()
