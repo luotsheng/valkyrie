@@ -13,13 +13,13 @@ import java.util.*;
  * @author Luo Tiansheng
  * @since 2026/4/02
  */
-public class SQL implements Iterable<SQLStatement>
+public class SQL implements Iterable<SQLParsedStatement>
 {
         @Getter
         private final long taskId;
         @Getter
         private final String db;
-        private final List<SQLStatement> sqlStatements = new ArrayList<>();
+        private final List<SQLParsedStatement> sqlStatements = new ArrayList<>();
 
         public SQL(Long taskId, String db, String sqlText)
                 throws JSQLParserException
@@ -31,7 +31,7 @@ public class SQL implements Iterable<SQLStatement>
                 int size = statements.size();
 
                 for (int i = 0; i < size; i++) {
-                        sqlStatements.add(new SQLStatement(
+                        sqlStatements.add(new SQLParsedStatement(
                                 statements.get(i),
                                 i == size - 1
                         ));
@@ -39,7 +39,7 @@ public class SQL implements Iterable<SQLStatement>
         }
 
         @Override
-        public Iterator<SQLStatement> iterator()
+        public Iterator<SQLParsedStatement> iterator()
         {
                 return sqlStatements.iterator();
         }

@@ -5,7 +5,6 @@ import com.changhong.opendb.driver.SQL;
 import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.driver.datasource.VirtualDataSource;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Jdbc 模板
+ * SQL 执行器
  *
  * @author Luo Tiansheng
  * @since 2026/3/30

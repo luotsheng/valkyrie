@@ -1,13 +1,16 @@
 package com.changhong.opendb.utils;
 
+import com.changhong.opendb.driver.ColumnMetaData;
 import com.changhong.opendb.driver.QueryResultSet;
 
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,10 @@ import java.util.Map;
  */
 public class ResultSetUtils
 {
+        private static final String TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+        private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_FORMAT_PATTERN);
+
         /**
          * 结果集转 Java 集合
          */
@@ -63,21 +70,35 @@ public class ResultSetUtils
         /**
          * 结果集转 QueryResultSet 对象
          */
-        public static void rs2qrs(ResultSet rs, QueryResultSet qrs) throws SQLException
+        public static void rs2qrs(List<ColumnMetaData> columns, ResultSet rs, QueryResultSet qrs)
+                throws SQLException
         {
-                ResultSetMetaData meta = rs.getMetaData();
-                int colCount = meta.getColumnCount();
+                qrs.setColumns(columns);
 
-                for (int i = 1; i <= colCount; i++)
-                        qrs.getColumns().add(meta.getColumnLabel(i));
+                SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT_PATTERN);
 
                 while (rs.next()) {
+
                         List<String> row = new ArrayList<>();
-                        for (int i = 1; i <= colCount; i++) {
-                                Object val = rs.getObject(i);
-                                row.add(val != null ? val.toString() : null);
-                        }
+
+                        for (int i = 1; i <= columns.size(); i++)
+                                row.add(stringify(rs.getObject(i), sdf));
+
                         qrs.getRows().add(row);
+
                 }
+        }
+
+        private static String stringify(Object val, SimpleDateFormat sdf)
+        {
+                if (val == null)
+                        return null;
+
+                return switch (val) {
+                        case java.sql.Timestamp ts -> ts.toLocalDateTime().format(formatter);
+                        case java.util.Date date -> sdf.format(date);
+                        case java.time.LocalDateTime date -> date.format(formatter);
+                        default -> val.toString();
+                };
         }
 }

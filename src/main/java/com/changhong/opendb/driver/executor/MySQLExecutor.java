@@ -8,10 +8,7 @@ import com.changhong.opendb.utils.Catcher;
 import com.changhong.opendb.utils.ResultSetUtils;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.changhong.opendb.utils.StringUtils.strfmt;
 
@@ -82,43 +79,99 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         private QueryResultSet executeQuery(Connection connection,
-                                           Statement statement,
-                                           String db,
-                                           String sql) throws SQLException
+                                            Statement statement,
+                                            String db,
+                                            String sql,
+                                            SQLParsedStatement pm) throws SQLException
         {
                 QueryResultSet qrs = new QueryResultSet();
 
                 ResultSet rs = statement.executeQuery(sql);
 
-                List<ColumnMetaData> colMetas = new ArrayList<>();
                 ResultSetMetaData rsMeta = rs.getMetaData();
+                DatabaseMetaData dbMeta = connection.getMetaData();
+
+                Map<String, ColumnMetaData> colMetas = new LinkedHashMap<>();
 
                 for (int i = 1; i < rsMeta.getColumnCount(); i++) {
+
                         ColumnMetaData c = new ColumnMetaData();
 
                         c.setIndex(i - 1);
+
                         c.setName(rsMeta.getColumnLabel(i));
+
                         c.setType(rsMeta.getColumnTypeName(i));
+
                         c.setJdbcType(rsMeta.getColumnType(i));
+
                         c.setLength(rsMeta.getPrecision(i));
+
                         c.setScale(rsMeta.getScale(i));
+
                         c.setNullable(
                                 rsMeta.isNullable(i) == ResultSetMetaData.columnNullable
                         );
+
                         c.setTable(rsMeta.getTableName(i));
+
                         c.setSchema(rsMeta.getSchemaName(i));
 
-                        colMetas.add(c);
-                }
-
-                DatabaseMetaData dbMeta = connection.getMetaData();
-                Set<String> pks = new HashSet<>();
-
-                try (ResultSet pk = dbMeta.getPrimaryKeys(db, connection.getSchema(), "")) {
+                        colMetas.put(c.getName(), c);
 
                 }
 
-                ResultSetUtils.rs2qrs(rs, qrs);
+                if (pm != null && pm.isOnlyOneTable()) {
+
+                        Set<String> pks = new HashSet<>();
+                        String onlyTable = pm.getOnlyTable();
+
+                        try (ResultSet pk = dbMeta.getPrimaryKeys(db, connection.getSchema(), onlyTable)) {
+                                while (pk.next())
+                                        pks.add(pk.getString("COLUMN_NAME"));
+                        }
+
+                        pks.forEach(c -> colMetas.get(c).setPrimary(true));
+
+                        Map<String, Map<String, Object>> columnInfo = new HashMap<>();
+
+                        try (ResultSet col = dbMeta.getColumns(db, null, onlyTable, null)) {
+
+                                while (col.next()) {
+
+                                        Map<String, Object> m = new HashMap<>();
+
+                                        m.put("autoIncrement",
+                                                "YES".equals(col.getString("IS_AUTOINCREMENT")));
+
+                                        m.put("default",
+                                                col.getString("COLUMN_DEF"));
+
+                                        m.put("comment",
+                                                col.getString("REMARKS"));
+
+                                        columnInfo.put(col.getString("COLUMN_NAME"), m);
+
+                                }
+
+                        }
+
+                        for (ColumnMetaData c : colMetas.values()) {
+                                Map<String, Object> m = columnInfo.get(c.getName());
+
+                                if (m == null)
+                                        continue;
+
+                                c.setAutoIncrement((Boolean) m.get("autoIncrement"));
+
+                                c.setDefaultValue((String) m.get("default"));
+
+                                c.setComment((String) m.get("comment"));
+                        }
+
+                }
+
+                ResultSetUtils.rs2qrs(List.copyOf(colMetas.values()), rs, qrs);
                 return qrs;
         }
 
@@ -134,14 +187,14 @@ public class MySQLExecutor extends SQLExecutor
         @Override
         public QueryResultSet execute(SQL sql, ExecuteCallback callback)
         {
-                SQLStatement current = null;
+                SQLParsedStatement current = null;
 
                 try (Connection connection = ds.getConnection();
                      Statement statement = ds.use(connection, sql.getDb())) {
 
                         queue.put(sql.getTaskId(), statement);
 
-                        for (SQLStatement stat : sql) {
+                        for (SQLParsedStatement stat : sql) {
 
                                 current = stat;
                                 boolean skip = false;
@@ -153,10 +206,10 @@ public class MySQLExecutor extends SQLExecutor
                                                 connection,
                                                 statement,
                                                 sql.getDb(),
-                                                stat.getScript()
+                                                stat.getScript(),
+                                                stat
                                         );
 
-                                        statement.execute(stat.getScript());
                                         callback.doCallback(stat.getScript(), SQLExecutorStatus.OK);
 
                                         return qrs;
@@ -194,7 +247,7 @@ public class MySQLExecutor extends SQLExecutor
 
                 try (Connection connection = ds.getConnection();
                      Statement statement = ds.use(connection, db)) {
-                        qrs = executeQuery(connection, statement, db, sql);
+                        qrs = executeQuery(connection, statement, db, sql, null);
                 }
 
                 return qrs;

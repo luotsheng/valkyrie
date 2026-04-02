@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Luo Tiansheng
  * @since 2026/4/02
  */
-public class SQLStatement
+public class SQLParsedStatement
 {
         @Getter
         private final String script;
@@ -38,7 +38,7 @@ public class SQLStatement
 
         private final Set<String> tables = new HashSet<>();
 
-        public SQLStatement(Statement statement, boolean last)
+        public SQLParsedStatement(Statement statement, boolean last)
         {
                 this.script = statement.toString();
                 this.type = toType(statement);
@@ -53,7 +53,7 @@ public class SQLStatement
                 }
         }
 
-        public boolean isOnlyOne()
+        public boolean isOnlyOneTable()
         {
                 return tables.size() == 1;
         }

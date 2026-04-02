@@ -192,7 +192,7 @@ public class ResultSetViewPane extends BorderPane
                 for (int i = 0; i < qrs.getColumns().size(); i++) {
                         int index = i;
 
-                        String colText = qrs.getColumns().get(i);
+                        String colText = qrs.getColumns().get(i).getName();
 
                         TableColumn<List<String>, String> col =
                                 new TableColumn<>(colText);

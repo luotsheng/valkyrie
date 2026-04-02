@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class QueryResultSet
 {
-        private List<String> columns;
+        private List<ColumnMetaData> columns;
         private List<List<String>> rows;
 
         public QueryResultSet()
@@ -20,7 +20,7 @@ public class QueryResultSet
                 this(new ArrayList<>(), new ArrayList<>());
         }
 
-        public QueryResultSet(List<String> columns, List<List<String>> rows)
+        public QueryResultSet(List<ColumnMetaData> columns, List<List<String>> rows)
         {
                 this.columns = columns;
                 this.rows = rows;
