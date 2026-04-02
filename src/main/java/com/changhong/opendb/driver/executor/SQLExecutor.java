@@ -1,7 +1,11 @@
-package com.changhong.opendb.driver;
+package com.changhong.opendb.driver.executor;
 
+import com.changhong.opendb.driver.QueryResultSet;
+import com.changhong.opendb.driver.SQL;
+import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.driver.datasource.VirtualDataSource;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -16,9 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings({
         "SqlDialectInspection",
-        "SqlNoDataSourceInspection"
+        "SqlNoDataSourceInspection",
+        "UnusedReturnValue"
 })
-public abstract class JdbcTemplate
+public abstract class SQLExecutor
 {
         private final String name;
         protected final VirtualDataSource ds;
@@ -28,13 +33,17 @@ public abstract class JdbcTemplate
          */
         protected final Map<Long, Statement> queue = new ConcurrentHashMap<>();
 
+        public interface ExecuteCallback {
+                void doCallback(String info, SQLExecutorStatus status);
+        }
+
         /**
          * 创建 Jdbc 目录
          *
          * @param name 连接名称
          * @param ds   数据源
          */
-        public JdbcTemplate(String name, VirtualDataSource ds)
+        public SQLExecutor(String name, VirtualDataSource ds)
         {
                 this.name = name;
                 this.ds = ds;
@@ -52,18 +61,11 @@ public abstract class JdbcTemplate
 
         public abstract List<TableMetadata> tables(String db);
 
-        public abstract void deleteTable(String db, String name) throws SQLException;
+        public abstract void drop(String db, String name) throws SQLException;
 
-        public abstract boolean execute(Long id, String db, String[] sql)
-                throws SQLException;
-
-        public abstract QueryResultSet select(Long id, String db, String[] sql)
-                throws SQLException;
+        public abstract QueryResultSet execute(SQL sql, ExecuteCallback callback);
 
         public abstract QueryResultSet select(String db, TableMetadata table, int start, int size)
-                throws SQLException;
-
-        public abstract QueryResultSet select(String db, String table, int start, int size)
                 throws SQLException;
 
         public abstract void cancel(Long id);

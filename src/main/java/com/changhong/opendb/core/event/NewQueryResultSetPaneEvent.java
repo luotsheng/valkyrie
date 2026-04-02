@@ -1,6 +1,6 @@
 package com.changhong.opendb.core.event;
 
-import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.driver.TableMetadata;
 import lombok.AllArgsConstructor;
 
@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class NewQueryResultSetPaneEvent extends Event
 {
-        public JdbcTemplate jdbcTemplate;
+        public SQLExecutor sqlExecutor;
         public String database;
         public TableMetadata info;
 }

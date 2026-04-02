@@ -3,7 +3,7 @@ package com.changhong.opendb.ui.navigator.node;
 import com.changhong.opendb.app.Application;
 import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.NewQueryResultSetPaneEvent;
-import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.resource.Assets;
 import javafx.scene.control.ContextMenu;
@@ -17,18 +17,18 @@ import javafx.scene.input.MouseEvent;
 @SuppressWarnings("FieldCanBeLocal")
 public class ODBNTable extends ODBNode
 {
-        private final JdbcTemplate jdbcTemplate;
+        private final SQLExecutor sqlExecutor;
         private final ODBNDatabase database;
         private final TableMetadata table;
 
-        public ODBNTable(JdbcTemplate jdbcTemplate,
+        public ODBNTable(SQLExecutor sqlExecutor,
                          ODBNDatabase database,
                          TableMetadata table)
         {
                 super(table.getName());
                 this.database = database;
                 setGraphic(Assets.use("table"));
-                this.jdbcTemplate = jdbcTemplate;
+                this.sqlExecutor = sqlExecutor;
                 this.table = table;
         }
 
@@ -56,6 +56,6 @@ public class ODBNTable extends ODBNode
         @Override
         public void onMouseDoubleClickEvent(MouseEvent event)
         {
-                EventBus.publish(new NewQueryResultSetPaneEvent(jdbcTemplate, database.getName(), table));
+                EventBus.publish(new NewQueryResultSetPaneEvent(sqlExecutor, database.getName(), table));
         }
 }

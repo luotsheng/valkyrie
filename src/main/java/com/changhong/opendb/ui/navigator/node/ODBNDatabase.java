@@ -1,7 +1,7 @@
 package com.changhong.opendb.ui.navigator.node;
 
 import com.changhong.opendb.core.event.*;
-import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.model.QueryInfo;
 import com.changhong.opendb.repository.QueryScriptRepository;
@@ -16,6 +16,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import lombok.Getter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,8 @@ import java.util.List;
 public class ODBNDatabase extends ODBNode implements EventListener
 {
         private final ODBNConnection connection;
-        private final JdbcTemplate jdbcTemplate;
+        @Getter
+        private final SQLExecutor sqlExecutor;
         private boolean openFlag = false;
         private final List<TableMetadata> tables = new ArrayList<>();
 
@@ -69,13 +71,13 @@ public class ODBNDatabase extends ODBNode implements EventListener
         }
 
         public ODBNDatabase(ODBNConnection connection,
-                            JdbcTemplate jdbcTemplate,
+                            SQLExecutor sqlExecutor,
                             String name)
         {
                 super(name);
                 this.connection = connection;
                 setGraphic(Assets.use("database1"));
-                this.jdbcTemplate = jdbcTemplate;
+                this.sqlExecutor = sqlExecutor;
 
                 setupTableNode();
                 setupListenerEvent();
@@ -100,12 +102,12 @@ public class ODBNDatabase extends ODBNode implements EventListener
         private void reloadTableMetadata()
         {
                 tables.clear();
-                tables.addAll(jdbcTemplate.tables(name));
+                tables.addAll(sqlExecutor.tables(name));
         }
 
-        public final JdbcTemplate jdbc()
+        public final void drop(TableMetadata tbMetaData) throws SQLException
         {
-                return jdbcTemplate;
+                sqlExecutor.drop(name, tbMetaData.getName());
         }
 
         @SuppressWarnings("unchecked")
@@ -158,7 +160,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
                 tableItem.getChildren().clear();
 
                 for (TableMetadata table : tables) {
-                        ODBNTable tableNode = new ODBNTable(jdbcTemplate, this, table);
+                        ODBNTable tableNode = new ODBNTable(sqlExecutor, this, table);
                         tableNode.setSelectedEvent(this::onSelected);
                         tableItem.getChildren().add(tableNode);
                 }

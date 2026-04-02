@@ -2,8 +2,6 @@ package com.changhong.opendb.ui.pane;
 
 import com.changhong.opendb.core.event.EventBus;
 import com.changhong.opendb.core.event.NewQueryResultSetPaneEvent;
-import com.changhong.opendb.core.event.RefreshTableNodeEvent;
-import com.changhong.opendb.driver.JdbcTemplate;
 import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
@@ -94,7 +92,7 @@ public class DatabaseDetailPane extends DetailPane
                 TableMetadata table = tableView.getSelectionModel().getSelectedItem();
 
                 if (ConfirmDialog.showCheckDialog("确认删除：%s？", table.getName())) {
-                        Catcher.tryCall(() -> database.jdbc().deleteTable(database.getName(), table.getName()));
+                        Catcher.tryCall(() -> database.drop(table));
                         database.refreshTableNode();
                 }
         }
@@ -147,7 +145,7 @@ public class DatabaseDetailPane extends DetailPane
 
                                 if (e.getClickCount() == 2 && !row.isEmpty()) {
                                         TableMetadata data = row.getItem();
-                                        EventBus.publish(new NewQueryResultSetPaneEvent(database.jdbc(), database.getName(), data));
+                                        EventBus.publish(new NewQueryResultSetPaneEvent(database.getSqlExecutor(), database.getName(), data));
                                 }
 
                         });

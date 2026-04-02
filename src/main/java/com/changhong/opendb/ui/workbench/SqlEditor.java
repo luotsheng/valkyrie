@@ -1,6 +1,7 @@
 package com.changhong.opendb.ui.workbench;
 
-import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.SQL;
+import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.driver.QueryResultSet;
 import com.changhong.opendb.model.ODBNStatus;
 import com.changhong.opendb.model.QueryInfo;
@@ -19,12 +20,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.StringConverter;
 import lombok.Getter;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.ExplainStatement;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.Statements;
-import net.sf.jsqlparser.statement.select.Select;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 
@@ -59,7 +54,7 @@ public class SqlEditor extends SplitPane
         private File sqlFile;
         private Node oldGraphic;
         private QueryInfo queryInfo;
-        private JdbcTemplate jdbcTemplate = null;
+        private SQLExecutor sqlExecutor = null;
         private long currentTaskId = System.currentTimeMillis();
         private boolean saveFlag = true;
         private ComboBox<ODBNConnection> connectionComboBox;
@@ -352,61 +347,6 @@ public class SqlEditor extends SplitPane
         }
 
         /**
-         * 执行 SQL
-         */
-        private void execute(StringBuilder currentSqlBuilder)
-                throws Exception
-        {
-                String scriptText = codeArea.getSelectedText();
-
-                if (scriptText == null || scriptText.isEmpty())
-                        scriptText = codeArea.getText();
-
-                Statements statements = CCJSqlParserUtil.parseStatements(scriptText);
-
-                ODBNConnection connection = connectionComboBox.getSelectionModel()
-                        .getSelectedItem();
-
-                ODBNDatabase database = databaseComboBox.getSelectionModel()
-                        .getSelectedItem();
-
-                jdbcTemplate = connection.getJdbcTemplate();
-
-                currentTaskId = System.currentTimeMillis();
-
-                QueryResultSet qrs = null;
-
-                for (Statement statement : statements) {
-                        String db = database.getName();
-                        String sql = statement.toString();
-
-                        currentSqlBuilder.delete(0, currentSqlBuilder.length());
-                        currentSqlBuilder.append(sql);
-
-                        if (statement instanceof Select || statement instanceof ExplainStatement) {
-                                qrs = jdbcTemplate.select(currentTaskId, db, new String[]{sql});
-                        } else {
-                                jdbcTemplate.execute(currentTaskId, db, new String[]{sql});
-                        }
-
-                        Platform.runLater(() -> {
-                                sqlMessagePane.appendInfo(sql);
-                                showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
-                        });
-                }
-
-                if (qrs != null) {
-                        QueryResultSet copyQrs = qrs;
-                        Platform.runLater(() -> {
-                                resultSetTableViewPane.refresh(copyQrs);
-                                showResultSetTableViewPane(QUERY_RESULT_SET_FIRST);
-                        });
-                } else {
-                        Platform.runLater(() -> showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST));
-                }
-        }
-
-        /**
          * 执行任务
          */
         private void runTask()
@@ -418,29 +358,69 @@ public class SqlEditor extends SplitPane
                 setLoadingIndicator();
 
                 new Thread(() -> {
-                        StringBuilder currentSqlBuilder = new StringBuilder();
+
                         try {
-                                execute(currentSqlBuilder);
+
+                                String scriptText = codeArea.getSelectedText();
+
+                                if (scriptText == null || scriptText.isEmpty())
+                                        scriptText = codeArea.getText();
+
+                                ODBNConnection connection = connectionComboBox.getSelectionModel()
+                                        .getSelectedItem();
+
+                                ODBNDatabase database = databaseComboBox.getSelectionModel()
+                                        .getSelectedItem();
+
+                                sqlExecutor = connection.getSqlExecutor();
+                                currentTaskId = System.currentTimeMillis();
+
+                                String db = database.getName();
+                                SQL sql = new  SQL(currentTaskId, db, scriptText);
+
+                                QueryResultSet qrs = sqlExecutor.execute(sql, (info, status) -> {
+                                        Platform.runLater(() -> {
+                                                switch (status) {
+                                                        case OK -> sqlMessagePane.appendInfo(info);
+                                                        case SKIP -> sqlMessagePane.appendSkip(info);
+                                                        case ERROR -> sqlMessagePane.appendError(info);
+                                                }
+                                        });
+                                });
+
+                                if (qrs != null) {
+                                        Platform.runLater(() -> {
+                                                resultSetTableViewPane.refresh(qrs);
+                                                showResultSetTableViewPane(QUERY_RESULT_SET_FIRST);
+                                        });
+                                } else {
+                                        Platform.runLater(() -> showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST));
+                                }
+
                         } catch (Throwable e) {
+
                                 Platform.runLater(() -> {
-                                        sqlMessagePane.appendError(currentSqlBuilder.toString());
                                         sqlMessagePane.appendError(e.getMessage());
                                         showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
                                         Catcher.ithrow(e);
                                 });
+
                         } finally {
+
                                 Platform.runLater(() -> {
                                         updateButtonForExecuting(false);
                                         removeLoadingIndicator();
                                 });
+
                         }
+
                 }).start();
         }
 
         private void stopTask()
         {
-                if (jdbcTemplate != null)
-                        jdbcTemplate.cancel(currentTaskId);
+                if (sqlExecutor != null)
+                        sqlExecutor.cancel(currentTaskId);
         }
 
         private void beautifySQL()

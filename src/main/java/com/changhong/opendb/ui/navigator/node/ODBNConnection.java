@@ -1,7 +1,7 @@
 package com.changhong.opendb.ui.navigator.node;
 
 import com.changhong.opendb.core.event.EventBus;
-import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.driver.datasource.MySQLDataSource;
 import com.changhong.opendb.model.ConnectionInfo;
@@ -35,7 +35,7 @@ public class ODBNConnection extends ODBNode
         private VirtualDataSource dataSource;
 
         @Getter
-        private JdbcTemplate jdbcTemplate;
+        private SQLExecutor sqlExecutor;
 
         // Menu Items
         private MenuItem openOrCloseMenuItem;
@@ -66,8 +66,8 @@ public class ODBNConnection extends ODBNode
                 new Thread(() -> {
                         try {
                                 dataSource = new MySQLDataSource(info);
-                                jdbcTemplate = dataSource.newJdbcTemplate(getName());
-                                setupDatabases(jdbcTemplate.databases());
+                                sqlExecutor = dataSource.newSQLExecutor(getName());
+                                setupDatabases(sqlExecutor.databases());
                                 setExpanded(true);
                                 openFlag = true;
                         } catch (Throwable e) {
@@ -156,7 +156,7 @@ public class ODBNConnection extends ODBNode
         private void setupDatabases(List<String> databaseNames)
         {
                 for (String name : databaseNames)
-                        databases.add(new ODBNDatabase(this, jdbcTemplate, name));
+                        databases.add(new ODBNDatabase(this, sqlExecutor, name));
                 getChildren().addAll(databases);
         }
 

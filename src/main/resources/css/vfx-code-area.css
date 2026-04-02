@@ -33,3 +33,7 @@
 .vfx-code-area .fail {
     -fx-fill: #ff0b0b;
 }
+
+.vfx-code-area .skip {
+    -fx-fill: #bd9f28;
+}

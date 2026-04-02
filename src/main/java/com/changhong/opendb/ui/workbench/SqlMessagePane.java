@@ -19,6 +19,7 @@ public class SqlMessagePane extends VirtualizedScrollPane<VCodeArea>
 
         static final Pattern PATTERN = Pattern.compile(
                 "(?<INFO>\\[\\s*OK\\s*])"
+                        + "|(?<SKIP>\\[\\s*SKIP\\s*])"
                         + "|(?<FAIL>\\[\\s*FAIL\\s*])",
                 Pattern.CASE_INSENSITIVE
         );
@@ -39,6 +40,8 @@ public class SqlMessagePane extends VirtualizedScrollPane<VCodeArea>
                 while (matcher.find()) {
                         if (matcher.group("INFO") != null) {
                                 area.setStyleClass(matcher.start(), matcher.end(), "info");
+                        } else if (matcher.group("SKIP") != null) {
+                                area.setStyleClass(matcher.start(), matcher.end(), "skip");
                         } else if (matcher.group("FAIL") != null) {
                                 area.setStyleClass(matcher.start(), matcher.end(), "fail");
                         }
@@ -50,8 +53,14 @@ public class SqlMessagePane extends VirtualizedScrollPane<VCodeArea>
                 codeArea.appendText(strfmt("[  OK  ] %s\n", text));
         }
 
+        public void appendSkip(String text)
+        {
+                codeArea.appendText(strfmt("[ SKIP ] %s\n", text));
+        }
+
         public void appendError(String text)
         {
-                codeArea.appendText(strfmt("[ FAIL ] %s\n", "", text));
+                codeArea.appendText(strfmt("[ FAIL ] %s\n", text));
         }
+
 }

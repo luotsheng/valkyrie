@@ -1,6 +1,6 @@
 package com.changhong.opendb.driver.datasource;
 
-import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.model.ConnectionInfo;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -42,7 +42,7 @@ public abstract class VirtualDataSource
         /**
          * 创建 Jdbc 模板
          */
-        public abstract JdbcTemplate newJdbcTemplate(String name);
+        public abstract SQLExecutor newSQLExecutor(String name);
 
         @Override
         public Connection getConnection() throws SQLException

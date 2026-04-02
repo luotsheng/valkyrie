@@ -193,7 +193,7 @@ public class Workbench extends VBox implements EventListener
                 String id = strfmt("%s@%s (%s)",
                         event.info.getName(),
                         event.database,
-                        event.jdbcTemplate.name());
+                        event.sqlExecutor.name());
 
                 Tab tab;
 
@@ -207,7 +207,7 @@ public class Workbench extends VBox implements EventListener
 
                 PreviewTableDataPane pane = new PreviewTableDataPane(
                         tab,
-                        event.jdbcTemplate,
+                        event.sqlExecutor,
                         event.database,
                         event.info
                 );

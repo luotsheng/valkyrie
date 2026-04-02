@@ -1,6 +1,6 @@
 package com.changhong.opendb.ui.workbench;
 
-import com.changhong.opendb.driver.JdbcTemplate;
+import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.driver.QueryResultSet;
 import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.resource.Assets;
@@ -22,18 +22,18 @@ public class PreviewTableDataPane extends BorderPane
         private Node oldGraphic;
 
         private final Tab ownerTab;
-        private final JdbcTemplate jdbcTemplate;
+        private final SQLExecutor sqlExecutor;
         private final String database;
         private final TableMetadata tableInfo;
         private final ResultSetViewPane resultSetViewPane;
 
         public PreviewTableDataPane(Tab ownerTab,
-                                    JdbcTemplate jdbcTemplate,
+                                    SQLExecutor sqlExecutor,
                                     String database,
                                     TableMetadata tableInfo)
         {
                 this.ownerTab = ownerTab;
-                this.jdbcTemplate = jdbcTemplate;
+                this.sqlExecutor = sqlExecutor;
                 this.database = database;
                 this.tableInfo = tableInfo;
                 this.resultSetViewPane = new ResultSetViewPane();
@@ -59,7 +59,7 @@ public class PreviewTableDataPane extends BorderPane
 
                 new Thread(() -> {
                         try {
-                                QueryResultSet rs = jdbcTemplate.select(
+                                QueryResultSet rs = sqlExecutor.select(
                                         database,
                                         tableInfo,
                                         start,

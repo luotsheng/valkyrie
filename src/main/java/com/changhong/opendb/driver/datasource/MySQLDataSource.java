@@ -1,7 +1,7 @@
 package com.changhong.opendb.driver.datasource;
 
-import com.changhong.opendb.driver.JdbcTemplate;
-import com.changhong.opendb.driver.MySQLJdbcTemplate;
+import com.changhong.opendb.driver.executor.SQLExecutor;
+import com.changhong.opendb.driver.executor.MySQLExecutor;
 import com.changhong.opendb.model.ConnectionInfo;
 
 import java.sql.Connection;
@@ -33,8 +33,8 @@ public class MySQLDataSource extends VirtualDataSource
         }
 
         @Override
-        public JdbcTemplate newJdbcTemplate(String name)
+        public SQLExecutor newSQLExecutor(String name)
         {
-                return new MySQLJdbcTemplate(name, this);
+                return new MySQLExecutor(name, this);
         }
 }
