@@ -70,6 +70,9 @@ public class Assets
                 IMAGES.put("search", load("/assets/icons/search.png"));
                 IMAGES.put("stop", load("/assets/icons/stop.png"));
                 IMAGES.put("beautify", load("/assets/icons/beautify.png"));
+                IMAGES.put("check", load("/assets/icons/check.png"));
+                IMAGES.put("cross", load("/assets/icons/cross.png"));
+                IMAGES.put("reload", load("/assets/icons/reload.png"));
 
         }
 

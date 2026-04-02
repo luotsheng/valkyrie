@@ -16,6 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import java.util.List;
 
@@ -31,15 +33,35 @@ public class ResultSetViewPane extends BorderPane
 {
         private final TabPane tabPane = new TabPane();
         private final Tab resultSetTab = new Tab();
-        private TableView<List<String>> tableView = VFX.newTableView();
+        private final TableView<List<String>> tableView = VFX.newTableView();
+        private final ToolBar toolBar = new ToolBar();
 
         private TablePosition<?, ?> start;
 
         public ResultSetViewPane()
         {
                 setupTableView();
-                resultSetTab.setContent(tableView);
+                setupToolBar();
+
+                VBox vBox = new VBox(tableView, toolBar);
+                VBox.setVgrow(tableView, Priority.ALWAYS);
+                resultSetTab.setContent(vBox);
+
                 setCenter(tabPane);
+        }
+
+        private void setupToolBar()
+        {
+                Button plus = VFX.newIconButton("新增数据", "plus");
+                Button minus = VFX.newIconButton("删除选中行", "minus");
+                minus.setDisable(true);
+                Button check = VFX.newIconButton("应用更改", "check");
+                check.setDisable(true);
+                Button cross = VFX.newIconButton("取消更改", "cross");
+                cross.setDisable(true);
+                Button reload = VFX.newIconButton("刷新", "reload");
+                toolBar.setStyle("-fx-spacing: 2px;");
+                toolBar.getItems().addAll(plus, minus, check, cross, reload);
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
