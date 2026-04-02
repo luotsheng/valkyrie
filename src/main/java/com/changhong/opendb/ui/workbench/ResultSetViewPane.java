@@ -88,7 +88,8 @@ public class ResultSetViewPane extends BorderPane
 
         public void select(Tab tab)
         {
-                tabPane.getSelectionModel().select(tab);
+                if (tabPane.getSelectionModel().getSelectedItem() != tab)
+                        tabPane.getSelectionModel().select(tab);
         }
 
         public void addTab(Tab tab)

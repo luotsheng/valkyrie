@@ -7,12 +7,8 @@ import com.changhong.opendb.model.QueryInfo;
 import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
-import com.changhong.opendb.ui.widgets.ConfirmDialog;
-import com.changhong.opendb.ui.widgets.SaveQueryScriptDialog;
-import com.changhong.opendb.ui.widgets.VFX;
-import com.changhong.opendb.ui.widgets.VSeparator;
+import com.changhong.opendb.ui.widgets.*;
 import com.changhong.opendb.utils.Catcher;
-import com.changhong.opendb.utils.OS;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -23,21 +19,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.StringConverter;
 import lombok.Getter;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.ExplainStatement;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.Statements;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.update.Update;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.LineNumberFactory;
 
 import java.io.File;
 import java.io.FileReader;
-import java.time.Duration;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.changhong.opendb.utils.StringUtils.strfmt;
 
@@ -54,7 +45,7 @@ public class SqlEditor extends SplitPane
         @Getter
         private final Tab ownerTab;
         private final ToolBar toolBar;
-        private final CodeArea codeArea;
+        private final VCodeArea codeArea;
         private final VirtualizedScrollPane<CodeArea> virtualizedScrollPane;
         private final BorderPane topBorderPane;
         private final ResultSetViewPane resultSetTableViewPane;
@@ -78,14 +69,6 @@ public class SqlEditor extends SplitPane
         private Button run;
         private Button stop;
 
-        static final Pattern PATTERN = Pattern.compile(
-                "(?<KEYWORD>\\b(" + String.join("|", SqlKeyWordDefine.KEYWORDS) + ")\\b)"
-                        + "|(?<STRING>'([^'\\\\]|\\\\.)*')"
-                        + "|(?<COMMENT>--[^\\n]*)"
-                        + "|(?<NUMBER>\\b\\d+(?:\\.\\d+)?\\b)",
-                Pattern.CASE_INSENSITIVE
-        );
-
 
         public SqlEditor(QueryInfo queryInfo, Tab ownerTab)
         {
@@ -101,7 +84,7 @@ public class SqlEditor extends SplitPane
 
                 topBorderPane = new BorderPane();
                 toolBar = new ToolBar();
-                codeArea = new CodeArea();
+                codeArea = new VCodeArea();
                 virtualizedScrollPane = new VirtualizedScrollPane<>(codeArea);
                 resultSetTableViewPane = new ResultSetViewPane();
                 sqlMessagePane = new SqlMessagePane();
@@ -178,20 +161,6 @@ public class SqlEditor extends SplitPane
 
         public void setupCodeArea()
         {
-                codeArea.setStyle("-fx-font-weight: normal;");
-
-                if (OS.isMac())
-                        codeArea.setStyle("-fx-font-family: 'Monaco'; -fx-font-size: 19px;");
-
-                if (OS.isWindows())
-                        codeArea.setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 19px;");
-
-                if (OS.isLinux())
-                        codeArea.setStyle("-fx-font-family: 'DejaVu Sans Mono'; -fx-font-size: 19px;");
-
-                codeArea.getStyleClass().add("vfx-code-area");
-                codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
-
                 codeArea.setOnKeyPressed(event -> {
                         if ((event.isControlDown() || event.isShortcutDown())
                                 && event.getCode() == KeyCode.R) {
@@ -199,10 +168,6 @@ public class SqlEditor extends SplitPane
                                 event.consume();
                         }
                 });
-
-                codeArea.multiPlainChanges()
-                        .successionEnds(Duration.ofMillis(200))
-                        .subscribe(ignore -> applyHighlighting(codeArea));
 
                 codeArea.textProperty().addListener((obs, oldVal, newVal) -> {
                         if (saveFlag) {
@@ -315,7 +280,6 @@ public class SqlEditor extends SplitPane
                         }
                 });
 
-
                 comboBox.setCellFactory(list -> new ListCell<>()
                 {
                         @Override
@@ -409,12 +373,18 @@ public class SqlEditor extends SplitPane
                                         String db = database.getName();
                                         String sql = statement.toString();
 
-                                        if (statement instanceof Select) {
+                                        if (statement instanceof Select || statement instanceof ExplainStatement) {
                                                 qrs = jdbcTemplate.select(currentTaskId, db, new String[]{sql});
-                                                Platform.runLater(() -> sqlMessagePane.appendInfo(sql));
+                                                Platform.runLater(() -> {
+                                                        sqlMessagePane.appendInfo(sql);
+                                                        showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
+                                                });
                                         } else {
                                                 jdbcTemplate.execute(currentTaskId, db, new String[]{sql});
-                                                Platform.runLater(() -> sqlMessagePane.appendInfo(sql));
+                                                Platform.runLater(() -> {
+                                                        sqlMessagePane.appendInfo(sql);
+                                                        showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
+                                                });
                                         }
                                 }
 
@@ -431,6 +401,7 @@ public class SqlEditor extends SplitPane
                                 Platform.runLater(() -> {
                                         sqlMessagePane.appendError(e.getMessage());
                                         showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
+                                        Catcher.ithrow(e);
                                 });
                         } finally {
                                 Platform.runLater(() -> {
@@ -445,25 +416,6 @@ public class SqlEditor extends SplitPane
         {
                 if (jdbcTemplate != null)
                         jdbcTemplate.cancel(currentTaskId);
-        }
-
-        private static void applyHighlighting(CodeArea area)
-        {
-                String text = area.getText();
-                area.clearStyle(0, text.length());
-
-                Matcher matcher = PATTERN.matcher(text);
-                while (matcher.find()) {
-                        if (matcher.group("KEYWORD") != null) {
-                                area.setStyleClass(matcher.start(), matcher.end(), "keyword");
-                        } else if (matcher.group("STRING") != null) {
-                                area.setStyleClass(matcher.start(), matcher.end(), "string");
-                        } else if (matcher.group("COMMENT") != null) {
-                                area.setStyleClass(matcher.start(), matcher.end(), "comment");
-                        } else if (matcher.group("NUMBER") != null) {
-                                area.setStyleClass(matcher.start(), matcher.end(), "number");
-                        }
-                }
         }
 
         public String getCodeAreaContent()
@@ -503,7 +455,7 @@ public class SqlEditor extends SplitPane
 
                         codeArea.clear();
                         codeArea.appendText(builder.toString().trim());
-                        applyHighlighting(codeArea);
+                        codeArea.applyHighlighting();
                 }
         }
 
