@@ -182,7 +182,11 @@ public class MySQLExecutor extends SQLExecutor
 
                 }
 
-                return ResultSetUtils.rs2qrs(List.copyOf(colMetas.values()), editable, rs);
+                QueryResultSet qrs = ResultSetUtils.rs2qrs(List.copyOf(colMetas.values()), rs);
+
+                qrs.setEditable(editable);
+
+                return qrs;
         }
 
         @Override
@@ -259,6 +263,9 @@ public class MySQLExecutor extends SQLExecutor
                      Statement statement = ds.use(connection, db)) {
                         qrs = executeQuery(connection, statement, db, sql, new SQLParsedStatement(sql));
                 }
+
+                qrs.setEditable(true);
+                qrs.setAddable(true);
 
                 return qrs;
         }

@@ -67,7 +67,7 @@ public class SQLParsedStatement
                 this.last = last;
 
                 if (type == SQLCommandType.UNSUPPORTED)
-                        Catcher.ithrow("不支持的查询语言！");
+                        Catcher.ithrow("Unsupported " + script);
 
                 if (type == SQLCommandType.DQL) {
                         TablesNamesFinder<Void> finder = new TablesNamesFinder<>();
@@ -119,8 +119,8 @@ public class SQLParsedStatement
                         case SetStatement ignored -> SQLCommandType.EXECUTE;
                         case Execute ignored -> SQLCommandType.EXECUTE;
 
-                        /* 不支持 */
-                        default -> SQLCommandType.UNSUPPORTED;
+                        /* 不支持也得硬要支持 */
+                        default -> SQLCommandType.DQL;
                 };
         }
 }

@@ -71,7 +71,6 @@ public class ResultSetUtils
          * 结果集转 QueryResultSet 对象
          */
         public static QueryResultSet rs2qrs(List<ColumnMetaData> columns,
-                                            boolean editable,
                                             ResultSet rs)
                 throws SQLException
         {
@@ -89,7 +88,7 @@ public class ResultSetUtils
                         rows.add(row);
                 }
 
-                return new QueryResultSet(columns, rows, editable);
+                return new QueryResultSet(columns, rows);
         }
 
         private static String stringify(Object val, SimpleDateFormat sdf)

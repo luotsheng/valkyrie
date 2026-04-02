@@ -48,28 +48,46 @@ public class ResultSetViewPane extends BorderPane
 
         public ResultSetViewPane()
         {
-                this(true);
-        }
-
-        public ResultSetViewPane(boolean isEnableToolBar)
-        {
                 setupTableView();
-                setupToolBar();
+
+                toolBar.setStyle("-fx-spacing: 2px;");
+                toolBar.getItems().addAll(plus, minus, check, cross, reload);
 
                 vContainer = new VBox(tableView, toolBar);
                 VBox.setVgrow(tableView, Priority.ALWAYS);
                 resultSetTab.setContent(vContainer);
 
                 setCenter(tabPane);
+                setEnableToolBar(false, false);
         }
 
-        private void setupToolBar()
+        private void setEnableToolBar(boolean addable, boolean editable)
         {
+                /* 如果可新增，说明在表数据页面 */
+                if (addable) {
+                        plus.setDisable(false);
+                        minus.setDisable(false);
+                        check.setDisable(false);
+                        cross.setDisable(false);
+                        reload.setDisable(false);
+                        return;
+                }
+
+                /* 可编辑但不可新增，说明是查询页 */
+                if (editable) {
+                        minus.setDisable(false);
+                        check.setDisable(false);
+                        cross.setDisable(false);
+                        reload.setDisable(false);
+                        return;
+                }
+
+                /* 执行例如关联查询，SHOW 之类的语句不可用 */
+                plus.setDisable(true);
                 minus.setDisable(true);
                 check.setDisable(true);
                 cross.setDisable(true);
-                toolBar.setStyle("-fx-spacing: 2px;");
-                toolBar.getItems().addAll(plus, minus, check, cross, reload);
+                reload.setDisable(true);
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -187,6 +205,8 @@ public class ResultSetViewPane extends BorderPane
 
                 if (!tabPane.getTabs().contains(resultSetTab))
                         tabPane.getTabs().addFirst(resultSetTab);
+
+                setEnableToolBar(qrs.isAddable(), qrs.isEditable());
 
                 resultSetTab.setText(strfmt("查询结果集 (%d条)", qrs.getRows().size()));
 

@@ -12,6 +12,9 @@ public class CauseEvent extends Event
 
         public CauseEvent(Throwable e)
         {
-                this.message = e.getCause().getMessage();
+                Throwable cause = e.getCause();
+                this.message = cause != null
+                        ? cause.getMessage()
+                        : e.getMessage();
         }
 }

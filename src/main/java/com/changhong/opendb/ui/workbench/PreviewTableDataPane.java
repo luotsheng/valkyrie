@@ -52,7 +52,6 @@ public class PreviewTableDataPane extends BorderPane
                 ownerTab.setGraphic(oldGraphic);
         }
 
-
         public void asyncUpdate()
         {
                 setLoadingIndicator();
