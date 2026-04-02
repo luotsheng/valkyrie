@@ -84,8 +84,6 @@ public class MySQLExecutor extends SQLExecutor
                                             String sql,
                                             SQLParsedStatement pm) throws SQLException
         {
-                QueryResultSet qrs = new QueryResultSet();
-
                 ResultSet rs = statement.executeQuery(sql);
 
                 ResultSetMetaData rsMeta = rs.getMetaData();
@@ -99,7 +97,9 @@ public class MySQLExecutor extends SQLExecutor
 
                         c.setIndex(i - 1);
 
-                        c.setName(rsMeta.getColumnLabel(i));
+                        c.setLabel(rsMeta.getColumnLabel(i));
+
+                        c.setName(rsMeta.getColumnName(i));
 
                         c.setType(rsMeta.getColumnTypeName(i));
 
@@ -121,6 +121,8 @@ public class MySQLExecutor extends SQLExecutor
 
                 }
 
+                boolean editable = false;
+
                 if (pm != null && pm.isOnlyOneTable()) {
 
                         Set<String> pks = new HashSet<>();
@@ -131,7 +133,15 @@ public class MySQLExecutor extends SQLExecutor
                                         pks.add(pk.getString("COLUMN_NAME"));
                         }
 
-                        pks.forEach(c -> colMetas.get(c).setPrimary(true));
+                        editable = !pks.isEmpty();
+
+                        pks.forEach(c -> {
+
+                                ColumnMetaData meta = colMetas.get(c);
+                                if (meta != null)
+                                        meta.setPrimary(true);
+
+                        });
 
                         Map<String, Map<String, Object>> columnInfo = new HashMap<>();
 
@@ -171,8 +181,7 @@ public class MySQLExecutor extends SQLExecutor
 
                 }
 
-                ResultSetUtils.rs2qrs(List.copyOf(colMetas.values()), rs, qrs);
-                return qrs;
+                return ResultSetUtils.rs2qrs(List.copyOf(colMetas.values()), editable, rs);
         }
 
         @Override

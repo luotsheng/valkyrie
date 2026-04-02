@@ -14,15 +14,14 @@ public class QueryResultSet
 {
         private List<ColumnMetaData> columns;
         private List<List<String>> rows;
+        private boolean editable;
 
-        public QueryResultSet()
-        {
-                this(new ArrayList<>(), new ArrayList<>());
-        }
-
-        public QueryResultSet(List<ColumnMetaData> columns, List<List<String>> rows)
+        public QueryResultSet(List<ColumnMetaData> columns,
+                              List<List<String>> rows,
+                              boolean editable)
         {
                 this.columns = columns;
                 this.rows = rows;
+                this.editable = editable;
         }
 }

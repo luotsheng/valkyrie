@@ -12,7 +12,12 @@ import lombok.Data;
 public class ColumnMetaData
 {
         /**
-         * 列名
+         * 列名（自定义 AS 语句）
+         */
+        private String label;
+
+        /**
+         * 真实列名
          */
         private String name;
 

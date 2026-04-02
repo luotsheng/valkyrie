@@ -70,12 +70,14 @@ public class ResultSetUtils
         /**
          * 结果集转 QueryResultSet 对象
          */
-        public static void rs2qrs(List<ColumnMetaData> columns, ResultSet rs, QueryResultSet qrs)
+        public static QueryResultSet rs2qrs(List<ColumnMetaData> columns,
+                                            boolean editable,
+                                            ResultSet rs)
                 throws SQLException
         {
-                qrs.setColumns(columns);
-
                 SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT_PATTERN);
+
+                List<List<String>> rows = new ArrayList<>();
 
                 while (rs.next()) {
 
@@ -84,9 +86,10 @@ public class ResultSetUtils
                         for (int i = 1; i <= columns.size(); i++)
                                 row.add(stringify(rs.getObject(i), sdf));
 
-                        qrs.getRows().add(row);
-
+                        rows.add(row);
                 }
+
+                return new QueryResultSet(columns, rows, editable);
         }
 
         private static String stringify(Object val, SimpleDateFormat sdf)
