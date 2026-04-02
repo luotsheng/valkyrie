@@ -2,6 +2,8 @@ package com.changhong.opendb.ui.widgets;
 
 import com.changhong.opendb.ui.workbench.SqlKeyWordDefine;
 import com.changhong.opendb.utils.OS;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
@@ -31,6 +33,8 @@ public class VCodeArea extends CodeArea
 
         private final List<HighlightingListener> highlightings = new ArrayList<>();
 
+        private final ContextMenu contextMenu = new ContextMenu();
+
         public VCodeArea()
         {
                 setStyle("-fx-font-weight: normal;");
@@ -50,6 +54,22 @@ public class VCodeArea extends CodeArea
                 multiPlainChanges()
                         .successionEnds(Duration.ofMillis(200))
                         .subscribe(ignore -> applyHighlighting());
+
+                /* 配置菜单 */
+                contextMenu.setStyle("-fx-font-size: 13px");
+
+                MenuItem copyTextItem = new MenuItem("复制");
+                copyTextItem.setOnAction(event -> copy());
+
+                MenuItem pasteTextItem = new MenuItem("粘贴");
+                pasteTextItem.setOnAction(event -> paste());
+
+                contextMenu.getItems().addAll(
+                        copyTextItem,
+                        pasteTextItem
+                );
+
+                setContextMenu(contextMenu);
         }
 
         public void addHighlightingListener(HighlightingListener listener)

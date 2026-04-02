@@ -40,6 +40,11 @@ public class Application extends javafx.application.Application
                 clipboard.setContent(clipboardContent);
         }
 
+        public static String getClipboardText()
+        {
+                return Clipboard.getSystemClipboard().getString();
+        }
+
         private static void addVFXStylesheet(Scene scene, String path)
         {
                 URL url = aClass.getResource(path);

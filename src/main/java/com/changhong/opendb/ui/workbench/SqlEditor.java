@@ -435,6 +435,7 @@ public class SqlEditor extends SplitPane
         private void beautifySQL()
         {
                 codeArea.replaceText(SqlFormatter.format(codeArea.getText()));
+                codeArea.applyHighlighting(); /* 强制刷新高亮 */
         }
 
         public String getCodeAreaContent()
