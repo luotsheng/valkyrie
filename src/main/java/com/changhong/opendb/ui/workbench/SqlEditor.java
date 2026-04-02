@@ -19,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.StringConverter;
 import lombok.Getter;
+import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.ExplainStatement;
 import net.sf.jsqlparser.statement.Statement;
@@ -90,6 +91,7 @@ public class SqlEditor extends SplitPane
                 resultSetTableViewPane = new ResultSetViewPane();
                 sqlMessagePane = new SqlMessagePane();
                 virtualizedScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+                resultSetTableViewPane.setToolBarDisable(true);
 
                 // 绑定日志标签
                 sqlMessageTab = new Tab("日志");
@@ -349,6 +351,64 @@ public class SqlEditor extends SplitPane
                         getItems().add(resultSetTableViewPane);
         }
 
+        /**
+         * 执行 SQL
+         */
+        private void execute(StringBuilder currentSqlBuilder)
+                throws Exception
+        {
+                String scriptText = codeArea.getSelectedText();
+
+                if (scriptText == null || scriptText.isEmpty())
+                        scriptText = codeArea.getText();
+
+                Statements statements = CCJSqlParserUtil.parseStatements(scriptText);
+
+                ODBNConnection connection = connectionComboBox.getSelectionModel()
+                        .getSelectedItem();
+
+                ODBNDatabase database = databaseComboBox.getSelectionModel()
+                        .getSelectedItem();
+
+                jdbcTemplate = connection.getJdbcTemplate();
+
+                currentTaskId = System.currentTimeMillis();
+
+                QueryResultSet qrs = null;
+
+                for (Statement statement : statements) {
+                        String db = database.getName();
+                        String sql = statement.toString();
+
+                        currentSqlBuilder.delete(0, currentSqlBuilder.length());
+                        currentSqlBuilder.append(sql);
+
+                        if (statement instanceof Select || statement instanceof ExplainStatement) {
+                                qrs = jdbcTemplate.select(currentTaskId, db, new String[]{sql});
+                        } else {
+                                jdbcTemplate.execute(currentTaskId, db, new String[]{sql});
+                        }
+
+                        Platform.runLater(() -> {
+                                sqlMessagePane.appendInfo(sql);
+                                showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
+                        });
+                }
+
+                if (qrs != null) {
+                        QueryResultSet copyQrs = qrs;
+                        Platform.runLater(() -> {
+                                resultSetTableViewPane.refresh(copyQrs);
+                                showResultSetTableViewPane(QUERY_RESULT_SET_FIRST);
+                        });
+                } else {
+                        Platform.runLater(() -> showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST));
+                }
+        }
+
+        /**
+         * 执行任务
+         */
         private void runTask()
         {
                 if (run.isDisable())
@@ -360,56 +420,7 @@ public class SqlEditor extends SplitPane
                 new Thread(() -> {
                         StringBuilder currentSqlBuilder = new StringBuilder();
                         try {
-                                String scriptText = codeArea.getSelectedText();
-
-                                if (scriptText == null || scriptText.isEmpty())
-                                        scriptText = codeArea.getText();
-
-                                Statements statements = CCJSqlParserUtil.parseStatements(scriptText);
-
-                                ODBNConnection connection = connectionComboBox.getSelectionModel()
-                                        .getSelectedItem();
-
-                                ODBNDatabase database = databaseComboBox.getSelectionModel()
-                                        .getSelectedItem();
-
-                                jdbcTemplate = connection.getJdbcTemplate();
-
-                                currentTaskId = System.currentTimeMillis();
-
-                                QueryResultSet qrs = null;
-
-                                for (Statement statement : statements) {
-                                        String db = database.getName();
-                                        String sql = statement.toString();
-
-                                        currentSqlBuilder.delete(0, currentSqlBuilder.length());
-                                        currentSqlBuilder.append(sql);
-
-                                        if (statement instanceof Select || statement instanceof ExplainStatement) {
-                                                qrs = jdbcTemplate.select(currentTaskId, db, new String[]{sql});
-                                                Platform.runLater(() -> {
-                                                        sqlMessagePane.appendInfo(sql);
-                                                        showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
-                                                });
-                                        } else {
-                                                jdbcTemplate.execute(currentTaskId, db, new String[]{sql});
-                                                Platform.runLater(() -> {
-                                                        sqlMessagePane.appendInfo(sql);
-                                                        showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
-                                                });
-                                        }
-                                }
-
-                                if (qrs != null) {
-                                        QueryResultSet copyQrs = qrs;
-                                        Platform.runLater(() -> {
-                                                resultSetTableViewPane.refresh(copyQrs);
-                                                showResultSetTableViewPane(QUERY_RESULT_SET_FIRST);
-                                        });
-                                } else {
-                                        Platform.runLater(() -> showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST));
-                                }
+                                execute(currentSqlBuilder);
                         } catch (Throwable e) {
                                 Platform.runLater(() -> {
                                         sqlMessagePane.appendError(currentSqlBuilder.toString());

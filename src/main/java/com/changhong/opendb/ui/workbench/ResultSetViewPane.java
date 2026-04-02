@@ -35,31 +35,38 @@ public class ResultSetViewPane extends BorderPane
         private final Tab resultSetTab = new Tab();
         private final TableView<List<String>> tableView = VFX.newTableView();
         private final ToolBar toolBar = new ToolBar();
+        private final VBox vContainer;
+
+        private final Button plus = VFX.newIconButton("新增数据", "plus");
+        private final Button minus = VFX.newIconButton("删除选中行", "minus");
+        private final Button check = VFX.newIconButton("应用更改", "check");
+        private final Button cross = VFX.newIconButton("取消更改", "cross");
+        private final Button reload = VFX.newIconButton("刷新", "reload");
 
         private TablePosition<?, ?> start;
 
         public ResultSetViewPane()
         {
+                this(true);
+        }
+
+        public ResultSetViewPane(boolean isEnableToolBar)
+        {
                 setupTableView();
                 setupToolBar();
 
-                VBox vBox = new VBox(tableView, toolBar);
+                vContainer = new VBox(tableView, toolBar);
                 VBox.setVgrow(tableView, Priority.ALWAYS);
-                resultSetTab.setContent(vBox);
+                resultSetTab.setContent(vContainer);
 
                 setCenter(tabPane);
         }
 
         private void setupToolBar()
         {
-                Button plus = VFX.newIconButton("新增数据", "plus");
-                Button minus = VFX.newIconButton("删除选中行", "minus");
                 minus.setDisable(true);
-                Button check = VFX.newIconButton("应用更改", "check");
                 check.setDisable(true);
-                Button cross = VFX.newIconButton("取消更改", "cross");
                 cross.setDisable(true);
-                Button reload = VFX.newIconButton("刷新", "reload");
                 toolBar.setStyle("-fx-spacing: 2px;");
                 toolBar.getItems().addAll(plus, minus, check, cross, reload);
         }
@@ -232,6 +239,15 @@ public class ResultSetViewPane extends BorderPane
                 int FW = Math.max(CM * V, 64);
 
                 return Math.min(Math.max(CW, FW), MAX); /* px */
+        }
+
+        public void setToolBarDisable(boolean flag)
+        {
+                plus.setDisable(flag);
+                minus.setDisable(flag);
+                check.setDisable(flag);
+                cross.setDisable(flag);
+                reload.setDisable(flag);
         }
 
 }
