@@ -86,7 +86,6 @@ public class SqlEditor extends SplitPane
                 resultSetTableViewPane = new ResultSetViewPane();
                 sqlMessagePane = new SqlMessagePane();
                 virtualizedScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-                resultSetTableViewPane.setToolBarDisable(true);
 
                 // 绑定日志标签
                 sqlMessageTab = new Tab("日志");

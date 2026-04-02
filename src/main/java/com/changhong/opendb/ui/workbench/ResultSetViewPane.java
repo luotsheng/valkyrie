@@ -65,6 +65,7 @@ public class ResultSetViewPane extends BorderPane
         {
                 /* 如果可新增，说明在表数据页面 */
                 if (addable) {
+                        tableView.setEditable(true);
                         plus.setDisable(false);
                         minus.setDisable(false);
                         check.setDisable(false);
@@ -75,6 +76,7 @@ public class ResultSetViewPane extends BorderPane
 
                 /* 可编辑但不可新增，说明是查询页 */
                 if (editable) {
+                        tableView.setEditable(true);
                         minus.setDisable(false);
                         check.setDisable(false);
                         cross.setDisable(false);
@@ -83,6 +85,7 @@ public class ResultSetViewPane extends BorderPane
                 }
 
                 /* 执行例如关联查询，SHOW 之类的语句不可用 */
+                tableView.setEditable(false);
                 plus.setDisable(true);
                 minus.setDisable(true);
                 check.setDisable(true);
@@ -274,15 +277,6 @@ public class ResultSetViewPane extends BorderPane
                 int FW = Math.max(CM * V, 64);
 
                 return Math.min(Math.max(CW, FW), MAX); /* px */
-        }
-
-        public void setToolBarDisable(boolean flag)
-        {
-                plus.setDisable(flag);
-                minus.setDisable(flag);
-                check.setDisable(flag);
-                cross.setDisable(flag);
-                reload.setDisable(flag);
         }
 
 }
