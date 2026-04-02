@@ -8,9 +8,11 @@ import com.changhong.opendb.utils.Catcher;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import static com.changhong.opendb.utils.StringUtils.strfmt;
 
@@ -69,7 +71,8 @@ public class QueryScriptRepository
                 for (File file : files)
                         queryInfos.add(new QueryInfo(connection, database, file));
 
-                queryInfos.sort(Comparator.comparing(QueryInfo::getName));
+                Collator collator = Collator.getInstance(Locale.CHINA);
+                queryInfos.sort(Comparator.comparing(QueryInfo::getName, collator));
 
                 return queryInfos;
         }

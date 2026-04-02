@@ -4,11 +4,14 @@ import com.changhong.opendb.driver.QueryResultSet;
 import com.changhong.opendb.ui.widgets.VFX;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
@@ -59,6 +62,23 @@ public class ResultSetViewPane extends BorderPane
                                );
                        }
                 });
+
+                tableView.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                        if ((event.isControlDown() || event.isShortcutDown())
+                                && event.getCode() == KeyCode.C)
+                                copyTableViewSelectedCell();
+                });
+        }
+
+        @SuppressWarnings("rawtypes")
+        private void copyTableViewSelectedCell()
+        {
+                ObservableList<TablePosition> cells =
+                        tableView.getSelectionModel().getSelectedCells();
+
+                for (TablePosition cell : cells) {
+                        System.out.println();
+                }
         }
 
         @SuppressWarnings({"rawtypes", "unchecked"})
