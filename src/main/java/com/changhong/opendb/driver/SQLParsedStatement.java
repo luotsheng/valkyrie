@@ -38,6 +38,8 @@ public class SQLParsedStatement
         private SQLCommandType type;
         @Getter
         private boolean last;
+        @Getter
+        private boolean star;
 
         private final Set<String> tables = new HashSet<>();
 
@@ -65,6 +67,7 @@ public class SQLParsedStatement
                 this.script = statement.toString();
                 this.type = toType(statement);
                 this.last = last;
+                this.star = false;
 
                 if (type == SQLCommandType.UNSUPPORTED)
                         Catcher.ithrow("Unsupported " + script);

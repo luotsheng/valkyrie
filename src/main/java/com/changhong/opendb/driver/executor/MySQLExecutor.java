@@ -79,7 +79,7 @@ public class MySQLExecutor extends SQLExecutor
                 return List.of();
         }
 
-        private QueryResultSet executeQuery(Connection connection,
+        private QueryResultSet builtInExecuteQuery(Connection connection,
                                             Statement statement,
                                             String db,
                                             String sql,
@@ -134,8 +134,6 @@ public class MySQLExecutor extends SQLExecutor
                                         pks.add(pk.getString("COLUMN_NAME"));
                         }
 
-                        editable = !pks.isEmpty();
-
                         pks.forEach(c -> {
 
                                 ColumnMetaData meta = colMetas.get(c);
@@ -180,6 +178,11 @@ public class MySQLExecutor extends SQLExecutor
                                 c.setComment((String) m.get("comment"));
                         }
 
+                        editable = colMetas
+                                .values()
+                                .stream()
+                                .anyMatch(ColumnMetaData::isPrimary);
+
                 }
 
                 QueryResultSet qrs = ResultSetUtils.rs2qrs(List.copyOf(colMetas.values()), rs);
@@ -199,6 +202,7 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         @Override
+        @SuppressWarnings("resource")
         public QueryResultSet execute(SQL sql, ExecuteCallback callback)
         {
                 SQLParsedStatement current = null;
@@ -216,7 +220,7 @@ public class MySQLExecutor extends SQLExecutor
                                 /* DQL 并且必须是最后一个 SQL 语句才执行查询 */
                                 if (stat.getType() == SQLCommandType.DQL && stat.isLast()) {
 
-                                        QueryResultSet qrs = executeQuery(
+                                        QueryResultSet qrs = builtInExecuteQuery(
                                                 connection,
                                                 statement,
                                                 sql.getDb(),
@@ -261,7 +265,7 @@ public class MySQLExecutor extends SQLExecutor
 
                 try (Connection connection = ds.getConnection();
                      Statement statement = ds.use(connection, db)) {
-                        qrs = executeQuery(connection, statement, db, sql, new SQLParsedStatement(sql));
+                        qrs = builtInExecuteQuery(connection, statement, db, sql, new SQLParsedStatement(sql));
                 }
 
                 qrs.setEditable(true);
