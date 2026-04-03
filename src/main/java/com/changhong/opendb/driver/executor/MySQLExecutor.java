@@ -6,6 +6,9 @@ import com.changhong.opendb.driver.*;
 import com.changhong.opendb.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.utils.Catcher;
 import com.changhong.opendb.utils.ResultSets;
+import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
@@ -23,6 +26,8 @@ import static com.changhong.opendb.utils.StringUtils.strfmt;
 })
 public class MySQLExecutor extends SQLExecutor
 {
+        private static final Logger LOG = LoggerFactory.getLogger(MySQLExecutor.class);
+
         public MySQLExecutor(String name, VirtualDataSource ds)
         {
                 super(name, ds);
@@ -81,9 +86,9 @@ public class MySQLExecutor extends SQLExecutor
         private ShittyMutableDataGrid builtInExecuteQuery(Connection connection,
                                                           Statement statement,
                                                           SQL sql,
-                                                          SQLParsedStatement pm) throws SQLException
+                                                          SQLParsedStatement ps) throws SQLException
         {
-                ResultSet rs = statement.executeQuery(pm.getScript());
+                ResultSet rs = statement.executeQuery(ps.getScript());
 
                 ResultSetMetaData rsMeta = rs.getMetaData();
                 DatabaseMetaData dbMeta = connection.getMetaData();
@@ -122,10 +127,10 @@ public class MySQLExecutor extends SQLExecutor
 
                 boolean editable = false;
 
-                if (pm.isOnlyOneTable()) {
+                if (ps.isOnlyOneTable()) {
 
                         Set<String> pks = new HashSet<>();
-                        String onlyTable = pm.getOnlyTable();
+                        String onlyTable = ps.getOnlyTable();
 
                         try (ResultSet pk = dbMeta.getPrimaryKeys(sql.getDb(), connection.getSchema(), onlyTable)) {
                                 while (pk.next())
@@ -210,38 +215,52 @@ public class MySQLExecutor extends SQLExecutor
 
                         queue.put(sql.getTaskId(), statement);
 
-                        for (SQLParsedStatement stat : sql) {
+                        for (SQLParsedStatement ps : sql) {
 
-                                current = stat;
+                                current = ps;
                                 boolean skip = false;
 
+                                LOG.info("Execute sql: \n{}", SqlFormatter.format(ps.getScript()));
+                                
                                 /* DQL 并且必须是最后一个 SQL 语句才执行查询 */
-                                if (stat.getType() == SQLCommandType.DQL && stat.isLast()) {
+                                if (ps.getType() == SQLCommandType.DQL && ps.isLast()) {
 
                                         ShittyMutableDataGrid grid = builtInExecuteQuery(
                                                 connection,
                                                 statement,
                                                 sql,
-                                                stat
+                                                ps
                                         );
 
-                                        callback.doCallback(stat.getScript(), SQLExecutorStatus.OK);
+                                        callback.doCallback(ps.getScript(), SQLExecutorStatus.OK);
 
                                         return grid;
 
                                 }
+                                
+                                if (ps.getType() == SQLCommandType.DML)
+                                        statement.executeUpdate(ps.getScript());
 
-                                if (stat.getType() == SQLCommandType.DQL)
+                                if (ps.getType() == SQLCommandType.DQL)
                                         skip = true;
 
-                                statement.execute(stat.getScript());
+                                statement.execute(ps.getScript());
 
-                                callback.doCallback(stat.getScript(), skip ? SQLExecutorStatus.SKIP : SQLExecutorStatus.OK);
+                                callback.doCallback(ps.getScript(), skip ? SQLExecutorStatus.SKIP : SQLExecutorStatus.OK);
                         }
 
                         queue.remove(sql.getTaskId());
 
                 } catch (SQLException e) {
+
+                        LOG.error("MySQLExecutor execute error", e);
+
+                        if (callback instanceof DefaultExecutorCallback) {
+
+                                callback.doCallback(e.getMessage(), SQLExecutorStatus.ERROR);
+                                return null;
+
+                        }
 
                         if (current != null)
                                 callback.doCallback(current.getScript(), SQLExecutorStatus.ERROR);

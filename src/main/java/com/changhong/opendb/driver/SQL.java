@@ -1,5 +1,6 @@
 package com.changhong.opendb.driver;
 
+import com.changhong.opendb.core.exception.CatcherException;
 import com.changhong.opendb.utils.Catcher;
 import lombok.Getter;
 import net.sf.jsqlparser.JSQLParserException;
@@ -41,6 +42,14 @@ public class SQL implements Iterable<SQLParsedStatement>
                 } catch (JSQLParserException e) {
                         Catcher.ithrow(e);
                 }
+        }
+
+        public String getOnlyTable()
+        {
+                if (sqlStatements.size() != 1)
+                        throw new CatcherException("sql statements is multi");
+
+                return iterator().next().getOnlyTable();
         }
 
         @Override

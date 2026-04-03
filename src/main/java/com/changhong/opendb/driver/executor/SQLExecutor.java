@@ -67,9 +67,7 @@ public abstract class SQLExecutor
         public abstract void drop(String db, String name) throws SQLException;
 
         public ShittyMutableDataGrid execute(SQL sql) {
-              return execute(sql, (info, status) -> {
-                      LOG.info("Execute SQL({}): {},", sql, status);
-              });
+              return execute(sql, new DefaultExecutorCallback());
         }
 
         public abstract ShittyMutableDataGrid execute(SQL sql, ExecuteCallback callback);

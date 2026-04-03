@@ -133,19 +133,23 @@ public class MutableDataGridViewPane extends BorderPane
 
         private void reloadAndBlinkTable()
         {
-                grid.refresh();
+                new Thread(() -> {
 
-                render(grid);
+                        grid.reload();
 
-                FadeTransition ft = new FadeTransition(Duration.millis(200), tableView);
-                ft.setFromValue(0.5);
-                ft.setToValue(1.0);
-                ft.setCycleCount(1);
-                ft.setAutoReverse(true);
+                        render(grid);
 
-                ft.setOnFinished(event -> tableView.setOpacity(1.0));
+                        FadeTransition ft = new FadeTransition(Duration.millis(200), tableView);
+                        ft.setFromValue(0.5);
+                        ft.setToValue(1.0);
+                        ft.setCycleCount(1);
+                        ft.setAutoReverse(true);
 
-                ft.play();
+                        ft.setOnFinished(event -> tableView.setOpacity(1.0));
+
+                        ft.play();
+
+                }).start();
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
