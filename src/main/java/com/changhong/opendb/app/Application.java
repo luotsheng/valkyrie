@@ -4,9 +4,11 @@ import atlantafx.base.theme.CupertinoLight;
 import com.changhong.opendb.ui.layout.MainLayout;
 import com.changhong.opendb.ui.widgets.ErrorDialog;
 import javafx.collections.ObservableList;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -77,6 +79,15 @@ public class Application extends javafx.application.Application
                 stage.setTitle("数据库可视化工具");
                 stage.setScene(scene);
                 stage.setMaximized(true);
+
+                ObservableList<Screen> screens = Screen.getScreens();
+
+                if (screens.size() > 1) {
+                        Screen second = screens.get(1);
+                        Rectangle2D bounds = second.getVisualBounds();
+                        stage.setX(bounds.getMinX());
+                        stage.setY(bounds.getMinY());
+                }
 
                 runnables.forEach(runnable -> runnable.run(stage, scene));
 
