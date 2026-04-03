@@ -5,6 +5,7 @@ import com.changhong.opendb.ui.widgets.ConfirmDialog;
 import lombok.Getter;
 import lombok.Setter;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.expression.NullValue;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -12,6 +13,7 @@ import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.delete.Delete;
+import net.sf.jsqlparser.statement.select.Limit;
 import net.sf.jsqlparser.statement.update.Update;
 
 import java.util.*;
@@ -202,6 +204,11 @@ public class MutableDataGrid
                                         exp = new AndExpression(exp, equals.get(i));
 
                                 delete.setWhere(exp);
+
+                                Limit limit = new Limit();
+                                limit.setRowCount(new LongValue(1));
+
+                                delete.setLimit(limit);
 
                         }
 
