@@ -1,4 +1,4 @@
-package com.changhong.opendb.ui.widgets;
+package com.changhong.opendb.ui.pane;
 
 import javafx.scene.layout.BorderPane;
 

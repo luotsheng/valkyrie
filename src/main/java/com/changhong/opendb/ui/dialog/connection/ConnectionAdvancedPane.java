@@ -1,7 +1,7 @@
 package com.changhong.opendb.ui.dialog.connection;
 
 import com.changhong.opendb.model.ConnectionInfo;
-import com.changhong.opendb.ui.widgets.PropertyGridPane;
+import com.changhong.opendb.ui.pane.PropertyGridPane;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;

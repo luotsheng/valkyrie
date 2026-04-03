@@ -1,4 +1,4 @@
-package com.changhong.opendb.ui.workbench;
+package com.changhong.opendb.ui.pane;
 
 import com.changhong.opendb.ui.widgets.VCodeArea;
 import com.changhong.opendb.ui.widgets.VCodeAreaConfig;

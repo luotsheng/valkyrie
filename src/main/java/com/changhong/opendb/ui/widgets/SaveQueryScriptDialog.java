@@ -5,6 +5,7 @@ import com.changhong.opendb.core.event.RefreshQueryNodeEvent;
 import com.changhong.opendb.repository.QueryScriptRepository;
 import com.changhong.opendb.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
+import com.changhong.opendb.ui.pane.DetailPane;
 import com.changhong.opendb.ui.workbench.SqlEditor;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -16,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;

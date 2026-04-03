@@ -1,6 +1,6 @@
 package com.changhong.opendb.core.event;
 
-import com.changhong.opendb.ui.widgets.DetailPane;
+import com.changhong.opendb.ui.pane.DetailPane;
 import lombok.Getter;
 
 /**

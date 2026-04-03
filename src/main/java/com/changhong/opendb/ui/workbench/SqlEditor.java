@@ -8,6 +8,8 @@ import com.changhong.opendb.model.QueryInfo;
 import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
+import com.changhong.opendb.ui.pane.MutableDataGridViewPane;
+import com.changhong.opendb.ui.pane.SqlMessagePane;
 import com.changhong.opendb.ui.widgets.*;
 import com.changhong.opendb.utils.Catcher;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;

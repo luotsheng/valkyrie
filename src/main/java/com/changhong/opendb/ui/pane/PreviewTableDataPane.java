@@ -1,4 +1,4 @@
-package com.changhong.opendb.ui.workbench;
+package com.changhong.opendb.ui.pane;
 
 import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.driver.MutableDataGrid;

@@ -3,6 +3,7 @@ package com.changhong.opendb.ui.workbench;
 import com.changhong.opendb.app.Application;
 import com.changhong.opendb.core.event.*;
 import com.changhong.opendb.resource.Assets;
+import com.changhong.opendb.ui.pane.PreviewTableDataPane;
 import com.changhong.opendb.ui.widgets.VTabPane;
 import javafx.scene.Node;
 import javafx.scene.control.*;

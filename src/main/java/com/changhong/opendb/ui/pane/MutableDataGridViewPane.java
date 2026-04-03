@@ -1,4 +1,4 @@
-package com.changhong.opendb.ui.workbench;
+package com.changhong.opendb.ui.pane;
 
 import com.changhong.opendb.app.Application;
 import com.changhong.opendb.driver.ColumnMetaData;
@@ -10,6 +10,7 @@ import com.changhong.opendb.ui.widgets.ConfirmDialog;
 import com.changhong.opendb.ui.widgets.EditingTableCell;
 import com.changhong.opendb.ui.widgets.VFX;
 import com.changhong.opendb.ui.widgets.VSeparator;
+import com.changhong.opendb.ui.workbench.ModifyCell;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
