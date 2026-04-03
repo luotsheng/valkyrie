@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
  * @since 2026/3/26
  */
 @AllArgsConstructor
-public class NewQueryResultSetPaneEvent extends Event
+public class NewMutableDataGridPaneEvent extends Event
 {
         public SQLExecutor sqlExecutor;
         public String database;

@@ -1,7 +1,7 @@
 package com.changhong.opendb.ui.pane;
 
 import com.changhong.opendb.core.event.EventBus;
-import com.changhong.opendb.core.event.NewQueryResultSetPaneEvent;
+import com.changhong.opendb.core.event.NewMutableDataGridPaneEvent;
 import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.navigator.node.ODBNDatabase;
@@ -145,7 +145,7 @@ public class DatabaseDetailPane extends DetailPane
 
                                 if (e.getClickCount() == 2 && !row.isEmpty()) {
                                         TableMetadata data = row.getItem();
-                                        EventBus.publish(new NewQueryResultSetPaneEvent(database.getSqlExecutor(), database.getName(), data));
+                                        EventBus.publish(new NewMutableDataGridPaneEvent(database.getSqlExecutor(), database.getName(), data));
                                 }
 
                         });

@@ -2,7 +2,7 @@ package com.changhong.opendb.ui.navigator.node;
 
 import com.changhong.opendb.app.Application;
 import com.changhong.opendb.core.event.EventBus;
-import com.changhong.opendb.core.event.NewQueryResultSetPaneEvent;
+import com.changhong.opendb.core.event.NewMutableDataGridPaneEvent;
 import com.changhong.opendb.driver.executor.SQLExecutor;
 import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.resource.Assets;
@@ -56,6 +56,6 @@ public class ODBNTable extends ODBNode
         @Override
         public void onMouseDoubleClickEvent(MouseEvent event)
         {
-                EventBus.publish(new NewQueryResultSetPaneEvent(sqlExecutor, database.getName(), table));
+                EventBus.publish(new NewMutableDataGridPaneEvent(sqlExecutor, database.getName(), table));
         }
 }

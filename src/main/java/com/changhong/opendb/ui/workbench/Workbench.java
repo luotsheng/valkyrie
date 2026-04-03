@@ -51,7 +51,7 @@ public class Workbench extends VBox implements EventListener
                 EventBus.subscribe(OpenWorkbenchPaneEvent.class, this);
                 EventBus.subscribe(CloseWorkbenchPaneEvent.class, this);
                 EventBus.subscribe(NewQueryScriptEvent.class, this);
-                EventBus.subscribe(NewQueryResultSetPaneEvent.class, this);
+                EventBus.subscribe(NewMutableDataGridPaneEvent.class, this);
                 EventBus.subscribe(RemoveSqlEditorTabEvent.class, this);
         }
 
@@ -138,7 +138,7 @@ public class Workbench extends VBox implements EventListener
                         case CloseWorkbenchPaneEvent e     -> handleCloseWorkbenchPaneEvent(e);
                         case RemoveSqlEditorTabEvent e     -> handleRemoveSqlEditorTabEvent(e);
                         case NewQueryScriptEvent e         -> handleNewQueryScriptEvent(e);
-                        case NewQueryResultSetPaneEvent e  -> handleNewQueryResultSetPaneEvent(e);
+                        case NewMutableDataGridPaneEvent e -> handleNewMutableDataGridPaneEvent(e);
                         default -> {}
                 }
         }
@@ -188,7 +188,7 @@ public class Workbench extends VBox implements EventListener
                 tabPane.select(queryTab);
         }
 
-        private void handleNewQueryResultSetPaneEvent(NewQueryResultSetPaneEvent event)
+        private void handleNewMutableDataGridPaneEvent(NewMutableDataGridPaneEvent event)
         {
                 String id = strfmt("%s@%s (%s)",
                         event.info.getName(),
