@@ -44,10 +44,17 @@ public class EditingTableCell<S> extends TextFieldTableCell<S, String>
                 super.updateItem(item, empty);
 
                 if (modifyListener != null && isCommit) {
+
+                        if (oldValue == null && (item != null && item.isEmpty())) {
+                                item = null;
+                                setItem(item);
+                        }
+
                         int colIndex = getTableView().getColumns().indexOf(getTableColumn());
                         int rowIndex = getTableRow().getIndex();
                         modifyListener.modify(new ModifyCell(colIndex, rowIndex, oldValue, item));
                         isCommit = false;
+
                 }
 
                 if (empty) {
