@@ -11,8 +11,8 @@
 
     <modules>
         <module>utils</module>
-        <module>studio</module>
         <module>app</module>
+        <module>launcher</module>
     </modules>
 
     <properties>
@@ -31,12 +31,12 @@
             </dependency>
             <dependency>
                 <groupId>com.changhong.opensource</groupId>
-                <artifactId>studio</artifactId>
+                <artifactId>app</artifactId>
                 <version>v1.0.0-BETA</version>
             </dependency>
             <dependency>
                 <groupId>com.changhong.opensource</groupId>
-                <artifactId>app</artifactId>
+                <artifactId>launcher</artifactId>
                 <version>v1.0.0-BETA</version>
             </dependency>
         </dependencies>
