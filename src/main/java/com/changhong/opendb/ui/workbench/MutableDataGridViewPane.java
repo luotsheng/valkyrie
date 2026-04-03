@@ -33,7 +33,7 @@ import static com.changhong.opendb.utils.StringUtils.strfmt;
  * @since 2026/3/30
  */
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
-public class ResultSetViewPane extends BorderPane
+public class MutableDataGridViewPane extends BorderPane
 {
         private final TabPane tabPane = new TabPane();
         private final Tab resultSetTab = new Tab();
@@ -50,7 +50,7 @@ public class ResultSetViewPane extends BorderPane
         private ShittyMutableDataGrid grid;
         private TablePosition<?, ?> start;
 
-        public ResultSetViewPane()
+        public MutableDataGridViewPane()
         {
                 setupTableView();
 

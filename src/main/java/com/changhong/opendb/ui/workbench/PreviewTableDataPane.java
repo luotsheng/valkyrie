@@ -25,7 +25,7 @@ public class PreviewTableDataPane extends BorderPane
         private final SQLExecutor sqlExecutor;
         private final String database;
         private final TableMetadata tableInfo;
-        private final ResultSetViewPane resultSetViewPane;
+        private final MutableDataGridViewPane mutableDataGridViewPane;
 
         public PreviewTableDataPane(Tab ownerTab,
                                     SQLExecutor sqlExecutor,
@@ -36,9 +36,9 @@ public class PreviewTableDataPane extends BorderPane
                 this.sqlExecutor = sqlExecutor;
                 this.database = database;
                 this.tableInfo = tableInfo;
-                this.resultSetViewPane = new ResultSetViewPane();
+                this.mutableDataGridViewPane = new MutableDataGridViewPane();
 
-                setCenter(resultSetViewPane);
+                setCenter(mutableDataGridViewPane);
         }
 
         private void setLoadingIndicator()
@@ -63,7 +63,7 @@ public class PreviewTableDataPane extends BorderPane
                                         tableInfo,
                                         start,
                                         size);
-                                Platform.runLater(() -> resultSetViewPane.refresh(rs));
+                                Platform.runLater(() -> mutableDataGridViewPane.refresh(rs));
                         } catch (Exception e) {
                                 Catcher.ithrow(e);
                         } finally {
