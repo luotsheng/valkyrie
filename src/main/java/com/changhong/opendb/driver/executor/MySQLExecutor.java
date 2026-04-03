@@ -81,11 +81,10 @@ public class MySQLExecutor extends SQLExecutor
 
         private QueryResultSet builtInExecuteQuery(Connection connection,
                                             Statement statement,
-                                            String db,
-                                            String sql,
+                                            SQL sql,
                                             SQLParsedStatement pm) throws SQLException
         {
-                ResultSet rs = statement.executeQuery(sql);
+                ResultSet rs = statement.executeQuery(pm.getScript());
 
                 ResultSetMetaData rsMeta = rs.getMetaData();
                 DatabaseMetaData dbMeta = connection.getMetaData();
@@ -124,12 +123,12 @@ public class MySQLExecutor extends SQLExecutor
 
                 boolean editable = false;
 
-                if (pm != null && pm.isOnlyOneTable()) {
+                if (pm.isOnlyOneTable()) {
 
                         Set<String> pks = new HashSet<>();
                         String onlyTable = pm.getOnlyTable();
 
-                        try (ResultSet pk = dbMeta.getPrimaryKeys(db, connection.getSchema(), onlyTable)) {
+                        try (ResultSet pk = dbMeta.getPrimaryKeys(sql.getDb(), connection.getSchema(), onlyTable)) {
                                 while (pk.next())
                                         pks.add(pk.getString("COLUMN_NAME"));
                         }
@@ -144,7 +143,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         Map<String, Map<String, Object>> columnInfo = new HashMap<>();
 
-                        try (ResultSet col = dbMeta.getColumns(db, null, onlyTable, null)) {
+                        try (ResultSet col = dbMeta.getColumns(sql.getDb(), null, onlyTable, null)) {
 
                                 while (col.next()) {
 
@@ -185,8 +184,8 @@ public class MySQLExecutor extends SQLExecutor
 
                 }
 
-                QueryResultSet qrs = ResultSetUtils.rs2qrs(List.copyOf(colMetas.values()), rs);
-
+                QueryResultSet qrs = new QueryResultSet(sql, this);
+                ResultSetUtils.rs2qrs(List.copyOf(colMetas.values()), rs, qrs);
                 qrs.setEditable(editable);
 
                 return qrs;
@@ -223,8 +222,7 @@ public class MySQLExecutor extends SQLExecutor
                                         QueryResultSet qrs = builtInExecuteQuery(
                                                 connection,
                                                 statement,
-                                                sql.getDb(),
-                                                stat.getScript(),
+                                                sql,
                                                 stat
                                         );
 
@@ -261,11 +259,13 @@ public class MySQLExecutor extends SQLExecutor
         {
                 QueryResultSet qrs;
 
-                String sql = strfmt("SELECT * FROM %s LIMIT %d OFFSET %d;", tbMeta.getName(), size, start);
+                String text = strfmt("SELECT * FROM %s LIMIT %d OFFSET %d;", tbMeta.getName(), size, start);
+
+                SQL sql = new SQL(0L, db , text);
 
                 try (Connection connection = ds.getConnection();
                      Statement statement = ds.use(connection, db)) {
-                        qrs = builtInExecuteQuery(connection, statement, db, sql, new SQLParsedStatement(sql));
+                        qrs = builtInExecuteQuery(connection, statement, sql, sql.iterator().next());
                 }
 
                 qrs.setEditable(true);

@@ -4,6 +4,8 @@ import com.changhong.opendb.driver.QueryResultSet;
 import com.changhong.opendb.driver.SQL;
 import com.changhong.opendb.driver.TableMetadata;
 import com.changhong.opendb.driver.datasource.VirtualDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 })
 public abstract class SQLExecutor
 {
+        private static final Logger LOG = LoggerFactory.getLogger(SQLExecutor.class);
+
         private final String name;
         protected final VirtualDataSource ds;
 
@@ -61,6 +65,12 @@ public abstract class SQLExecutor
         public abstract List<TableMetadata> tables(String db);
 
         public abstract void drop(String db, String name) throws SQLException;
+
+        public QueryResultSet execute(SQL sql) {
+              return execute(sql, (info, status) -> {
+                      LOG.info("Execute SQL({}): {},", sql, status);
+              });
+        }
 
         public abstract QueryResultSet execute(SQL sql, ExecuteCallback callback);
 

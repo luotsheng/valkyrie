@@ -4,6 +4,7 @@ import com.changhong.opendb.app.Application;
 import com.changhong.opendb.driver.ColumnMetaData;
 import com.changhong.opendb.driver.QueryResultSet;
 import com.changhong.opendb.ui.widgets.VFX;
+import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,9 +20,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.converter.DefaultStringConverter;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.changhong.opendb.utils.StringUtils.strempty;
@@ -74,7 +74,6 @@ public class ResultSetViewPane extends BorderPane
                         minus.setDisable(false);
                         check.setDisable(false);
                         cross.setDisable(false);
-                        reload.setDisable(false);
                         return;
                 }
 
@@ -84,7 +83,6 @@ public class ResultSetViewPane extends BorderPane
                         minus.setDisable(false);
                         check.setDisable(false);
                         cross.setDisable(false);
-                        reload.setDisable(false);
                         return;
                 }
 
@@ -94,7 +92,6 @@ public class ResultSetViewPane extends BorderPane
                 minus.setDisable(true);
                 check.setDisable(true);
                 cross.setDisable(true);
-                reload.setDisable(true);
         }
 
         private void setupToolAction()
@@ -104,6 +101,25 @@ public class ResultSetViewPane extends BorderPane
                         tableView.getItems().setAll(qrs.getRows());
                         tableView.refresh();
                 });
+
+                reload.setOnAction(event -> reloadAndBlinkTable());
+        }
+
+        private void reloadAndBlinkTable()
+        {
+                qrs.refresh();
+
+                refresh(qrs);
+
+                FadeTransition ft = new FadeTransition(Duration.millis(200), tableView);
+                ft.setFromValue(0.5);
+                ft.setToValue(1.0);
+                ft.setCycleCount(1);
+                ft.setAutoReverse(true);
+
+                ft.setOnFinished(event -> tableView.setOpacity(1.0));
+
+                ft.play();
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})

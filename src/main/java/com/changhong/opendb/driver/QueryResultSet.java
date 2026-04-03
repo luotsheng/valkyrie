@@ -1,5 +1,6 @@
 package com.changhong.opendb.driver;
 
+import com.changhong.opendb.driver.executor.SQLExecutor;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -17,11 +18,22 @@ public class QueryResultSet
         private boolean editable = false;
         private boolean addable = false;
 
-        public QueryResultSet(List<ColumnMetaData> columns,
-                              List<List<String>> rows)
+        private final SQL origin;
+        private final SQLExecutor executor;
+
+        public QueryResultSet(SQL origin, SQLExecutor executor)
         {
-                this.columns = columns;
-                this.rows = rows;
+                this.origin = origin;
+                this.executor = executor;
+        }
+
+        public void refresh()
+        {
+                if (executor != null && origin != null) {
+                        QueryResultSet refreshQRS = executor.execute(origin);
+                        this.columns = refreshQRS.columns;
+                        this.rows = refreshQRS.rows;
+                }
         }
 
         public void addEmptyRow()

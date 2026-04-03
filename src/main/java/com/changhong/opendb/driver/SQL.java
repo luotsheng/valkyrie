@@ -1,5 +1,6 @@
 package com.changhong.opendb.driver;
 
+import com.changhong.opendb.utils.Catcher;
 import lombok.Getter;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -16,25 +17,29 @@ import java.util.*;
 public class SQL implements Iterable<SQLParsedStatement>
 {
         @Getter
-        private final long taskId;
+        private long taskId;
         @Getter
-        private final String db;
+        private String db;
+
         private final List<SQLParsedStatement> sqlStatements = new ArrayList<>();
 
         public SQL(Long taskId, String db, String sqlText)
-                throws JSQLParserException
         {
-                this.taskId = taskId;
-                this.db = db;
+                try {
+                        this.taskId = taskId;
+                        this.db = db;
 
-                Statements statements = CCJSqlParserUtil.parseStatements(sqlText);
-                int size = statements.size();
+                        Statements statements = CCJSqlParserUtil.parseStatements(sqlText);
+                        int size = statements.size();
 
-                for (int i = 0; i < size; i++) {
-                        sqlStatements.add(new SQLParsedStatement(
-                                statements.get(i),
-                                i == size - 1
-                        ));
+                        for (int i = 0; i < size; i++) {
+                                sqlStatements.add(new SQLParsedStatement(
+                                        statements.get(i),
+                                        i == size - 1
+                                ));
+                        }
+                } catch (JSQLParserException e) {
+                        Catcher.ithrow(e);
                 }
         }
 

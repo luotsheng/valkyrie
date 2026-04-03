@@ -70,8 +70,8 @@ public class ResultSetUtils
         /**
          * 结果集转 QueryResultSet 对象
          */
-        public static QueryResultSet rs2qrs(List<ColumnMetaData> columns,
-                                            ResultSet rs)
+        public static void rs2qrs(List<ColumnMetaData> columns,
+                                            ResultSet rs, QueryResultSet dst)
                 throws SQLException
         {
                 SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT_PATTERN);
@@ -88,7 +88,8 @@ public class ResultSetUtils
                         rows.add(row);
                 }
 
-                return new QueryResultSet(columns, rows);
+                dst.setColumns(columns);
+                dst.setRows(rows);
         }
 
         private static String stringify(Object val, SimpleDateFormat sdf)

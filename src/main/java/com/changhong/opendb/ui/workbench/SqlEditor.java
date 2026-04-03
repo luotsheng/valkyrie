@@ -22,6 +22,8 @@ import javafx.util.StringConverter;
 import lombok.Getter;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -35,6 +37,8 @@ import static com.changhong.opendb.utils.StringUtils.strfmt;
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public class SqlEditor extends SplitPane
 {
+        private static final Logger LOG = LoggerFactory.getLogger(SqlEditor.class);
+
         static final int QUERY_RESULT_SET_FIRST = 0;
         static final int QUERY_MESSAGE_LOG_FIRST = 1;
 
@@ -399,9 +403,9 @@ public class SqlEditor extends SplitPane
                         } catch (Throwable e) {
 
                                 Platform.runLater(() -> {
-                                        sqlMessagePane.appendError(e.getMessage());
+                                        sqlMessagePane.appendError(e.getCause().getMessage());
                                         showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
-                                        Catcher.ithrow(e);
+                                        LOG.error("run task error", e);
                                 });
 
                         } finally {
