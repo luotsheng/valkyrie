@@ -38,6 +38,21 @@ public class PreviewTableDataPane extends BorderPane
                 this.tableInfo = tableInfo;
                 this.mutableDataGridViewPane = new MutableDataGridViewPane();
 
+                mutableDataGridViewPane.setReloadProgressListener(new MutableDataGridViewPane.ReloadProgressListener()
+                {
+                        @Override
+                        public void start()
+                        {
+                                setLoadingIndicator();
+                        }
+
+                        @Override
+                        public void end()
+                        {
+                                removeLoadingIndicator();
+                        }
+                });
+
                 setCenter(mutableDataGridViewPane);
         }
 

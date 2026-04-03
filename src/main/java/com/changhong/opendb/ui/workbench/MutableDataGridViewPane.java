@@ -4,10 +4,12 @@ import com.changhong.opendb.app.Application;
 import com.changhong.opendb.driver.ColumnMetaData;
 import com.changhong.opendb.driver.Row;
 import com.changhong.opendb.driver.ShittyMutableDataGrid;
+import com.changhong.opendb.resource.Assets;
 import com.changhong.opendb.ui.widgets.EditingTableCell;
 import com.changhong.opendb.ui.widgets.VFX;
 import com.changhong.opendb.ui.widgets.VSeparator;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -48,8 +51,19 @@ public class MutableDataGridViewPane extends BorderPane
         private final Button cross = VFX.newIconButton("取消更改", "cross");
         private final Button reload = VFX.newIconButton("刷新", "reload");
 
+        private final Node progressIndicator = Assets.newProgressIndicator();
+
         private ShittyMutableDataGrid grid;
         private TablePosition<?, ?> start;
+
+        public interface ReloadProgressListener
+        {
+                void start();
+                void end();
+        }
+
+        @Setter
+        private ReloadProgressListener reloadProgressListener;
 
         public MutableDataGridViewPane()
         {
@@ -133,21 +147,50 @@ public class MutableDataGridViewPane extends BorderPane
 
         private void reloadAndBlinkTable()
         {
+                reload.setDisable(true);
+
+                if (reloadProgressListener != null) {
+
+                        reloadProgressListener.start();
+
+                } else {
+
+                        dataGridTab.setGraphic(progressIndicator);
+
+                }
+
                 new Thread(() -> {
 
-                        grid.reload();
+                        try {
+                                grid.reload();
 
-                        render(grid);
+                                Platform.runLater(() -> render(grid));
 
-                        FadeTransition ft = new FadeTransition(Duration.millis(200), tableView);
-                        ft.setFromValue(0.5);
-                        ft.setToValue(1.0);
-                        ft.setCycleCount(1);
-                        ft.setAutoReverse(true);
+                        } finally {
 
-                        ft.setOnFinished(event -> tableView.setOpacity(1.0));
+                                FadeTransition ft = new FadeTransition(Duration.millis(200), tableView);
+                                ft.setFromValue(0.1);
+                                ft.setToValue(1.0);
+                                ft.setCycleCount(1);
+                                ft.setAutoReverse(true);
 
-                        ft.play();
+                                ft.setOnFinished(event -> tableView.setOpacity(1.0));
+
+                                ft.play();
+
+                                if (reloadProgressListener != null) {
+
+                                        Platform.runLater(reloadProgressListener::end);
+
+                                } else {
+
+                                        Platform.runLater(() -> dataGridTab.setGraphic(null));
+
+                                }
+
+                                reload.setDisable(false);
+
+                        }
 
                 }).start();
         }
