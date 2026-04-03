@@ -63,7 +63,7 @@ public class PreviewTableDataPane extends BorderPane
                                         tableInfo,
                                         start,
                                         size);
-                                Platform.runLater(() -> mutableDataGridViewPane.refresh(rs));
+                                Platform.runLater(() -> mutableDataGridViewPane.render(rs));
                         } catch (Exception e) {
                                 Catcher.ithrow(e);
                         } finally {

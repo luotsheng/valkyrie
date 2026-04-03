@@ -393,7 +393,7 @@ public class SqlEditor extends SplitPane
 
                                 if (grid != null) {
                                         Platform.runLater(() -> {
-                                                mutableDataGridViewPane.refresh(grid);
+                                                mutableDataGridViewPane.render(grid);
                                                 showResultSetTableViewPane(QUERY_RESULT_SET_FIRST);
                                         });
                                 } else {

@@ -1,11 +1,10 @@
 package com.changhong.opendb.ui.widgets;
 
+import com.changhong.opendb.ui.workbench.ModifyCell;
 import javafx.application.Platform;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
-
-import java.util.Objects;
 
 /**
  * @author Luo Tiansheng
@@ -18,14 +17,24 @@ public class EditingTableCell<S> extends TextFieldTableCell<S, String>
          */
         private TextField tf;
 
+        private boolean isCommit = false;
+
         /**
          * 开始编辑前记录旧值
          */
         private String oldValue;
 
-        public EditingTableCell()
+        public interface ModifyListener
+        {
+                void modify(ModifyCell cell);
+        }
+
+        private final ModifyListener modifyListener;
+
+        public EditingTableCell(ModifyListener modifyListener)
         {
                 super(new DefaultStringConverter());
+                this.modifyListener = modifyListener;
         }
 
         @Override
@@ -33,6 +42,13 @@ public class EditingTableCell<S> extends TextFieldTableCell<S, String>
         public void updateItem(String item, boolean empty)
         {
                 super.updateItem(item, empty);
+
+                if (modifyListener != null && isCommit) {
+                        int colIndex = getTableView().getColumns().indexOf(getTableColumn());
+                        int rowIndex = getTableRow().getIndex();
+                        modifyListener.modify(new ModifyCell(colIndex, rowIndex, oldValue, item));
+                        isCommit = false;
+                }
 
                 if (empty) {
                         setText(null);
@@ -94,6 +110,7 @@ public class EditingTableCell<S> extends TextFieldTableCell<S, String>
         @Override
         public void commitEdit(String newValue)
         {
+                isCommit = true;
                 super.commitEdit(newValue);
         }
 

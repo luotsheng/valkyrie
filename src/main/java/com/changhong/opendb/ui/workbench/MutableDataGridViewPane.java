@@ -6,6 +6,7 @@ import com.changhong.opendb.driver.Row;
 import com.changhong.opendb.driver.ShittyMutableDataGrid;
 import com.changhong.opendb.ui.widgets.EditingTableCell;
 import com.changhong.opendb.ui.widgets.VFX;
+import com.changhong.opendb.ui.widgets.VSeparator;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -15,7 +16,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -37,7 +37,7 @@ import static com.changhong.opendb.utils.StringUtils.strfmt;
 public class MutableDataGridViewPane extends BorderPane
 {
         private final TabPane tabPane = new TabPane();
-        private final Tab resultSetTab = new Tab();
+        private final Tab dataGridTab = new Tab();
         private final TableView<Row> tableView = VFX.newTableView();
         private final ToolBar toolBar = new ToolBar();
         private final VBox vContainer;
@@ -56,26 +56,28 @@ public class MutableDataGridViewPane extends BorderPane
                 setupTableView();
 
                 toolBar.setStyle("-fx-spacing: 2px;");
-                toolBar.getItems().addAll(plus, minus, check, cross, reload);
+                toolBar.getItems().addAll(
+                        plus, minus,
+                        new VSeparator(),
+                        check, cross, reload);
 
                 vContainer = new VBox(tableView, toolBar);
                 VBox.setVgrow(tableView, Priority.ALWAYS);
-                resultSetTab.setContent(vContainer);
+                dataGridTab.setContent(vContainer);
 
                 setCenter(tabPane);
 
-                setupToolAction();
+                updateCheckCross();
+                setupToolButtonAction();
         }
 
-        private void setEnableToolBar(boolean addable, boolean editable)
+        private void setToolButtonStatus(boolean addable, boolean editable)
         {
                 /* 如果可新增，说明在表数据页面 */
                 if (addable) {
                         tableView.setEditable(true);
                         plus.setDisable(false);
                         minus.setDisable(false);
-                        check.setDisable(false);
-                        cross.setDisable(false);
                         return;
                 }
 
@@ -83,8 +85,6 @@ public class MutableDataGridViewPane extends BorderPane
                 if (editable) {
                         tableView.setEditable(true);
                         minus.setDisable(false);
-                        check.setDisable(false);
-                        cross.setDisable(false);
                         return;
                 }
 
@@ -92,11 +92,18 @@ public class MutableDataGridViewPane extends BorderPane
                 tableView.setEditable(false);
                 plus.setDisable(true);
                 minus.setDisable(true);
-                check.setDisable(true);
-                cross.setDisable(true);
         }
 
-        private void setupToolAction()
+        private void updateCheckCross()
+        {
+                boolean disable = (grid == null ||
+                        !grid.isEmptyUpdateBuffer());
+
+                check.setDisable(disable);
+                cross.setDisable(disable);
+        }
+
+        private void setupToolButtonAction()
         {
                 plus.setOnAction(event -> {
                         grid.addEmptyRow();
@@ -104,14 +111,31 @@ public class MutableDataGridViewPane extends BorderPane
                         tableView.refresh();
                 });
 
+                check.setOnAction(event -> applyCheck());
+                cross.setOnAction(event -> applyCross());
+
                 reload.setOnAction(event -> reloadAndBlinkTable());
+        }
+
+        private void applyCheck()
+        {
+                grid.flushUpdateBuffer();
+                updateCheckCross();
+                render(grid);
+        }
+
+        private void applyCross()
+        {
+                grid.clearUpdateBuffer();
+                updateCheckCross();
+                render(grid);
         }
 
         private void reloadAndBlinkTable()
         {
                 grid.refresh();
 
-                refresh(grid);
+                render(grid);
 
                 FadeTransition ft = new FadeTransition(Duration.millis(200), tableView);
                 ft.setFromValue(0.5);
@@ -217,7 +241,7 @@ public class MutableDataGridViewPane extends BorderPane
 
         public void selectResultSetFirst()
         {
-                select(resultSetTab);
+                select(dataGridTab);
         }
 
         public void select(Tab tab)
@@ -232,19 +256,33 @@ public class MutableDataGridViewPane extends BorderPane
                         tabPane.getTabs().addLast(tab);
         }
 
-        public void refresh(ShittyMutableDataGrid grid)
+        /**
+         * 当有数据被编辑时触发（不论是否修改）
+         */
+        private void commit(ModifyCell cell)
         {
-                this.grid = grid;
+                if (cell.isUnmodified())
+                        return;
+
+                grid.addUpdateRow(cell.getColumnIndex(), cell.getRowIndex(), cell.getNewValue());
+        }
+
+        public void render(ShittyMutableDataGrid grid)
+        {
+                if (this.grid != grid) {
+                        this.grid = grid;
+                        this.grid.setUpdateListener(r -> updateCheckCross());
+                }
 
                 tableView.getColumns().clear();
                 tableView.getItems().clear();
 
-                if (!tabPane.getTabs().contains(resultSetTab))
-                        tabPane.getTabs().addFirst(resultSetTab);
+                if (!tabPane.getTabs().contains(dataGridTab))
+                        tabPane.getTabs().addFirst(dataGridTab);
 
-                setEnableToolBar(grid.isAddable(), grid.isEditable());
+                setToolButtonStatus(grid.isAddable(), grid.isEditable());
 
-                resultSetTab.setText(strfmt("查询结果集 (%d条)", grid.getRows().size()));
+                dataGridTab.setText(strfmt("查询结果集 (%d条)", grid.getRows().size()));
 
                 for (int i = 0; i < grid.getColumns().size(); i++) {
                         int index = i;
@@ -273,7 +311,7 @@ public class MutableDataGridViewPane extends BorderPane
                         col.setMaxWidth(1000);
                         col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(index)));
 
-                        col.setCellFactory(c -> new EditingTableCell<>());
+                        col.setCellFactory(c -> new EditingTableCell<>(this::commit));
 
                         tableView.getColumns().add(col);
                 }
@@ -285,7 +323,7 @@ public class MutableDataGridViewPane extends BorderPane
 
         public void setOnCloseRequest(EventHandler<Event> value)
         {
-                resultSetTab.setOnCloseRequest(value);
+                dataGridTab.setOnCloseRequest(value);
         }
 
         private static int calcColWidth(String colText, List<Row> values, int index)
