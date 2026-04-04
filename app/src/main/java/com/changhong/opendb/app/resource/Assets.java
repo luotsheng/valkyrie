@@ -73,6 +73,7 @@ public class Assets
                 IMAGES.put("check", load("/assets/icons/check.png"));
                 IMAGES.put("cross", load("/assets/icons/cross.png"));
                 IMAGES.put("reload", load("/assets/icons/reload.png"));
+                IMAGES.put("save", load("/assets/icons/save.png"));
 
         }
 

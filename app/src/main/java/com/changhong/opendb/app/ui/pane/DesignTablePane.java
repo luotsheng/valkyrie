@@ -6,9 +6,8 @@ import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.ui.widgets.VStringEditingTableCell;
 import com.changhong.opendb.app.ui.widgets.VCheckBoxTableCell;
 import com.changhong.opendb.app.ui.widgets.VFX;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.collections.FXCollections;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
@@ -24,25 +23,42 @@ public class DesignTablePane extends DetailPane
         private final TableMetaData tableMetaData;
         private final List<ColumnMetaData> columnMetaDatas;
         private final TableView<ColumnMetaData> tableView = VFX.newTableView();
+        private final ToolBar toolBar = new ToolBar();
 
         public DesignTablePane(TableMetaData tableMetaData, List<ColumnMetaData> columnMetaDatas)
         {
                 this.tableMetaData = tableMetaData;
                 this.columnMetaDatas = columnMetaDatas;
 
+                setupToolBar();
                 setupTableView();
 
+                setTop(toolBar);
                 setCenter(tableView);
+        }
+
+        private void setupToolBar()
+        {
+                Button save = VFX.newIconButton("保存", "save");
+                Button plus = VFX.newIconButton("新增行", "plus");
+                Button minus = VFX.newIconButton("删除行", "minus");
+
+                toolBar.getItems().addAll(
+                        save,
+                        plus,
+                        minus
+                );
         }
 
         private void setupTableView()
         {
+                tableView.setEditable(true);
                 tableView.getSelectionModel().setCellSelectionEnabled(true);
                 tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
                 // 列
-                TableColumn<ColumnMetaData, String> name = VFX.newEditableTableColumn("字段名称");
-                TableColumn<ColumnMetaData, String> type = VFX.newEditableTableColumn("字段类型");
+                TableColumn<ColumnMetaData, String> name = VFX.newEditableTableColumn("名称");
+                TableColumn<ColumnMetaData, String> type = VFX.newEditableTableColumn("类型");
                 TableColumn<ColumnMetaData, Integer> length = VFX.newEditableTableColumn("长度");
                 TableColumn<ColumnMetaData, Integer> scale = VFX.newEditableTableColumn("小数位");
                 TableColumn<ColumnMetaData, String> defaultValue = VFX.newEditableTableColumn("默认值");
@@ -66,21 +82,22 @@ public class DesignTablePane extends DetailPane
                 defaultValue.setCellFactory(c -> new VStringEditingTableCell<>());
                 length.setCellFactory(c -> new TextFieldTableCell<>(new IntegerStringConverter()));
                 scale.setCellFactory(c -> new TextFieldTableCell<>(new IntegerStringConverter()));
+                comment.setCellFactory(c -> new VStringEditingTableCell<>());
 
                 nullable.setCellFactory(c -> new VCheckBoxTableCell<>());
                 primary.setCellFactory(c -> new VCheckBoxTableCell<>());
                 autoIncrement.setCellFactory(c -> new VCheckBoxTableCell<>());
 
                 // 初始化宽度
-                name.setPrefWidth(230);
-                type.setPrefWidth(120);
+                name.setPrefWidth(150);
+                type.setPrefWidth(100);
                 length.setPrefWidth(100);
                 scale.setPrefWidth(100);
-                defaultValue.setPrefWidth(230);
+                defaultValue.setPrefWidth(200);
                 nullable.setPrefWidth(120);
                 primary.setPrefWidth(100);
                 autoIncrement.setPrefWidth(100);
-                comment.setPrefWidth(300);
+                comment.setPrefWidth(200);
 
                 tableView.getColumns().addAll(
                         name,
@@ -90,9 +107,10 @@ public class DesignTablePane extends DetailPane
                         nullable,
                         primary,
                         autoIncrement,
-                        defaultValue
+                        defaultValue,
+                        comment
                 );
 
-                tableView.getItems().add(new ColumnMetaData());
+                tableView.getItems().addAll(FXCollections.observableArrayList(columnMetaDatas));
         }
 }
