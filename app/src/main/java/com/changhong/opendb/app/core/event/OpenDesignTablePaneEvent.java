@@ -6,7 +6,7 @@ import com.changhong.opendb.app.driver.executor.SQLExecutor;
 
 import java.util.List;
 
-import static com.changhong.opendb.app.utils.StringUtils.strfmt;
+import static com.changhong.string.StringUtils.strwfmt;
 
 /**
  * 打开设计表面板事件
@@ -34,7 +34,7 @@ public class OpenDesignTablePaneEvent extends Event
 
         public String id()
         {
-                return strfmt("%s@%s(%s)",
+                return strwfmt("%s@%s(%s)",
                         table.getName(),
                         table.getDatabase(),
                         connectionName);

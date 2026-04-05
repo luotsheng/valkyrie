@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.changhong.opendb.app.utils.StringUtils.strfmt;
+import static com.changhong.string.StringUtils.strwfmt;
 
 /**
  * @author Luo Tiansheng
@@ -77,7 +77,7 @@ public class ConfirmDialog
                         ok.setDisable(!newVal);
                 });
 
-                openDialog(stage, strfmt(fmt, args), checkBox, ok, cancel);
+                openDialog(stage, strwfmt(fmt, args), checkBox, ok, cancel);
 
                 return flag.get();
         }
@@ -102,7 +102,7 @@ public class ConfirmDialog
                         stage.close();
                 });
 
-                openDialog(stage, strfmt(fmt, args), ok, cancel);
+                openDialog(stage, strwfmt(fmt, args), ok, cancel);
 
                 return flag.get();
         }

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 
-import static com.changhong.opendb.app.utils.StringUtils.strfmt;
+import static com.changhong.string.StringUtils.strwfmt;
 
 /**
  * @author Luo Tiansheng
@@ -80,7 +80,7 @@ public class SqlEditor extends SplitPane
 
                 this.name = queryInfo != null
                         ? queryInfo.getName()
-                        : strfmt("查询脚本_%s.sql@[ N/A ]", (numberCount++));
+                        : strwfmt("查询脚本_%s.sql@[ N/A ]", (numberCount++));
 
                 this.ownerTab = ownerTab;
 

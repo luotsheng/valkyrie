@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.*;
 
-import static com.changhong.opendb.app.utils.StringUtils.strfmt;
+import static com.changhong.string.StringUtils.strwfmt;
 import static com.changhong.utils.Transformer.atobool;
 import static com.changhong.utils.Transformer.atoi;
 
@@ -63,7 +63,7 @@ public class MySQLExecutor extends SQLExecutor
         @Override
         public List<TableMetaData> getTables(String db)
         {
-                String sql = strfmt("""
+                String sql = strwfmt("""
                             SELECT
                             	`TABLE_NAME` AS `name`,
                             	`CREATE_TIME` AS `createTime`,
@@ -149,11 +149,11 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         @Override
-        public void drop(String db, String name) throws SQLException
+        public void drop(String db, String table) throws SQLException
         {
                 try (Connection connection = ds.getConnection();
                      Statement statement = ds.use(connection, db)) {
-                        statement.execute(strfmt("DROP TABLE `%s`;", name));
+                        statement.execute(strwfmt("DROP TABLE `%s`;", table));
                 }
         }
 
@@ -233,7 +233,7 @@ public class MySQLExecutor extends SQLExecutor
         {
                 MutableDataGrid grid;
 
-                String text = strfmt("SELECT * FROM %s LIMIT %d OFFSET %d;", tbMeta.getName(), size, start);
+                String text = strwfmt("SELECT * FROM %s LIMIT %d OFFSET %d;", tbMeta.getName(), size, start);
 
                 SQL sql = new SQL(0L, tbMeta.getDatabase(), text);
 

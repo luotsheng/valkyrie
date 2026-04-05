@@ -80,7 +80,7 @@ public abstract class SQLExecutor
 
         public abstract List<TableIndexMetaData> getIndexes(TableMetaData table);
 
-        public abstract void drop(String db, String name) throws SQLException;
+        public abstract void drop(String db, String table) throws SQLException;
 
         public MutableDataGrid execute(SQL sql) {
               return execute(sql, new DefaultExecutorCallback());

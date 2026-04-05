@@ -4,7 +4,7 @@ import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.exception.CatcherException;
 import javafx.application.Platform;
 
-import static com.changhong.opendb.app.utils.StringUtils.strfmt;
+import static com.changhong.string.StringUtils.strwfmt;
 
 /**
  * @author Luo Tiansheng
@@ -19,7 +19,7 @@ public class Catcher
 
         public static void ithrow(String msg, Object... args)
         {
-                ithrow(new CatcherException(strfmt(msg, args)));
+                ithrow(new CatcherException(strwfmt(msg, args)));
         }
 
         /**

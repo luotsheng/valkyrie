@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.changhong.opendb.app.utils.StringUtils.strfmt;
+import static com.changhong.string.StringUtils.strwfmt;
 
 /**
  * @author Luo Tiansheng
@@ -197,7 +197,7 @@ public class Workbench extends VBox implements EventListener
 
         private void handleNewMutableDataGridPaneEvent(NewMutableDataGridPaneEvent event)
         {
-                String id = strfmt("%s@%s (%s)",
+                String id = strwfmt("%s@%s (%s)",
                         event.info.getName(),
                         event.database,
                         event.sqlExecutor.getConnectionName());

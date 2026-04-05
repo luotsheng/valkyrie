@@ -31,8 +31,8 @@ import lombok.Setter;
 
 import java.util.List;
 
-import static com.changhong.opendb.app.utils.StringUtils.strempty;
-import static com.changhong.opendb.app.utils.StringUtils.strfmt;
+import static com.changhong.string.StringUtils.strnempty;
+import static com.changhong.string.StringUtils.strwfmt;
 
 /**
  * @author Luo Tiansheng
@@ -293,7 +293,7 @@ public class MutableDataGridViewPane extends BorderPane
                                         .getItems().get(ROW);
                                 String text = tableRow.get(cell.getColumn());
 
-                                if (!strempty(text))
+                                if (strnempty(text))
                                         builder.append(text);
 
                                 builder.append("\t");
@@ -371,7 +371,7 @@ public class MutableDataGridViewPane extends BorderPane
 
                 setToolButtonStatus(grid.isAddable(), grid.isEditable());
 
-                dataGridTab.setText(strfmt("查询结果集 (%d条)", grid.getRows().size()));
+                dataGridTab.setText(strwfmt("查询结果集 (%d条)", grid.getRows().size()));
 
                 for (int i = 0; i < grid.getColumns().size(); i++) {
                         int index = i;

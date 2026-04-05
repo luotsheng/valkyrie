@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import static com.changhong.opendb.app.utils.StringUtils.strfmt;
+import static com.changhong.string.StringUtils.strwfmt;
 
 /**
  * 脚本数据
@@ -30,7 +30,7 @@ public class QueryScriptRepository
                                            String content)
         {
                 File sqlFile = new File(
-                        strfmt("%s/%s/%s/%s.sql", Users.connectionDir, conn, db, name)
+                        strwfmt("%s/%s/%s/%s.sql", Users.connectionDir, conn, db, name)
                 );
 
                 return saveQueryScript(sqlFile, content);
@@ -58,7 +58,7 @@ public class QueryScriptRepository
                 List<QueryInfo> queryInfos = new ArrayList<>();
 
                 File sqlDir = new File(
-                        strfmt("%s/%s/%s",
+                        strwfmt("%s/%s/%s",
                                 Users.connectionDir,
                                 connection.getName(),
                                 database.getName())
