@@ -10,7 +10,6 @@
 
 .vfx-code-area .keyword {
     -fx-fill: #0066cc;
-    -fx-font-weight: bold;
 }
 
 .vfx-code-area .string {

@@ -48,7 +48,7 @@ public class SqlEditor extends SplitPane
         @Getter
         private final Tab ownerTab;
         private final ToolBar toolBar;
-        private final VCodeArea codeArea;
+        private final VfxCodeArea codeArea;
         private final VirtualizedScrollPane<CodeArea> virtualizedScrollPane;
         private final BorderPane topBorderPane;
         private final MutableDataGridViewPane mutableDataGridViewPane;
@@ -88,7 +88,7 @@ public class SqlEditor extends SplitPane
 
                 topBorderPane = new BorderPane();
                 toolBar = new ToolBar();
-                codeArea = new VCodeArea();
+                codeArea = new VfxCodeArea();
                 virtualizedScrollPane = new VirtualizedScrollPane<>(codeArea);
                 mutableDataGridViewPane = new MutableDataGridViewPane();
                 sqlMessagePane = new SqlMessagePane();
@@ -161,10 +161,10 @@ public class SqlEditor extends SplitPane
                 toolBar.getItems().addAll(
                         connectionComboBox,
                         databaseComboBox,
-                        new VSeparator(),
+                        new VfxSeparator(),
                         run,
                         stop,
-                        new VSeparator(),
+                        new VfxSeparator(),
                         beautify);
 
         }

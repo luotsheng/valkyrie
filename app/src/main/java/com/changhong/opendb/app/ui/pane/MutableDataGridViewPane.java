@@ -6,9 +6,9 @@ import com.changhong.opendb.app.driver.Row;
 import com.changhong.opendb.app.driver.MutableDataGrid;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.widgets.ConfirmDialog;
-import com.changhong.opendb.app.ui.widgets.VStringEditingTableCell;
+import com.changhong.opendb.app.ui.widgets.VfxStringEditingTableCell;
 import com.changhong.opendb.app.ui.widgets.VFX;
-import com.changhong.opendb.app.ui.widgets.VSeparator;
+import com.changhong.opendb.app.ui.widgets.VfxSeparator;
 import com.changhong.opendb.app.ui.workbench.ModifyCell;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -74,7 +74,7 @@ public class MutableDataGridViewPane extends BorderPane
                 toolBar.setStyle("-fx-spacing: 2px;");
                 toolBar.getItems().addAll(
                         plus, minus,
-                        new VSeparator(),
+                        new VfxSeparator(),
                         check, cross, reload);
 
                 vContainer = new VBox(tableView, toolBar);
@@ -400,7 +400,7 @@ public class MutableDataGridViewPane extends BorderPane
                         col.setMaxWidth(1000);
                         col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(index)));
 
-                        col.setCellFactory(c -> new VStringEditingTableCell<>(this::commit));
+                        col.setCellFactory(c -> new VfxStringEditingTableCell<>(this::commit));
 
                         tableView.getColumns().add(col);
                 }

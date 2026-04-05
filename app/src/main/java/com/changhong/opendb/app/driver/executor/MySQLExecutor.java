@@ -103,9 +103,8 @@ public class MySQLExecutor extends SQLExecutor
         @Override
         public List<TableIndexMetaData> getIndexes(TableMetaData table)
         {
-                SQL sql = new SQL(table.getDatabase(),
-                        "SHOW INDEX FROM %s;",
-                        table.getName());
+                String text = "SHOW INDEX FROM " + table.getName() + ";";
+                SQL sql = new SQL(table.getDatabase(), text);
 
                 MutableDataGrid dataGrid = execute(sql);
 

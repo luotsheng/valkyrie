@@ -6,15 +6,14 @@ import com.changhong.opendb.app.driver.TableIndexMetaData;
 import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
 import com.changhong.opendb.app.resource.Assets;
-import com.changhong.opendb.app.ui.widgets.VStringEditingTableCell;
-import com.changhong.opendb.app.ui.widgets.VCheckBoxTableCell;
+import com.changhong.opendb.app.ui.widgets.VfxStringEditingTableCell;
+import com.changhong.opendb.app.ui.widgets.VfxCheckBoxTableCell;
 import com.changhong.opendb.app.ui.widgets.VFX;
 import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
-import javafx.util.converter.BooleanStringConverter;
 
 import java.util.List;
 
@@ -129,16 +128,16 @@ public class TableDesignerTablePane extends DetailPane
                 autoIncrement.setCellValueFactory(new PropertyValueFactory<>("autoIncrement"));
                 comment.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
-                name.setCellFactory(c -> new VStringEditingTableCell<>());
-                type.setCellFactory(c -> new VStringEditingTableCell<>());
-                defaultValue.setCellFactory(c -> new VStringEditingTableCell<>());
+                name.setCellFactory(c -> new VfxStringEditingTableCell<>());
+                type.setCellFactory(c -> new VfxStringEditingTableCell<>());
+                defaultValue.setCellFactory(c -> new VfxStringEditingTableCell<>());
                 length.setCellFactory(c -> new TextFieldTableCell<>(new IntegerStringConverter()));
                 scale.setCellFactory(c -> new TextFieldTableCell<>(new IntegerStringConverter()));
-                comment.setCellFactory(c -> new VStringEditingTableCell<>());
+                comment.setCellFactory(c -> new VfxStringEditingTableCell<>());
 
-                nullable.setCellFactory(c -> new VCheckBoxTableCell<>());
-                primary.setCellFactory(c -> new VCheckBoxTableCell<>());
-                autoIncrement.setCellFactory(c -> new VCheckBoxTableCell<>());
+                nullable.setCellFactory(c -> new VfxCheckBoxTableCell<>());
+                primary.setCellFactory(c -> new VfxCheckBoxTableCell<>());
+                autoIncrement.setCellFactory(c -> new VfxCheckBoxTableCell<>());
 
                 // 初始化宽度
                 name.setPrefWidth(150);
@@ -182,10 +181,10 @@ public class TableDesignerTablePane extends DetailPane
                 type.setCellValueFactory(new PropertyValueFactory<>("type"));
                 visible.setCellValueFactory(new PropertyValueFactory<>("visible"));
 
-                name.setCellFactory(c -> new VStringEditingTableCell<>());
-                columns.setCellFactory(c -> new VStringEditingTableCell<>());
-                type.setCellFactory(c -> new VStringEditingTableCell<>());
-                visible.setCellFactory(c -> new VCheckBoxTableCell<>());
+                name.setCellFactory(c -> new VfxStringEditingTableCell<>());
+                columns.setCellFactory(c -> new VfxStringEditingTableCell<>());
+                type.setCellFactory(c -> new VfxStringEditingTableCell<>());
+                visible.setCellFactory(c -> new VfxCheckBoxTableCell<>());
 
                 name.setPrefWidth(150);
                 columns.setPrefWidth(200);

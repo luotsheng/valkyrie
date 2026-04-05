@@ -6,7 +6,7 @@ import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
 import com.changhong.opendb.app.ui.widgets.*;
-import com.changhong.opendb.app.ui.widgets.DateCell;
+import com.changhong.opendb.app.ui.widgets.VfxDateTableCell;
 import com.changhong.opendb.app.utils.Catcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -82,7 +82,7 @@ public class DatabaseDetailPane extends DetailPane
                         modifyTable,
                         newTable,
                         delTable,
-                        new VSeparator(),
+                        new VfxSeparator(),
                         spacer,
                         searchBox);
         }
@@ -196,8 +196,8 @@ public class DatabaseDetailPane extends DetailPane
                         }
                 });
 
-                createTime.setCellFactory(col -> new DateCell<>());
-                updateTime.setCellFactory(col -> new DateCell<>());
+                createTime.setCellFactory(col -> new VfxDateTableCell<>());
+                updateTime.setCellFactory(col -> new VfxDateTableCell<>());
         }
 
         public void update(List<TableMetaData> tables)

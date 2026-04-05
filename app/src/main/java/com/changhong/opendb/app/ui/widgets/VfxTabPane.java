@@ -14,7 +14,7 @@ import java.util.*;
  * @author Luo Tiansheng
  * @since 2026/4/1
  */
-public class VTabPane extends TabPane implements ObservableList<Tab>
+public class VfxTabPane extends TabPane implements ObservableList<Tab>
 {
         /// ///////////////////////////////////////////////////////////
         /// 增强函数

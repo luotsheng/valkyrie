@@ -26,15 +26,13 @@ public class SQL implements Iterable<SQLParsedStatement>
 
         private final List<SQLParsedStatement> sqlStatements = new ArrayList<>();
 
-        public SQL(String db, String sqlText, Object... args)
+        public SQL(String db, String sqlText)
         {
-                this(-1L, db, sqlText, args);
+                this(-1L, db, sqlText);
         }
 
-        public SQL(Long taskId, String db, String sqlText, Object... args)
+        public SQL(Long taskId, String db, String sqlText)
         {
-                sqlText = strwfmt(sqlText, args);
-
                 try {
                         this.taskId = taskId;
                         this.db = db;

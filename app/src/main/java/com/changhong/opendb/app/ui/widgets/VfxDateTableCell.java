@@ -9,7 +9,7 @@ import java.util.Date;
  * @author Luo Tiansheng
  * @since 2026/3/27
  */
-public class DateCell<S> extends TableCell<S, Date>
+public class VfxDateTableCell<S> extends TableCell<S, Date>
 {
         private final SimpleDateFormat sdf =
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

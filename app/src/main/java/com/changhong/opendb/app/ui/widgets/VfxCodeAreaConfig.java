@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class VCodeAreaConfig
+public class VfxCodeAreaConfig
 {
         public boolean enableCopy = true;
         public boolean enablePaste = true;

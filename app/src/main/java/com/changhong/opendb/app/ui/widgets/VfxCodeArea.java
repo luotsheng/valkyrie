@@ -22,7 +22,7 @@ import static com.changhong.opendb.app.utils.StringUtils.strempty;
  * @author Luo Tiansheng
  * @since 2026/4/2
  */
-public class VCodeArea extends CodeArea
+public class VfxCodeArea extends CodeArea
 {
         static final Pattern PATTERN = Pattern.compile(
                 "(?<KEYWORD>\\b(" + String.join("|", SqlKeyWordDefine.KEYWORDS) + ")\\b)"
@@ -33,7 +33,7 @@ public class VCodeArea extends CodeArea
         );
 
         public interface HighlightingListener {
-                void apply(VCodeArea area);
+                void apply(VfxCodeArea area);
         }
 
         public interface ShowingMenuListener {
@@ -45,12 +45,12 @@ public class VCodeArea extends CodeArea
 
         private final ContextMenu contextMenu = new ContextMenu();
 
-        public VCodeArea()
+        public VfxCodeArea()
         {
-                this(new VCodeAreaConfig());
+                this(new VfxCodeAreaConfig());
         }
 
-        public VCodeArea(VCodeAreaConfig config)
+        public VfxCodeArea(VfxCodeAreaConfig config)
         {
                 setStyle("-fx-font-weight: normal;");
 
