@@ -67,7 +67,7 @@ public class ODBNConnection extends ODBNode
                         try {
                                 dataSource = new MySQLDataSource(info);
                                 sqlExecutor = dataSource.newSQLExecutor(getName());
-                                setupDatabases(sqlExecutor.databases());
+                                setupDatabases(sqlExecutor.getDatabases());
                                 setExpanded(true);
                                 openFlag = true;
                         } catch (Throwable e) {

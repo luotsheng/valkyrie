@@ -5,6 +5,9 @@ import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.exception.CatcherException;
 import com.changhong.opendb.app.driver.*;
 import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
+import com.changhong.opendb.app.driver.sql.SQL;
+import com.changhong.opendb.app.driver.sql.SQLCommandType;
+import com.changhong.opendb.app.driver.sql.SQLParsedStatement;
 import com.changhong.opendb.app.utils.Catcher;
 import com.changhong.opendb.app.utils.ResultSets;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
@@ -13,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.changhong.opendb.app.utils.StringUtils.strfmt;
 import static com.changhong.utils.Transformer.atobool;
@@ -38,7 +40,7 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         @Override
-        public List<String> databases()
+        public List<String> getDatabases()
         {
                 String sql = "SHOW DATABASES;";
 
@@ -59,7 +61,7 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         @Override
-        public List<TableMetaData> tables(String db)
+        public List<TableMetaData> getTables(String db)
         {
                 String sql = strfmt("""
                             SELECT
@@ -129,7 +131,10 @@ public class MySQLExecutor extends SQLExecutor
                         TableIndexMetaData index = new TableIndexMetaData();
                         index.setName(keyName);
                         index.setType(dataGrid.getRowValue("Index_type", i));
-                        index.setVisible(atobool(dataGrid.getRowValue("Visible", i)));
+
+                        if (productMetaData.getMajorVersion() >= MySQL.VERSION_8x)
+                                index.setVisible(atobool(dataGrid.getRowValue("Visible", i)));
+
                         index.getColumnMetaDatas().add(indexColumn);
 
                         indexes.put(index.getName(), index);

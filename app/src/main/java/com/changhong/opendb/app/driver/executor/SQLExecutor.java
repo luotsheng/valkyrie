@@ -2,9 +2,13 @@ package com.changhong.opendb.app.driver.executor;
 
 import com.changhong.opendb.app.driver.*;
 import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
+import com.changhong.opendb.app.driver.sql.SQL;
+import com.changhong.opendb.app.exception.VfxRuntimeException;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -26,7 +30,12 @@ public abstract class SQLExecutor
 {
         private static final Logger LOG = LoggerFactory.getLogger(SQLExecutor.class);
 
-        private final String name;
+        @Getter
+        private final String connectionName;
+
+        @Getter
+        protected final ProductMetaData productMetaData;
+
         protected final VirtualDataSource ds;
 
         /**
@@ -41,26 +50,31 @@ public abstract class SQLExecutor
         /**
          * 创建 Jdbc 目录
          *
-         * @param name 连接名称
-         * @param ds   数据源
+         * @param connectionName 连接名称
+         * @param ds             数据源
          */
-        public SQLExecutor(String name, VirtualDataSource ds)
+        public SQLExecutor(String connectionName, VirtualDataSource ds)
         {
-                this.name = name;
+                this.connectionName = connectionName;
                 this.ds = ds;
+
+                try (var conn = ds.getConnection()) {
+                        DatabaseMetaData db = conn.getMetaData();
+                        productMetaData = new ProductMetaData();
+                        productMetaData.setProductName(db.getDatabaseProductName());
+                        productMetaData.setVersion(db.getDatabaseProductVersion());
+                        productMetaData.setMajorVersion(db.getDatabaseMajorVersion());
+                        productMetaData.setMinorVersion(db.getDatabaseMinorVersion());
+                } catch (Exception e) {
+                        LOG.error("Initialize executor error", e);
+                        throw new VfxRuntimeException(e);
+                }
+
         }
 
-        /**
-         * @return 返回 Jdbc 连接名称
-         */
-        public String name()
-        {
-                return name;
-        }
+        public abstract List<String> getDatabases();
 
-        public abstract List<String> databases();
-
-        public abstract List<TableMetaData> tables(String db);
+        public abstract List<TableMetaData> getTables(String db);
 
         public abstract List<ColumnMetaData> getColumns(TableMetaData table);
 

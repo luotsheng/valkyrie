@@ -103,7 +103,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
         private void reloadTableMetadata()
         {
                 tables.clear();
-                tables.addAll(sqlExecutor.tables(name));
+                tables.addAll(sqlExecutor.getTables(name));
         }
 
         public final void drop(TableMetaData tbMetaData) throws SQLException

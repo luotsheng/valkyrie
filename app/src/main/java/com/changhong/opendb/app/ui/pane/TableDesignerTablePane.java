@@ -2,6 +2,7 @@ package com.changhong.opendb.app.ui.pane;
 
 import atlantafx.base.util.IntegerStringConverter;
 import com.changhong.opendb.app.driver.ColumnMetaData;
+import com.changhong.opendb.app.driver.MySQL;
 import com.changhong.opendb.app.driver.TableIndexMetaData;
 import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
@@ -174,24 +175,28 @@ public class TableDesignerTablePane extends DetailPane
                 TableColumn<TableIndexMetaData, String> name = VFX.newEditableTableColumn("名称");
                 TableColumn<TableIndexMetaData, String> columns = VFX.newEditableTableColumn("索引列");
                 TableColumn<TableIndexMetaData, String> type = VFX.newEditableTableColumn("类型");
-                TableColumn<TableIndexMetaData, Boolean> visible = VFX.newEditableTableColumn("是否可见");
 
                 name.setCellValueFactory(new PropertyValueFactory<>("name"));
                 columns.setCellValueFactory(new PropertyValueFactory<>("columnsText"));
                 type.setCellValueFactory(new PropertyValueFactory<>("type"));
-                visible.setCellValueFactory(new PropertyValueFactory<>("visible"));
 
                 name.setCellFactory(c -> new VfxStringEditingTableCell<>());
                 columns.setCellFactory(c -> new VfxStringEditingTableCell<>());
                 type.setCellFactory(c -> new VfxStringEditingTableCell<>());
-                visible.setCellFactory(c -> new VfxCheckBoxTableCell<>());
 
                 name.setPrefWidth(150);
                 columns.setPrefWidth(200);
                 type.setPrefWidth(100);
-                visible.setPrefWidth(120);
 
-                indexView.getColumns().addAll(name, columns, type, visible);
+                if (executor.getProductMetaData().getMajorVersion() >= MySQL.VERSION_8x) {
+                        TableColumn<TableIndexMetaData, Boolean> visible = VFX.newEditableTableColumn("是否可见");
+                        visible.setCellValueFactory(new PropertyValueFactory<>("visible"));
+                        visible.setCellFactory(c -> new VfxCheckBoxTableCell<>());
+                        visible.setPrefWidth(120);
+                        indexView.getColumns().add(visible);
+                }
+
+                indexView.getColumns().addAll(name, columns, type);
                 indexView.getItems().addAll(FXCollections.observableArrayList(indexes));
         }
 }

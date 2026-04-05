@@ -1,4 +1,4 @@
-package com.changhong.opendb.app.driver;
+package com.changhong.opendb.app.driver.sql;
 
 /**
  * SQL 脚本命令类型

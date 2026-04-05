@@ -1,4 +1,4 @@
-package com.changhong.opendb.app.driver;
+package com.changhong.opendb.app.driver.sql;
 
 import com.changhong.opendb.app.core.exception.CatcherException;
 import com.changhong.opendb.app.utils.Catcher;
@@ -8,8 +8,6 @@ import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.*;
 
 import java.util.*;
-
-import static com.changhong.string.StringUtils.strwfmt;
 
 /**
  * SQL 脚本

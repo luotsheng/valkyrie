@@ -1,6 +1,6 @@
 package com.changhong.opendb.app.ui.workbench;
 
-import com.changhong.opendb.app.driver.SQL;
+import com.changhong.opendb.app.driver.sql.SQL;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
 import com.changhong.opendb.app.driver.MutableDataGrid;
 import com.changhong.opendb.app.model.ODBNStatus;

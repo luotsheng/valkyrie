@@ -2,6 +2,7 @@ package com.changhong.opendb.app.driver;
 
 import com.changhong.collection.Maps;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
+import com.changhong.opendb.app.driver.sql.SQL;
 import lombok.Getter;
 import lombok.Setter;
 import net.sf.jsqlparser.expression.Expression;
@@ -79,7 +80,7 @@ public class MutableDataGrid
                         .toList();
 
                 for (int i = 0; i < columns.size(); i++)
-                        columnIndices.put(columns.get(i).getName(), i);
+                        columnIndices.put(columns.get(i).getLabel(), i);
         }
 
         public void reload()
@@ -297,7 +298,7 @@ public class MutableDataGrid
          * @param index 行索引
          * @return 对应行列值
          */
-        public String getRowValue(String columnName, int index)
+        public String  getRowValue(String columnName, int index)
         {
                 return rows.get(index).get(columnIndices.get(columnName));
         }

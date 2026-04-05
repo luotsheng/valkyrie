@@ -200,7 +200,7 @@ public class Workbench extends VBox implements EventListener
                 String id = strfmt("%s@%s (%s)",
                         event.info.getName(),
                         event.database,
-                        event.sqlExecutor.name());
+                        event.sqlExecutor.getConnectionName());
 
                 Tab tab;
 

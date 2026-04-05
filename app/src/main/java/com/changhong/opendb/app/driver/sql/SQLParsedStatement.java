@@ -1,4 +1,4 @@
-package com.changhong.opendb.app.driver;
+package com.changhong.opendb.app.driver.sql;
 
 import com.changhong.opendb.app.core.exception.CatcherException;
 import com.changhong.opendb.app.utils.Catcher;
