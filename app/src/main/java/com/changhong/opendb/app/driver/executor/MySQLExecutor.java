@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.*;
 
+import static com.changhong.string.StringUtils.streq;
 import static com.changhong.string.StringUtils.strwfmt;
 import static com.changhong.utils.Transformer.atobool;
 import static com.changhong.utils.Transformer.atoi;
@@ -115,6 +116,10 @@ public class MySQLExecutor extends SQLExecutor
                 for (int i = 0; i < dataGrid.size(); i++) {
 
                         String keyName = dataGrid.getRowValue("Key_name", i);
+
+                        if (streq(keyName, "PRIMARY"))
+                                continue;
+
                         String columnName = dataGrid.getRowValue("Column_name", i);
 
                         TableIndexColumn indexColumn = new TableIndexColumn();
@@ -257,6 +262,7 @@ public class MySQLExecutor extends SQLExecutor
                 });
         }
 
+        @SuppressWarnings("SimplifiableConditionalExpression")
         private MutableDataGrid executeQueryGrid(Connection connection,
                                                  Statement statement,
                                                  SQL sql,
@@ -288,7 +294,7 @@ public class MySQLExecutor extends SQLExecutor
                         c.setScale(rsMeta.getScale(i));
 
                         c.setNullable(
-                                !c.isPrimary() && rsMeta.isNullable(i) == ResultSetMetaData.columnNullable
+                                rsMeta.isNullable(i) == ResultSetMetaData.columnNullable
                         );
 
                         c.setTable(rsMeta.getTableName(i));

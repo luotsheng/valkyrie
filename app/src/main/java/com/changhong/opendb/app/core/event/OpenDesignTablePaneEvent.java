@@ -1,10 +1,7 @@
 package com.changhong.opendb.app.core.event;
 
-import com.changhong.opendb.app.driver.ColumnMetaData;
 import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
-
-import java.util.List;
 
 import static com.changhong.string.StringUtils.strwfmt;
 
@@ -19,17 +16,14 @@ public class OpenDesignTablePaneEvent extends Event
         public final SQLExecutor executor;
         public final String connectionName;
         public final TableMetaData table;
-        public final List<ColumnMetaData> columns;
 
         public OpenDesignTablePaneEvent(SQLExecutor executor,
                                         String connectionName,
-                                        TableMetaData table,
-                                        List<ColumnMetaData> columns)
+                                        TableMetaData table)
         {
                 this.executor = executor;
                 this.connectionName = connectionName;
                 this.table = table;
-                this.columns = columns;
         }
 
         public String id()

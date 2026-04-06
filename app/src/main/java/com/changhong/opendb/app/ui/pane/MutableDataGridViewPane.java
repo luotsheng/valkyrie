@@ -40,7 +40,7 @@ public class MutableDataGridViewPane extends BorderPane
 {
         private final TabPane tabPane = new TabPane();
         private final Tab dataGridTab = new Tab();
-        private final TableView<Row> tableView = new VfxTableView<>();
+        private final VfxTableView<Row> tableView = new VfxTableView<>();
         private final ToolBar toolBar = new ToolBar();
         private final VBox vContainer;
 
@@ -200,15 +200,7 @@ public class MutableDataGridViewPane extends BorderPane
                                 grid.reload();
                                 Platform.runLater(() -> render(grid));
                         } finally {
-                                FadeTransition ft = new FadeTransition(Duration.millis(200), tableView);
-                                ft.setFromValue(0.1);
-                                ft.setToValue(1.0);
-                                ft.setCycleCount(1);
-                                ft.setAutoReverse(true);
-
-                                ft.setOnFinished(event -> tableView.setOpacity(1.0));
-
-                                ft.play();
+                                tableView.blink();
 
                                 if (enableProgressIndicator)
                                         removeProgressIndicator();
@@ -221,7 +213,6 @@ public class MutableDataGridViewPane extends BorderPane
         @SuppressWarnings({"unchecked", "rawtypes"})
         private void setupTableView()
         {
-                tableView.getStylesheets().add("vfx-table-view");
                 tableView.setEditable(true);
                 tableView.getSelectionModel().setCellSelectionEnabled(true);
                 tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

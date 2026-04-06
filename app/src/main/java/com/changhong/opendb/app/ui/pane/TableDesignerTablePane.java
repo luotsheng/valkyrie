@@ -8,13 +8,17 @@ import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.widgets.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 
 import java.util.List;
+
+import static com.changhong.string.StringUtils.streq;
 
 /**
  * @author Luo Tiansheng
@@ -23,27 +27,38 @@ import java.util.List;
 @SuppressWarnings({"FieldCanBeLocal", "unchecked"})
 public class TableDesignerTablePane extends DetailPane
 {
+        private final Tab ownerTab;
         private final SQLExecutor executor;
         private final TableMetaData tableMetaData;
-        private final List<ColumnMetaData> columnMetaDatas;
-        private final List<TableIndexMetaData> indexes;
-        private final TableView<ColumnMetaData> structureView = new VfxTableView<>();
-        private final TableView<TableIndexMetaData> indexView = new VfxTableView<>();
+        private final VfxTableView<ColumnMetaData> structureView = new VfxTableView<>();
+        private final VfxTableView<TableIndexMetaData> indexView = new VfxTableView<>();
         private final ToolBar toolBar = new ToolBar();
         private final TabPane tabPane = new TabPane();
 
-        public TableDesignerTablePane(SQLExecutor executor,
-                                      TableMetaData tableMetaData,
-                                      List<ColumnMetaData> columnMetaDatas)
+        private Node oldGraphic;
+        private final ProgressIndicator progressIndicator = Assets.newProgressIndicator();
+
+        private List<ColumnMetaData> columnMetaDatas;
+        private List<TableIndexMetaData> indexes;
+
+        private Button reload;
+
+        public TableDesignerTablePane(Tab ownerTab,
+                                      SQLExecutor executor,
+                                      TableMetaData tableMetaData)
         {
+                this.ownerTab = ownerTab;
                 this.executor = executor;
                 this.tableMetaData = tableMetaData;
-                this.columnMetaDatas = columnMetaDatas;
+                this.columnMetaDatas = executor.getColumns(tableMetaData);
                 this.indexes = executor.getIndexes(tableMetaData);
 
                 setupToolBar();
+
                 setupStructureView();
                 setupIndexView();
+
+                applyReload();
 
                 Tab tableStruct = new Tab("表结构");
                 tableStruct.setClosable(false);
@@ -78,10 +93,16 @@ public class TableDesignerTablePane extends DetailPane
                 Button minus = VFX.newIconButton("删除行", "minus");
                 minus.setOnAction(e -> applyMinus());
 
+                reload = VFX.newIconButton("刷新", "reload");
+                reload.setOnAction(e -> applyReload());
+
                 toolBar.getItems().addAll(
                         save,
+                        new VfxSeparator(),
                         plus,
-                        minus
+                        minus,
+                        new VfxSeparator(),
+                        reload
                 );
         }
 
@@ -98,6 +119,40 @@ public class TableDesignerTablePane extends DetailPane
 
         private void applyMinus()
         {
+        }
+
+        private void beginReload()
+        {
+                Platform.runLater(() -> {
+                        reload.setDisable(true);
+                        oldGraphic = ownerTab.getGraphic();
+                        ownerTab.setGraphic(progressIndicator);
+                });
+        }
+
+        private void endReload()
+        {
+                Platform.runLater(() -> {
+                        reload.setDisable(false);
+                        ownerTab.setGraphic(oldGraphic);
+                });
+        }
+
+        private void applyReload()
+        {
+                beginReload();
+                new Thread(() -> {
+                        try {
+                                this.columnMetaDatas = executor.getColumns(tableMetaData);
+                                this.indexes = executor.getIndexes(tableMetaData);
+                                structureView.getItems().setAll(FXCollections.observableArrayList(columnMetaDatas));
+                                structureView.blink();
+                                indexView.getItems().setAll(FXCollections.observableArrayList(indexes));
+                                indexView.blink();
+                        } finally {
+                                endReload();
+                        }
+                }).start();
         }
 
         private void setupStructureView()
@@ -133,7 +188,6 @@ public class TableDesignerTablePane extends DetailPane
                 length.setCellFactory(c -> new TextFieldTableCell<>(new IntegerStringConverter()));
                 scale.setCellFactory(c -> new TextFieldTableCell<>(new IntegerStringConverter()));
                 comment.setCellFactory(c -> new VfxStringEditingTableCell<>());
-
                 nullable.setCellFactory(c -> new VfxCheckBoxTableCell<>());
                 primary.setCellFactory(c -> new VfxCheckBoxTableCell<>());
                 autoIncrement.setCellFactory(c -> new VfxCheckBoxTableCell<>());
@@ -160,8 +214,6 @@ public class TableDesignerTablePane extends DetailPane
                         defaultValue,
                         comment
                 );
-
-                structureView.getItems().addAll(FXCollections.observableArrayList(columnMetaDatas));
         }
 
         private void setupIndexView()
@@ -195,7 +247,5 @@ public class TableDesignerTablePane extends DetailPane
                         visible.setPrefWidth(120);
                         indexView.getColumns().addLast(visible);
                 }
-
-                indexView.getItems().addAll(FXCollections.observableArrayList(indexes));
         }
 }

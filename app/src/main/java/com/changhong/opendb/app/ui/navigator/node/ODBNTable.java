@@ -54,12 +54,10 @@ public class ODBNTable extends ODBNode
 
                 MenuItem designTableItem = new MenuItem("设计表");
                 designTableItem.setOnAction(event -> {
-                        List<ColumnMetaData> columns = sqlExecutor.getColumns(table);
                         EventBus.publish(new OpenDesignTablePaneEvent(
                                 sqlExecutor,
                                 database.getConnection().getName(),
-                                table,
-                                columns));
+                                table));
                 });
 
                 contextMenu.getItems().addAll(

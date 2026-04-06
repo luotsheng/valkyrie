@@ -235,7 +235,7 @@ public class Workbench extends VBox implements EventListener
         private void handleOpenDesignTablePaneEvent(OpenDesignTablePaneEvent e)
         {
                 Tab tab = new Tab(e.id());
-                tab.setContent(new TableDesignerTablePane(e.executor, e.table, e.columns));
+                tab.setContent(new TableDesignerTablePane(tab, e.executor, e.table));
                 tab.setGraphic(Assets.use("struct1"));
                 tabPane.addAndSelect(tab);
                 tableMetaDataMgr.put(e.table, tab);
