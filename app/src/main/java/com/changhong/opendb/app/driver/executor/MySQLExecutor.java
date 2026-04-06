@@ -288,7 +288,7 @@ public class MySQLExecutor extends SQLExecutor
                         c.setScale(rsMeta.getScale(i));
 
                         c.setNullable(
-                                rsMeta.isNullable(i) == ResultSetMetaData.columnNullable
+                                !c.isPrimary() && rsMeta.isNullable(i) == ResultSetMetaData.columnNullable
                         );
 
                         c.setTable(rsMeta.getTableName(i));
