@@ -10,7 +10,7 @@ import javafx.util.converter.DefaultStringConverter;
  * @author Luo Tiansheng
  * @since 2026/4/3
  */
-public class VfxStringEditingTableCell<S> extends TextFieldTableCell<S, String>
+public class VFXStringEditingTableCell<S> extends TextFieldTableCell<S, String>
 {
         /**
          * 文本编辑器
@@ -31,12 +31,12 @@ public class VfxStringEditingTableCell<S> extends TextFieldTableCell<S, String>
 
         private final ModifyListener modifyListener;
 
-        public VfxStringEditingTableCell()
+        public VFXStringEditingTableCell()
         {
                 this(null);
         }
 
-        public VfxStringEditingTableCell(ModifyListener modifyListener)
+        public VFXStringEditingTableCell(ModifyListener modifyListener)
         {
                 super(new DefaultStringConverter());
                 this.modifyListener = modifyListener;

@@ -9,9 +9,9 @@ import javafx.util.Duration;
  * @author Luo Tiansheng
  * @since 2026/4/6
  */
-public class VfxTableView<S> extends TableView<S>
+public class VFXTableView<S> extends TableView<S>
 {
-        public VfxTableView()
+        public VFXTableView()
         {
                 getStyleClass().add("vfx-table-view");
                 setFixedCellSize(26);

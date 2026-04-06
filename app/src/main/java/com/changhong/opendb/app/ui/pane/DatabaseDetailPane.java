@@ -6,7 +6,7 @@ import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
 import com.changhong.opendb.app.ui.widgets.*;
-import com.changhong.opendb.app.ui.widgets.VfxDateTableCell;
+import com.changhong.opendb.app.ui.widgets.VFXDateTableCell;
 import com.changhong.opendb.app.utils.Catcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,7 +47,7 @@ public class DatabaseDetailPane extends DetailPane
         {
                 this.database = database;
 
-                tableView = new VfxTableView<>();
+                tableView = new VFXTableView<>();
                 toolBar = new ToolBar();
 
                 // setup
@@ -82,7 +82,7 @@ public class DatabaseDetailPane extends DetailPane
                         modifyTable,
                         newTable,
                         delTable,
-                        new VfxSeparator(),
+                        new VFXSeparator(),
                         spacer,
                         searchBox);
         }
@@ -101,13 +101,13 @@ public class DatabaseDetailPane extends DetailPane
         private void initializeColumn()
         {
                 // 列
-                name = new VfxTableColumn<>("名称");
-                createTime = new VfxTableColumn<>("创建时间");
-                updateTime = new VfxTableColumn<>("更新时间");
-                engine = new VfxTableColumn<>("存储引擎");
-                size = new VfxTableColumn<>("表大小");
-                rows = new VfxTableColumn<>("数据条数");
-                comment = new VfxTableColumn<>("注释");
+                name = new VFXTableColumn<>("名称");
+                createTime = new VFXTableColumn<>("创建时间");
+                updateTime = new VFXTableColumn<>("更新时间");
+                engine = new VFXTableColumn<>("存储引擎");
+                size = new VFXTableColumn<>("表大小");
+                rows = new VFXTableColumn<>("数据条数");
+                comment = new VFXTableColumn<>("注释");
 
                 // 属性配置
                 name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -196,8 +196,8 @@ public class DatabaseDetailPane extends DetailPane
                         }
                 });
 
-                createTime.setCellFactory(col -> new VfxDateTableCell<>());
-                updateTime.setCellFactory(col -> new VfxDateTableCell<>());
+                createTime.setCellFactory(col -> new VFXDateTableCell<>());
+                updateTime.setCellFactory(col -> new VFXDateTableCell<>());
         }
 
         public void update(List<TableMetaData> tables)

@@ -5,7 +5,7 @@ import com.changhong.opendb.app.core.event.NewQueryScriptEvent;
 import com.changhong.opendb.app.model.ODBNStatus;
 import com.changhong.opendb.app.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.app.ui.widgets.VFX;
-import com.changhong.opendb.app.ui.widgets.VfxSeparator;
+import com.changhong.opendb.app.ui.widgets.VFXSeparator;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 
@@ -27,7 +27,7 @@ public class AppToolBar extends ToolBar
                 getItems().addAll(
                         newConnectionButton,
                         newQueryButton,
-                        new VfxSeparator()
+                        new VFXSeparator()
                 );
         }
 

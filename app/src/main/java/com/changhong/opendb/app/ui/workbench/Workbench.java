@@ -6,7 +6,7 @@ import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.pane.TableDesignerTablePane;
 import com.changhong.opendb.app.ui.pane.PreviewTableDataPane;
-import com.changhong.opendb.app.ui.widgets.VfxTabPane;
+import com.changhong.opendb.app.ui.widgets.VFXTabPane;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
@@ -28,7 +28,7 @@ import static com.changhong.string.StringUtils.strwfmt;
 @SuppressWarnings({"FieldCanBeLocal", "MismatchedQueryAndUpdateOfCollection"})
 public class Workbench extends VBox implements EventListener
 {
-        private final VfxTabPane tabPane = new VfxTabPane();
+        private final VFXTabPane tabPane = new VFXTabPane();
         private final Tab detailTab = new Tab("详情");
         private final List<SqlEditor> editors = new ArrayList<>();
         
@@ -66,7 +66,7 @@ public class Workbench extends VBox implements EventListener
                 tabPane.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
                         Node node = (Node) event.getTarget();
 
-                        while (node != null && !(node instanceof VfxTabPane)) {
+                        while (node != null && !(node instanceof VFXTabPane)) {
                                 if (node.getStyleClass().contains("tab")) {
                                         Tab tab = (Tab) node.getProperties().get(Tab.class);
 
@@ -105,7 +105,7 @@ public class Workbench extends VBox implements EventListener
                 tabPane.add(detailTab);
         }
 
-        private void showMenu(VfxTabPane tabPane, Tab tab, ContextMenuEvent e)
+        private void showMenu(VFXTabPane tabPane, Tab tab, ContextMenuEvent e)
         {
                 closeCurrent.setOnAction(ev -> {
                         tabPane.remove(tab);

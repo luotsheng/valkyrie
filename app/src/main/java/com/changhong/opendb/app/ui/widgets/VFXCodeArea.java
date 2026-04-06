@@ -22,7 +22,7 @@ import static com.changhong.string.StringUtils.strempty;
  * @author Luo Tiansheng
  * @since 2026/4/2
  */
-public class VfxCodeArea extends CodeArea
+public class VFXCodeArea extends CodeArea
 {
         static final Pattern PATTERN = Pattern.compile(
                 "(?<KEYWORD>\\b(" + String.join("|", SqlKeyWordDefine.KEYWORDS) + ")\\b)"
@@ -33,7 +33,7 @@ public class VfxCodeArea extends CodeArea
         );
 
         public interface HighlightingListener {
-                void apply(VfxCodeArea area);
+                void apply(VFXCodeArea area);
         }
 
         public interface ShowingMenuListener {
@@ -45,12 +45,12 @@ public class VfxCodeArea extends CodeArea
 
         private final ContextMenu contextMenu = new ContextMenu();
 
-        public VfxCodeArea()
+        public VFXCodeArea()
         {
-                this(new VfxCodeAreaConfig());
+                this(new VFXCodeAreaConfig());
         }
 
-        public VfxCodeArea(VfxCodeAreaConfig config)
+        public VFXCodeArea(VFXCodeAreaConfig config)
         {
                 setStyle("-fx-font-weight: normal;");
 

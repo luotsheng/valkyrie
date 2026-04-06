@@ -3,7 +3,7 @@ package com.changhong.opendb.app.driver.executor;
 import com.changhong.opendb.app.driver.*;
 import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.app.driver.sql.SQL;
-import com.changhong.opendb.app.exception.VfxRuntimeException;
+import com.changhong.opendb.app.exception.VFXRuntimeException;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +67,7 @@ public abstract class SQLExecutor
                         productMetaData.setMinorVersion(db.getDatabaseMinorVersion());
                 } catch (Exception e) {
                         LOG.error("Initialize executor error", e);
-                        throw new VfxRuntimeException(e);
+                        throw new VFXRuntimeException(e);
                 }
 
         }

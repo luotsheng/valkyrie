@@ -7,7 +7,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
  * @author Luo Tiansheng
  * @since 2026/4/4
  */
-public class VfxCheckBoxTableCell<S> extends CheckBoxTableCell<S, Boolean>
+public class VFXCheckBoxTableCell<S> extends CheckBoxTableCell<S, Boolean>
 {
         private final CheckBox checkBox = new CheckBox();
 

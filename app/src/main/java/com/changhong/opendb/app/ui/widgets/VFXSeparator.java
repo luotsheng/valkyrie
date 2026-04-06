@@ -7,9 +7,9 @@ import javafx.scene.control.Separator;
  * @author Luo Tiansheng
  * @since 2026/3/30
  */
-public class VfxSeparator extends Separator
+public class VFXSeparator extends Separator
 {
-        public VfxSeparator()
+        public VFXSeparator()
         {
                 super(Orientation.VERTICAL);
         }

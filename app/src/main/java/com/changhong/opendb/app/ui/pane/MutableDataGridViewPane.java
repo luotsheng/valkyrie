@@ -7,7 +7,6 @@ import com.changhong.opendb.app.driver.MutableDataGrid;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.widgets.*;
 import com.changhong.opendb.app.ui.workbench.ModifyCell;
-import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -23,7 +22,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 import lombok.Setter;
 
 import java.util.List;
@@ -40,7 +38,7 @@ public class MutableDataGridViewPane extends BorderPane
 {
         private final TabPane tabPane = new TabPane();
         private final Tab dataGridTab = new Tab();
-        private final VfxTableView<Row> tableView = new VfxTableView<>();
+        private final VFXTableView<Row> tableView = new VFXTableView<>();
         private final ToolBar toolBar = new ToolBar();
         private final VBox vContainer;
 
@@ -71,7 +69,7 @@ public class MutableDataGridViewPane extends BorderPane
                 toolBar.setStyle("-fx-spacing: 2px;");
                 toolBar.getItems().addAll(
                         plus, minus,
-                        new VfxSeparator(),
+                        new VFXSeparator(),
                         check, cross, reload);
 
                 vContainer = new VBox(tableView, toolBar);
@@ -388,7 +386,7 @@ public class MutableDataGridViewPane extends BorderPane
                         col.setMaxWidth(1000);
                         col.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(index)));
 
-                        col.setCellFactory(c -> new VfxStringEditingTableCell<>(this::commit));
+                        col.setCellFactory(c -> new VFXStringEditingTableCell<>(this::commit));
 
                         tableView.getColumns().add(col);
                 }

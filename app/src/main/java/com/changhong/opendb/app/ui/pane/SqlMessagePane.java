@@ -1,7 +1,7 @@
 package com.changhong.opendb.app.ui.pane;
 
-import com.changhong.opendb.app.ui.widgets.VfxCodeArea;
-import com.changhong.opendb.app.ui.widgets.VfxCodeAreaConfig;
+import com.changhong.opendb.app.ui.widgets.VFXCodeArea;
+import com.changhong.opendb.app.ui.widgets.VFXCodeAreaConfig;
 import javafx.scene.control.MenuItem;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 
@@ -14,9 +14,9 @@ import static com.changhong.string.StringUtils.strwfmt;
  * @author Luo Tiansheng
  * @since 2026/4/2
  */
-public class SqlMessagePane extends VirtualizedScrollPane<VfxCodeArea>
+public class SqlMessagePane extends VirtualizedScrollPane<VFXCodeArea>
 {
-        private final VfxCodeArea codeArea;
+        private final VFXCodeArea codeArea;
 
         static final Pattern PATTERN = Pattern.compile(
                 "(?<INFO>\\[\\s*OK\\s*])"
@@ -27,7 +27,7 @@ public class SqlMessagePane extends VirtualizedScrollPane<VfxCodeArea>
 
         public SqlMessagePane()
         {
-                super(new VfxCodeArea(new VfxCodeAreaConfig(true, false)));
+                super(new VFXCodeArea(new VFXCodeAreaConfig(true, false)));
 
                 codeArea = getContent();
                 codeArea.setEditable(false);
@@ -48,7 +48,7 @@ public class SqlMessagePane extends VirtualizedScrollPane<VfxCodeArea>
                 codeArea.replaceText("");
         }
 
-        public static void applyHighlighting(VfxCodeArea area)
+        public static void applyHighlighting(VFXCodeArea area)
         {
                 String text = area.getText();
 
