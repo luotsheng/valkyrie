@@ -1,7 +1,6 @@
 package com.changhong.opendb.app.ui.pane;
 
 import atlantafx.base.util.IntegerStringConverter;
-import com.changhong.collection.Lists;
 import com.changhong.opendb.app.driver.ColumnMetaData;
 import com.changhong.opendb.app.driver.MySQL;
 import com.changhong.opendb.app.driver.TableIndexMetaData;
@@ -15,8 +14,6 @@ import com.changhong.opendb.app.ui.widgets.table.VFXTableColumnFactory;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableView;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXCheckBoxTableCell;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXTextFieldTableCell;
-import com.changhong.reflect.UClass;
-import com.changhong.reflect.UField;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
@@ -52,36 +49,6 @@ public class TableDesignerTablePane extends DetailPane
         private final Map<Integer, TableIndexMetaData> tableIndexMetaDataUpdateBuffer = new HashMap<>();
 
         private Button reload;
-
-        /**
-         * ColumnMetaData 与表格列索引映射表
-         */
-        private static final Map<Integer, UField> columnMetaDataMapping = new HashMap<>();
-
-        /**
-         * TableIndexMetaData 与表格列索引映射表
-         */
-        private static final Map<Integer, UField> indexMetaDataMapping = new HashMap<>();
-
-        static {
-                UClass colClass = new UClass(ColumnMetaData.class);
-
-                columnMetaDataMapping.put(0, colClass.getDeclaredField("name"));
-                columnMetaDataMapping.put(1, colClass.getDeclaredField("type"));
-                columnMetaDataMapping.put(2, colClass.getDeclaredField("length"));
-                columnMetaDataMapping.put(3, colClass.getDeclaredField("scale"));
-                columnMetaDataMapping.put(4, colClass.getDeclaredField("nullable"));
-                columnMetaDataMapping.put(5, colClass.getDeclaredField("primary"));
-                columnMetaDataMapping.put(6, colClass.getDeclaredField("autoIncrement"));
-                columnMetaDataMapping.put(7, colClass.getDeclaredField("defaultValue"));
-                columnMetaDataMapping.put(8, colClass.getDeclaredField("comment"));
-
-                UClass idxClass = new UClass(TableIndexMetaData.class);
-                indexMetaDataMapping.put(0, idxClass.getDeclaredField("name"));
-                indexMetaDataMapping.put(1, idxClass.getDeclaredField("columnsText"));
-                indexMetaDataMapping.put(2, idxClass.getDeclaredField("type"));
-
-        }
 
         public TableDesignerTablePane(Tab ownerTab,
                                       SQLExecutor executor,
@@ -209,10 +176,6 @@ public class TableDesignerTablePane extends DetailPane
                 VFXTableColumnFactory<ColumnMetaData> factory = new VFXTableColumnFactory<>();
 
                 factory.setOnEditCommitEventListener((row, col, newVal) -> {
-                        UField uField = columnMetaDataMapping.get(col);
-                        ColumnMetaData columnMetaData = structureView.getItems().get(row);
-                        uField.write(columnMetaData, newVal);
-                        columnMetaDataUpdateBuffer.add(columnMetaData);
                 });
 
                 // 列
