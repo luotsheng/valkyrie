@@ -320,12 +320,12 @@ public class MySQLExecutor extends SQLExecutor
 
                 boolean editable = false;
 
-                if (ps.isOnlyOneTable()) {
+                if (ps.isSingleTable()) {
 
                         Set<String> pks = new HashSet<>();
-                        String onlyTable = ps.getOnlyTable();
+                        String singleTable = ps.getSingleTable();
 
-                        try (ResultSet pk = dbMeta.getPrimaryKeys(sql.getDb(), connection.getSchema(), onlyTable)) {
+                        try (ResultSet pk = dbMeta.getPrimaryKeys(sql.getDb(), connection.getSchema(), singleTable)) {
                                 while (pk.next())
                                         pks.add(pk.getString("COLUMN_NAME"));
                         }
@@ -340,7 +340,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         Map<String, Map<String, Object>> columnInfo = new HashMap<>();
 
-                        try (ResultSet col = dbMeta.getColumns(sql.getDb(), null, onlyTable, null)) {
+                        try (ResultSet col = dbMeta.getColumns(sql.getDb(), null, singleTable, null)) {
 
                                 while (col.next()) {
 

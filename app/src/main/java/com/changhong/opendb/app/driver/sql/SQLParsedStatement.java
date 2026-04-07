@@ -80,12 +80,12 @@ public class SQLParsedStatement
                 }
         }
 
-        public boolean isOnlyOneTable()
+        public boolean isSingleTable()
         {
                 return tables.size() == 1;
         }
 
-        public String getOnlyTable()
+        public String getSingleTable()
         {
                 return tables.iterator().next();
         }

@@ -54,7 +54,7 @@ public class SQL implements Iterable<SQLParsedStatement>
                 if (sqlStatements.size() != 1)
                         throw new CatcherException("sql statements is multi");
 
-                return iterator().next().getOnlyTable();
+                return iterator().next().getSingleTable();
         }
 
         @Override
