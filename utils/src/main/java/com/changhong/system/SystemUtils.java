@@ -22,8 +22,8 @@ import com.changhong.time.Chrono;
 
 import java.util.Map;
 
-import static com.changhong.string.StringUtils.stricheckin;
-import static com.changhong.string.StringUtils.strrexp;
+import static com.changhong.string.StringStaticize.stricheckin;
+import static com.changhong.string.StringStaticize.strrexp;
 
 /**
  * `SystemUtils` 是一个类，用于管理和操作操作系统环境变量。

@@ -4,7 +4,7 @@ import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.exception.CatcherException;
 import javafx.application.Platform;
 
-import static com.changhong.string.StringUtils.strwfmt;
+import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
  * @author Luo Tiansheng

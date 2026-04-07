@@ -19,7 +19,7 @@ package com.changhong.tuple;
 \* -------------------------------------------------------------------------------- */
 
 
-import static com.changhong.utils.Transformer.anyeq;
+import static com.changhong.utils.TypeConverter.anyeq;
 
 /**
  * 表示包含三个元素的元组。

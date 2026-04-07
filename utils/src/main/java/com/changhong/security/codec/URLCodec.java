@@ -1,6 +1,6 @@
 package com.changhong.security.codec;
 
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 import com.changhong.utils.Captor;
 import com.changhong.security.URL;
 
@@ -26,13 +26,13 @@ public class URLCodec implements URL {
         try {
             String temporary = "";
             if (source.startsWith(CRYPT_PREFIX_HTTPS)) {
-                source = StringUtils.strcut(source, StringUtils.strlen(CRYPT_PREFIX_HTTPS), 0);
+                source = StringStaticize.strcut(source, StringStaticize.strlen(CRYPT_PREFIX_HTTPS), 0);
                 temporary = CRYPT_PREFIX_HTTPS;
             } else if (source.startsWith(CRYPT_PREFIX_HTTP)) {
-                source = StringUtils.strcut(source, StringUtils.strlen(CRYPT_PREFIX_HTTP), 0);
+                source = StringStaticize.strcut(source, StringStaticize.strlen(CRYPT_PREFIX_HTTP), 0);
                 temporary = CRYPT_PREFIX_HTTP;
             }
-            return StringUtils.strwfmt("%s%s", temporary, URLEncoder.encode(source, enc));
+            return StringStaticize.strwfmt("%s%s", temporary, URLEncoder.encode(source, enc));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

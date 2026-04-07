@@ -24,7 +24,7 @@ import com.changhong.security.key.RSAPrivateKey;
 import com.changhong.security.key.RSAPublicKey;
 import com.changhong.tuple.Pair;
 import com.changhong.utils.Captor;
-import com.changhong.utils.Transformer;
+import com.changhong.utils.TypeConverter;
 import com.changhong.security.Codec;
 import com.changhong.security.RSA;
 
@@ -32,7 +32,7 @@ import javax.crypto.Cipher;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
-import static com.changhong.utils.Transformer.atos;
+import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * @author Luo Tiansheng
@@ -59,7 +59,7 @@ public class RSACipher implements RSA {
         return Captor.call(() -> {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey.toPublicKey());
-            byte[] b = cipher.doFinal(Transformer.atob(message));
+            byte[] b = cipher.doFinal(TypeConverter.atob(message));
             return Codec.BASE64.encode(b);
         });
     }
@@ -70,7 +70,7 @@ public class RSACipher implements RSA {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privateKey.toPrivateKey());
             byte[] b = cipher.doFinal(Codec.BASE64.decodeBytes(encryptedMessage));
-            return Transformer.atos(b);
+            return TypeConverter.atos(b);
         });
     }
 

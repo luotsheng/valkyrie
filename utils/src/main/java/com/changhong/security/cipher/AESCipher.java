@@ -7,7 +7,7 @@ import com.changhong.security.Codec;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.changhong.utils.Transformer.atos;
+import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * @author Luo Tiansheng

@@ -8,7 +8,7 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.changhong.string.StringUtils.strwfmt;
+import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
  * @author Luo Tiansheng

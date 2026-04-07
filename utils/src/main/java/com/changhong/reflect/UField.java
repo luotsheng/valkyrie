@@ -20,7 +20,7 @@ package com.changhong.reflect;
 
 /* Creates on 2019/5/16. */
 
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 import com.changhong.utils.Assert;
 import com.changhong.utils.Captor;
 import com.changhong.utils.Optional;
@@ -89,7 +89,7 @@ public class UField {
         this.modifiers = field.getModifiers();
         this.inClass = field.getDeclaringClass();
         this.name = field.getName();
-        this.path = StringUtils.strwfmt("%s#%s", inClass.getName(), name);
+        this.path = StringStaticize.strwfmt("%s#%s", inClass.getName(), name);
         this.originType = field.getType();
     }
 

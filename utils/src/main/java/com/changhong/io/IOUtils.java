@@ -22,10 +22,14 @@ package com.changhong.io;
 
 import com.changhong.exception.IOReadException;
 import com.changhong.exception.IOWriteException;
+import com.changhong.string.StringInterface;
 import com.changhong.utils.Assert;
 import com.changhong.utils.Captor;
+import com.changhong.utils.TypeConverter;
 
 import java.io.*;
+
+import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * IO操作工具包，整合大部分IO操作，使得在Java中更多的IO操作
@@ -59,6 +63,32 @@ public class IOUtils {
      * 标准输出缓冲区
      */
     public static final PrintStream stdout = System.out;
+
+    /**
+     * 格式化并打印输出信息。
+     *
+     * <p>该方法是对 System#out.printf 的封装，主要特点是在输出前会
+     * 将第一个参数（格式化字符串）通过 atos 方法进行转换处理。
+     *
+     * <p>使用示例：
+     * <pre>
+     * // 假设 atos() 方法将对象转换为字符串（如支持多语言、格式化等）
+     * printf("用户：%s，年龄：%d", "张三", 25);
+     * printf(12345);  // 将数字作为格式字符串处理
+     * </pre>
+     *
+     * @param fmt  格式化字符串（会先经过 atos() 方法处理），或任何将被转换为格式字符串的对象
+     * @param args 可变参数，用于填充格式化字符串中的占位符（与 Formatter 语法兼容）
+     *
+     * @throws java.util.IllegalFormatException 如果格式化字符串语法错误或参数类型不匹配
+     *
+     * @see System#out
+     * @see TypeConverter#atos(Object, StringInterface...)  将任意对象转换为格式化字符串的方法
+     */
+    public static void printf(Object fmt, Object... args)
+    {
+        System.out.printf(atos(fmt), args);
+    }
 
     /**
      * 关闭所有实现了 {@link Closeable} 的对象实例，并且不需要捕获

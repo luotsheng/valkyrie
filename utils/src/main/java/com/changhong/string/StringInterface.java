@@ -19,9 +19,9 @@ package com.changhong.string;
 \* -------------------------------------------------------------------------------- */
 
 
-import com.changhong.utils.Transformer;
+import com.changhong.utils.TypeConverter;
 
-import static com.changhong.utils.Transformer.atos;
+import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * 定义字符串操作类型的枚举类。
@@ -50,7 +50,7 @@ public enum StringInterface {
     STRING_IFACE_TRIM_EXT {
         @Override
         public String apply(String input) {
-            return StringUtils.strip(input);
+            return StringStaticize.strip(input);
         }
     },
 
@@ -60,7 +60,7 @@ public enum StringInterface {
     STRING_IFACE_UPPER_CASE_EXT {
         @Override
         public String apply(String input) {
-            return StringUtils.uppercase(input);
+            return StringStaticize.uppercase(input);
         }
     },
 
@@ -70,7 +70,7 @@ public enum StringInterface {
     STRING_IFACE_LOWER_CASE_EXT {
         @Override
         public String apply(String input) {
-            return StringUtils.lowercase(input);
+            return StringStaticize.lowercase(input);
         }
     },
 
@@ -80,7 +80,7 @@ public enum StringInterface {
     STRING_IFACE_CAPITALIZE_EXT {
         @Override
         public String apply(String input) {
-            return StringUtils.strcut(input, 0, 1, STRING_IFACE_UPPER_CASE_EXT) + StringUtils.strcut(input,1, 0);
+            return StringStaticize.strcut(input, 0, 1, STRING_IFACE_UPPER_CASE_EXT) + StringStaticize.strcut(input,1, 0);
         }
     },
 
@@ -90,7 +90,7 @@ public enum StringInterface {
     STRING_IFACE_REVERSE_EXT {
         @Override
         public String apply(String input) {
-            return Transformer.atos(new StringBuilder(input).reverse());
+            return TypeConverter.atos(new StringBuilder(input).reverse());
         }
     },
 
@@ -100,7 +100,7 @@ public enum StringInterface {
     STRING_IFACE_REMOVE_SPACES_EXT {
         @Override
         public String apply(String input) {
-            return StringUtils.strrexp(input, "\\s+", "");
+            return StringStaticize.strrexp(input, "\\s+", "");
         }
     },
 
@@ -110,7 +110,7 @@ public enum StringInterface {
     STRING_IFACE_LINE_HMP_EXT {
         @Override
         public String apply(String input) {
-            return StringUtils.strlinehmp(input);
+            return StringStaticize.strlinehmp(input);
         }
     }
     ;

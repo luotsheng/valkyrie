@@ -18,7 +18,7 @@ package com.changhong.exception;
 |*                                                                                  *|
 \* -------------------------------------------------------------------------------- */
 
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 
 /**
  * `SystemRuntimeException` 是一个自定义的运行时异常类，用于在系统中抛出各种运行时异常。
@@ -79,7 +79,7 @@ public class SystemRuntimeException extends RuntimeException {
      * @param args 格式化参数。
      */
     public SystemRuntimeException(String fmt, Object... args) {
-        super(StringUtils.strwfmt(fmt, args));
+        super(StringStaticize.strwfmt(fmt, args));
     }
 
     /**
@@ -90,7 +90,7 @@ public class SystemRuntimeException extends RuntimeException {
      * @param args 格式化参数。
      */
     public SystemRuntimeException(String fmt, Throwable e, Object... args) {
-        super(StringUtils.strwfmt(fmt, args), e);
+        super(StringStaticize.strwfmt(fmt, args), e);
     }
 
 }

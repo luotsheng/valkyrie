@@ -29,11 +29,11 @@ import com.changhong.collection.Maps;
 import com.changhong.reflect.UClass;
 import com.changhong.reflect.UField;
 import com.changhong.stream.Streams;
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 import com.changhong.time.DateFormatter;
 import com.changhong.utils.Captor;
 import com.changhong.utils.Optional;
-import com.changhong.utils.Transformer;
+import com.changhong.utils.TypeConverter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -44,7 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static com.changhong.utils.Transformer.atos;
+import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * 类 {@link WorkBook} 用于创建和操作 Excel 工作簿。
@@ -277,7 +277,7 @@ public class WorkBook implements Iterable<Row> {
      *
      */
     public void addRow(Object... values) {
-        addRow(new Row(Lists.map(values, Transformer::atos)));
+        addRow(new Row(Lists.map(values, TypeConverter::atos)));
     }
 
     /**
@@ -331,7 +331,7 @@ public class WorkBook implements Iterable<Row> {
         for (int i = 0; i < lastCellNum; i++) {
             Cell cell = row.getCell(i);
             String value = cellFormatter.formatCellValue(cell);
-            retval.add(cell != null && StringUtils.strnempty(value) ? value : "NULL");
+            retval.add(cell != null && StringStaticize.strnempty(value) ? value : "NULL");
         }
 
         return retval;
@@ -355,7 +355,7 @@ public class WorkBook implements Iterable<Row> {
         forEach(retval::add);
         return Streams.filter(retval, e -> {
             for (String cell : e) {
-                if (StringUtils.strne(cell, "NULL"))
+                if (StringStaticize.strne(cell, "NULL"))
                     return true;
             }
             return false;
@@ -472,7 +472,7 @@ public class WorkBook implements Iterable<Row> {
         List<Row> rows = getRows();
         for (Row row : rows) {
             for (String cell : row) {
-                builder.append(StringUtils.strne(cell, "NULL") ? cell : "");
+                builder.append(StringStaticize.strne(cell, "NULL") ? cell : "");
                 builder.append(",");
             }
             builder.deleteCharAt(builder.length() - 1);
@@ -488,7 +488,7 @@ public class WorkBook implements Iterable<Row> {
 
         /* 基础数据类型 */
         if (uField.isPrimitiveCheck())
-            uField.write(obj, Transformer.toPrimitiveValue(value, uField.getOriginType()));
+            uField.write(obj, TypeConverter.toPrimitiveValue(value, uField.getOriginType()));
 
         /* 日期类型 */
         else if (uField.typecheck(Date.class))

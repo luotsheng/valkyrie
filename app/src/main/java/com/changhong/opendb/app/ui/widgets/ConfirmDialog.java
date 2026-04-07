@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.changhong.string.StringUtils.strwfmt;
+import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
  * @author Luo Tiansheng

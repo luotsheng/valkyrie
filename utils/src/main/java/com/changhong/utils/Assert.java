@@ -21,12 +21,12 @@ package com.changhong.utils;
 import com.changhong.collection.Lists;
 import com.changhong.collection.Maps;
 import com.changhong.exception.AssertException;
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 
 import java.util.Collection;
 import java.util.Map;
 
-import static com.changhong.utils.Transformer.anyeq;
+import static com.changhong.utils.TypeConverter.anyeq;
 
 /**
  * 运行时断言工具类，这个类断言失败后并不会直接停止整个程序，而是会将所有失败的断言
@@ -165,7 +165,7 @@ public class Assert {
      * @throws AssertException 如果字符串为 null 或空字符串
      */
     public static void notEmpty(String source, String fmt, Object... args) {
-        if (StringUtils.strempty(source))
+        if (StringStaticize.strempty(source))
             throw new AssertException(fmt, args);
     }
 
@@ -317,7 +317,7 @@ public class Assert {
      * @throws AssertException 如果不存在文本就抛出异常
      */
     public static void hasText(String text, String message, Object... args) {
-        if (StringUtils.strempty(text))
+        if (StringStaticize.strempty(text))
             throw new AssertException(message, args);
     }
 

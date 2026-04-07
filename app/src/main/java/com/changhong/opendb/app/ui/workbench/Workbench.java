@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.changhong.string.StringUtils.strwfmt;
+import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
  * @author Luo Tiansheng

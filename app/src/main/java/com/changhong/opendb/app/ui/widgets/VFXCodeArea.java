@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.changhong.string.StringUtils.strempty;
+import static com.changhong.string.StringStaticize.strempty;
 
 /**
  * @author Luo Tiansheng

@@ -22,7 +22,7 @@ package com.changhong.utils;
 
 import com.changhong.iface.ActionFunction;
 import com.changhong.iface.CallableFunction;
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 
 /**
  * @author Luo Tiansheng
@@ -67,7 +67,7 @@ public class Optional {
      * @return 如果 {@code value} 为 null，则返回 {@code orBlank}，否则返回 {@code value}
      */
     public static String ifBlank(String value, String orBlank) {
-        return StringUtils.strempty(value) ? orBlank : value;
+        return StringStaticize.strempty(value) ? orBlank : value;
     }
 
     /**

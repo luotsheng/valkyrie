@@ -3,7 +3,7 @@ package com.changhong.opendb.app.core.event;
 import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
 
-import static com.changhong.string.StringUtils.strwfmt;
+import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
  * 打开设计表面板事件

@@ -1,6 +1,6 @@
 package com.changhong.security.codec;
 
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 import com.changhong.security.MD5;
 import com.changhong.exception.SystemRuntimeException;
 
@@ -76,7 +76,7 @@ public class MD5Codec implements MD5 {
             }
             /* 判断是获取 16 位的 md5 字符串还是 16 位的 */
             int flag = n > 16 ? 0 : 8;
-            return StringUtils.strcut(chars, flag, (n + flag));
+            return StringStaticize.strcut(chars, flag, (n + flag));
         } catch (NoSuchAlgorithmException e) {
             throw new SystemRuntimeException(e);
         }

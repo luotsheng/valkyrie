@@ -28,8 +28,8 @@ import lombok.Setter;
 
 import java.util.List;
 
-import static com.changhong.string.StringUtils.strnempty;
-import static com.changhong.string.StringUtils.strwfmt;
+import static com.changhong.string.StringStaticize.strnempty;
+import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
  * @author Luo Tiansheng

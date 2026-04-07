@@ -20,7 +20,7 @@ package com.changhong.io;
 
 import com.changhong.collection.Lists;
 import com.changhong.exception.IOReadException;
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 import com.changhong.system.SystemUtils;
 import com.changhong.utils.Assert;
 import com.changhong.utils.Captor;
@@ -310,7 +310,7 @@ public class MutableFile extends java.io.File {
      */
     public String getCleanName() {
         String name = getName();
-        return StringUtils.strcut(getName(), 0, name.lastIndexOf("."));
+        return StringStaticize.strcut(getName(), 0, name.lastIndexOf("."));
     }
 
     /**
@@ -321,7 +321,7 @@ public class MutableFile extends java.io.File {
      * @return 当前 File 文件和 {@code extension} 一致返回 `true`
      */
     public boolean typeEquals(String extension) {
-        return StringUtils.streq(extension, getExtension());
+        return StringStaticize.streq(extension, getExtension());
     }
 
     /**
@@ -336,7 +336,7 @@ public class MutableFile extends java.io.File {
      *         否则返回 {@code false}
      */
     public boolean typeMatch(String... extensions) {
-        return StringUtils.strcheckin(getExtension(), extensions);
+        return StringStaticize.strcheckin(getExtension(), extensions);
     }
 
     /**
@@ -347,7 +347,7 @@ public class MutableFile extends java.io.File {
         int index = name.indexOf(".");
         if (index == -1)
             return "";
-        return StringUtils.strcut(getName(), index, 0);
+        return StringStaticize.strcut(getName(), index, 0);
     }
 
     private boolean forceDeleteDirectory(MutableFile dir) {

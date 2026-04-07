@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.*;
 
-import static com.changhong.string.StringUtils.streq;
-import static com.changhong.string.StringUtils.strwfmt;
-import static com.changhong.utils.Transformer.atobool;
-import static com.changhong.utils.Transformer.atoi;
+import static com.changhong.string.StringStaticize.streq;
+import static com.changhong.string.StringStaticize.strwfmt;
+import static com.changhong.utils.TypeConverter.atobool;
+import static com.changhong.utils.TypeConverter.atoi;
 
 /**
  * @author Luo Tiansheng

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 
-import static com.changhong.string.StringUtils.strwfmt;
+import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
  * @author Luo Tiansheng

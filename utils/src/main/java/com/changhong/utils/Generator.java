@@ -2,7 +2,7 @@ package com.changhong.utils;
 
 import com.changhong.security.Codec;
 import com.changhong.string.StringInterface;
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 
 import java.util.Random;
 import java.util.UUID;
@@ -58,7 +58,7 @@ public class Generator {
      * @return 生成不带符号的UUID
      */
     public static String uuid(StringInterface... iface) {
-        return StringUtils.uppercase(UUID.randomUUID(), iface)
+        return StringStaticize.uppercase(UUID.randomUUID(), iface)
                 .replace("-", "");
     }
 
@@ -71,7 +71,7 @@ public class Generator {
      * @return 返回没有任何符号的 UUID
      */
     public static String uuid(int n, StringInterface... iface) {
-        return StringUtils.strcut(uuid(iface), 0, n);
+        return StringStaticize.strcut(uuid(iface), 0, n);
     }
 
     /**

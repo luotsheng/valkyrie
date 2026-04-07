@@ -1,9 +1,9 @@
 package com.changhong.security.codec;
 
-import com.changhong.utils.Transformer;
+import com.changhong.utils.TypeConverter;
 import com.changhong.security.Base64;
 
-import static com.changhong.utils.Transformer.atos;
+import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * @author Luo Tiansheng
@@ -21,7 +21,7 @@ public class Base64Codec implements Base64 {
 
     @Override
     public String decode(String src) {
-        return Transformer.atos(decodeBytes(src));
+        return TypeConverter.atos(decodeBytes(src));
     }
 
     @Override

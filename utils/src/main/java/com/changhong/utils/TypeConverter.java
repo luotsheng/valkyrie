@@ -24,7 +24,7 @@ import com.changhong.exception.InvalidArgumentException;
 import com.changhong.exception.UnsupportedOperationException;
 import com.changhong.reflect.UClass;
 import com.changhong.string.StringInterface;
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -45,7 +45,8 @@ import java.util.Objects;
  * @author Luo Tiansheng
  * @see Objects
  */
-public class Transformer {
+public class TypeConverter
+{
 
     /**
      * #brief: 比较模式常量 - 等于
@@ -391,8 +392,8 @@ public class Transformer {
             return (Boolean) obj;
         if (obj instanceof Number)
             return ((Number) obj).intValue() > 0;
-        String bool = atos(obj, StringUtils::uppercase);
-        return StringUtils.strxmatch(bool, "TRUE|ON|Y|YES");
+        String bool = atos(obj, StringStaticize::uppercase);
+        return StringStaticize.strxmatch(bool, "TRUE|ON|Y|YES");
     }
 
     /**

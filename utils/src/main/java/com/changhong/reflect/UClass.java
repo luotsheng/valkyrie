@@ -26,10 +26,10 @@ package com.changhong.reflect;
 /* Creates on 2019/5/16. */
 
 import com.changhong.stream.Streams;
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 import com.changhong.utils.Assert;
 import com.changhong.utils.Captor;
-import com.changhong.utils.Transformer;
+import com.changhong.utils.TypeConverter;
 import com.changhong.collection.Lists;
 import com.changhong.exception.SystemRuntimeException;
 
@@ -150,7 +150,7 @@ public class UClass {
     public static <T> T getConstant(Class<?> aClass, String name) {
         UClass uClass = new UClass(aClass);
         for (UField field : uClass.fields.values()) {
-            if (field.isStatic() && field.isFinal() && StringUtils.streq(field.getName(), name))
+            if (field.isStatic() && field.isFinal() && StringStaticize.streq(field.getName(), name))
                 return (T) field.read(null);
         }
         return null;
@@ -290,7 +290,7 @@ public class UClass {
      */
     public UField getDeclaredField(String name) {
         for (UField field : getDeclaredFields()) {
-            if (StringUtils.streq(field.getName(), name))
+            if (StringStaticize.streq(field.getName(), name))
                 return field;
         }
         return null;
@@ -499,7 +499,7 @@ public class UClass {
     public boolean isPrimitiveCheck() {
         if (descriptor.isPrimitive())
             return true;
-        return Transformer.checkin(descriptor, Short.class, Integer.class, Long.class,
+        return TypeConverter.checkin(descriptor, Short.class, Integer.class, Long.class,
                 Float.class, Double.class, Character.class, Boolean.class);
     }
 

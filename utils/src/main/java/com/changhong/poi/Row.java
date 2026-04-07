@@ -24,7 +24,7 @@ import com.changhong.iface.TypeMapper;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static com.changhong.utils.Transformer.atos;
+import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * 表示一行数据，继承自 {@link ArrayList}，用于存储字符串类型的单元格数据。

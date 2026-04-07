@@ -26,8 +26,8 @@ import com.changhong.utils.Captor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.changhong.string.StringUtils.strcheckin;
-import static com.changhong.string.StringUtils.strlen;
+import static com.changhong.string.StringStaticize.strcheckin;
+import static com.changhong.string.StringStaticize.strlen;
 
 /**
  * `DateFormatter` 类提供日期和时间的格式化和解析功能。

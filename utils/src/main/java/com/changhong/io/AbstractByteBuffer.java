@@ -20,7 +20,7 @@ package com.changhong.io;
 
 /* Creates on 2023/5/8. */
 
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 import com.changhong.utils.ArrayUtils;
 
 /**
@@ -248,6 +248,6 @@ public abstract class AbstractByteBuffer extends ByteBuffer {
 
     @Override
     public String toString() {
-        return StringUtils.strwfmt("%s [size=%s, cap=%s, index=%s]", super.toString(), size(), capacity(), index());
+        return StringStaticize.strwfmt("%s [size=%s, cap=%s, index=%s]", super.toString(), size(), capacity(), index());
     }
 }

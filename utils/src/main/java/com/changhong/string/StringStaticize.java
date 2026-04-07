@@ -19,7 +19,7 @@ package com.changhong.string;
 \* -------------------------------------------------------------------------------- */
 
 import com.changhong.utils.Optional;
-import com.changhong.utils.Transformer;
+import com.changhong.utils.TypeConverter;
 
 import java.nio.file.FileSystems;
 import java.nio.file.PathMatcher;
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 
-import static com.changhong.utils.Transformer.atos;
+import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * `StringUtils` 是一个工具类，提供了一系列针对字符串的操作方法。这些方法用于处理
@@ -69,7 +69,8 @@ import static com.changhong.utils.Transformer.atos;
  * @author Luo Tiansheng
  * @since 1.0
  */
-public class StringUtils {
+public class StringStaticize
+{
 
     private static final Map<String, Pattern> compiled = new WeakHashMap<>();
 
@@ -85,7 +86,7 @@ public class StringUtils {
      * @return 字符串的长度；如果输入为 null，则返回 0
      */
     public static int strlen(Object wstr) {
-        return Transformer.atos(wstr).length();
+        return TypeConverter.atos(wstr).length();
     }
 
     /**
@@ -135,7 +136,7 @@ public class StringUtils {
      * @return 转换后的小写字符串；如果输入为 null，则返回 null
      */
     public static String lowercase(Object wstr, StringInterface... iface) {
-        return StringInterface.pipelineExecutor(Transformer.atos(wstr, String::toLowerCase), iface);
+        return StringInterface.pipelineExecutor(TypeConverter.atos(wstr, String::toLowerCase), iface);
     }
 
     /**
@@ -149,7 +150,7 @@ public class StringUtils {
      * @return 转换后的大写字符串；如果输入为 null，则返回 null
      */
     public static String uppercase(Object wstr, StringInterface... iface) {
-        return StringInterface.pipelineExecutor(Transformer.atos(wstr, String::toUpperCase), iface);
+        return StringInterface.pipelineExecutor(TypeConverter.atos(wstr, String::toUpperCase), iface);
     }
 
 
@@ -164,9 +165,9 @@ public class StringUtils {
      * @return 处理后的字符串
      */
     public static String strcap(Object wstr, StringInterface... iface) {
-        StringBuilder builder = new StringBuilder(Transformer.atos(wstr));
+        StringBuilder builder = new StringBuilder(TypeConverter.atos(wstr));
         builder.replace(0, 1, uppercase(builder.charAt(0)));
-        return StringInterface.pipelineExecutor(Transformer.atos(builder), iface);
+        return StringInterface.pipelineExecutor(TypeConverter.atos(builder), iface);
     }
 
     /**
@@ -180,7 +181,7 @@ public class StringUtils {
      * @return 如果两个字符串相等，则返回 true；否则返回 false
      */
     public static boolean streq(Object a, Object b) {
-        return Transformer.anyeq(Transformer.atos(a), Transformer.atos(b));
+        return TypeConverter.anyeq(TypeConverter.atos(a), TypeConverter.atos(b));
     }
 
     /**
@@ -208,7 +209,7 @@ public class StringUtils {
      * @return 如果两个字符串相等，则返回 true；否则返回 false
      */
     public static boolean strieq(Object a, Object b) {
-        return Transformer.anyeq(uppercase(a), uppercase(b));
+        return TypeConverter.anyeq(uppercase(a), uppercase(b));
     }
 
     /**
@@ -236,7 +237,7 @@ public class StringUtils {
      * @return 格式化后的字符串
      */
     public static String strwfmt(Object wstr, Object... args) {
-        return String.format(Transformer.atos(wstr), args);
+        return String.format(TypeConverter.atos(wstr), args);
     }
 
     /**
@@ -249,7 +250,7 @@ public class StringUtils {
      * @return 如果 `wstr` 包含 `cmp`，返回 true；否则返回 false
      */
     public static boolean strcheckin(Object wstr, String cmp) {
-        return Transformer.atos(wstr).contains(cmp);
+        return TypeConverter.atos(wstr).contains(cmp);
     }
 
     /**
@@ -372,7 +373,7 @@ public class StringUtils {
      * @return 替换后的字符串
      */
     public static String strrexp(Object wstr, String regexp, String value, StringInterface... iface) {
-        return StringInterface.pipelineExecutor(Transformer.atos(wstr).replaceAll(regexp, value), iface);
+        return StringInterface.pipelineExecutor(TypeConverter.atos(wstr).replaceAll(regexp, value), iface);
     }
 
     /**
@@ -386,7 +387,7 @@ public class StringUtils {
      * @return 拆分后的字符串数组
      */
     public static String[] strtok(Object wstr, String delim, StringInterface... iface) {
-        String[] origins = Transformer.atos(wstr).split(delim);
+        String[] origins = TypeConverter.atos(wstr).split(delim);
 
         if (iface != null) {
             for (int i = 0; i < origins.length; i++) {
@@ -409,7 +410,7 @@ public class StringUtils {
      * @return 截取后的字符串
      */
     public static String strcut(Object wstr, int off, int len, StringInterface... iface) {
-        return StringInterface.pipelineExecutor(Transformer.atos(wstr, off, len), iface);
+        return StringInterface.pipelineExecutor(TypeConverter.atos(wstr, off, len), iface);
     }
 
     /**
@@ -423,7 +424,7 @@ public class StringUtils {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean strdig(Object wstr) {
-        return Optional.ifError(() -> Double.parseDouble(Transformer.atos(wstr)), true, false);
+        return Optional.ifError(() -> Double.parseDouble(TypeConverter.atos(wstr)), true, false);
     }
 
     /**
@@ -481,7 +482,7 @@ public class StringUtils {
     private static boolean strxmatch(Object obj, String regexp, boolean enablePatternCache) {
         Pattern pattern = enablePatternCache ? _patternCacheComputeIfAbsent(regexp) : Pattern.compile(regexp);
         assert pattern != null;
-        return pattern.matcher(Transformer.atos(obj)).find();
+        return pattern.matcher(TypeConverter.atos(obj)).find();
     }
 
     /**
@@ -501,7 +502,7 @@ public class StringUtils {
     public static boolean strant(Object wstr, String pattern) {
         PathMatcher pathMatcher =
                 pathMatcherCache.computeIfAbsent(pattern, k -> compilePathMatcher(pattern));
-        return pathMatcher.matches(Paths.get(Transformer.atos(wstr)));
+        return pathMatcher.matches(Paths.get(TypeConverter.atos(wstr)));
     }
 
     private static PathMatcher compilePathMatcher(String pattern) {
@@ -519,7 +520,7 @@ public class StringUtils {
      * @return 去除前后空白后的字符串
      */
     public static String strip(Object wstr, StringInterface... iface) {
-        return StringInterface.pipelineExecutor(Transformer.atos(wstr).trim(), iface);
+        return StringInterface.pipelineExecutor(TypeConverter.atos(wstr).trim(), iface);
     }
 
     /**
@@ -533,7 +534,7 @@ public class StringUtils {
      */
     @Deprecated
     public static String strxip(Object wstr) {
-        return Transformer.atos(wstr).replaceAll("[\r\n]+", "");
+        return TypeConverter.atos(wstr).replaceAll("[\r\n]+", "");
     }
 
     /**
@@ -546,7 +547,7 @@ public class StringUtils {
      * @return 转换为驼峰风格后的字符串
      */
     public static String strlinehmp(Object obj, StringInterface... iface) {
-        char[] charArray = Transformer.atos(obj).toCharArray();
+        char[] charArray = TypeConverter.atos(obj).toCharArray();
         StringBuilder buffer = new StringBuilder();
 
         boolean next = false;

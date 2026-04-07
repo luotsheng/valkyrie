@@ -22,7 +22,7 @@ package com.changhong.utils;
 
 import com.changhong.exception.InvalidArgumentException;
 import com.changhong.reflect.UClass;
-import com.changhong.string.StringUtils;
+import com.changhong.string.StringStaticize;
 
 /**
  * `Enumerates` 是一个工具类，提供了获取和查找枚举值的方法。主要包括获取指定枚举类的所有
@@ -116,7 +116,7 @@ public class Enumerate {
     public static <E extends Enum<E>> E find(Class<? extends Enum<E>> enumClass, String name) {
         Enum<E>[] values = values(enumClass);
         for (Enum<E> value : values)
-            if (StringUtils.strieq(value.name(), name))
+            if (StringStaticize.strieq(value.name(), name))
                 return (E) value;
         return null;
     }

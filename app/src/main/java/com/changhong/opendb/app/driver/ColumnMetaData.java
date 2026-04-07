@@ -1,5 +1,7 @@
 package com.changhong.opendb.app.driver;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Data;
 
 /**
@@ -80,4 +82,12 @@ public class ColumnMetaData
          * 所属 schema
          */
         private String schema;
+
+        private BooleanProperty isPrimary;
+
+        public BooleanProperty primaryProperty()
+        {
+                return isPrimary;
+        }
+
 }

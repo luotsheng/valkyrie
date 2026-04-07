@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import static com.changhong.string.StringUtils.strwfmt;
+import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
  * 脚本数据
