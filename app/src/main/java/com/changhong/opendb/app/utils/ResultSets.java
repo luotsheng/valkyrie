@@ -102,7 +102,17 @@ public class ResultSets
                         case java.sql.Timestamp ts -> ts.toLocalDateTime().format(formatter);
                         case java.util.Date date -> sdf.format(date);
                         case java.time.LocalDateTime date -> date.format(formatter);
+                        case byte[] bits -> toBInary(bits);
                         default -> val.toString();
                 };
+        }
+
+        private static String toBInary(byte[] bytes) {
+                StringBuilder sb = new StringBuilder();
+                for (byte b : bytes) {
+                        sb.append(String.format("%8s", Integer.toBinaryString(b & 0xFF))
+                                .replace(' ', '0'));
+                }
+                return sb.toString();
         }
 }
