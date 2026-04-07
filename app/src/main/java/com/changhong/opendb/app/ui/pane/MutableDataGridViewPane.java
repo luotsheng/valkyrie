@@ -43,6 +43,7 @@ public class MutableDataGridViewPane extends BorderPane
         private final VFXTableView<Row> tableView = new VFXTableView<>();
         private final ToolBar toolBar = new ToolBar();
         private final VBox vContainer;
+        private final boolean isPreview;
 
         private final Button plus = VFX.newIconButton("新增数据", "plus");
         private final Button minus = VFX.newIconButton("删除选中行", "minus");
@@ -65,8 +66,13 @@ public class MutableDataGridViewPane extends BorderPane
         @Setter
         private ReloadProgressListener reloadProgressListener;
 
-        public MutableDataGridViewPane()
+        public MutableDataGridViewPane(boolean isPreview)
         {
+                this.isPreview = isPreview;
+
+                if (isPreview)
+                        dataGridTab.setClosable(false);
+
                 setupTableView();
 
                 toolBar.setStyle("-fx-spacing: 2px;");
@@ -75,10 +81,11 @@ public class MutableDataGridViewPane extends BorderPane
                         new VFXSeparator(),
                         check, cross, reload);
 
-                vContainer = new VBox(tableView, toolBar);
+                vContainer = new VBox(tableView);
                 VBox.setVgrow(tableView, Priority.ALWAYS);
                 dataGridTab.setContent(vContainer);
 
+                setTop(toolBar);
                 setCenter(tabPane);
 
                 updateCheckCross();

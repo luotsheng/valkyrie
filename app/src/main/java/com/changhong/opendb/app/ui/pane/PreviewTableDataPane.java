@@ -36,7 +36,7 @@ public class PreviewTableDataPane extends BorderPane
                 this.sqlExecutor = sqlExecutor;
                 this.database = database;
                 this.tableInfo = tableInfo;
-                this.mutableDataGridViewPane = new MutableDataGridViewPane();
+                this.mutableDataGridViewPane = new MutableDataGridViewPane(true);
 
                 mutableDataGridViewPane.setReloadProgressListener(new MutableDataGridViewPane.ReloadProgressListener()
                 {

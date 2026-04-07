@@ -90,7 +90,7 @@ public class SqlEditor extends SplitPane
                 toolBar = new ToolBar();
                 codeArea = new VFXCodeArea();
                 virtualizedScrollPane = new VirtualizedScrollPane<>(codeArea);
-                mutableDataGridViewPane = new MutableDataGridViewPane();
+                mutableDataGridViewPane = new MutableDataGridViewPane(false);
                 sqlMessagePane = new SqlMessagePane();
                 virtualizedScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
