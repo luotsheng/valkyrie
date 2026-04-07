@@ -301,7 +301,6 @@ public class MySQLExecutor extends SQLExecutor
 
                 for (ColumnMetaData col : columnMetaDatas) {
                         AlterExpression alterExpr = new AlterExpression();
-                        // alterExpr.setColumnName(col.getName());
 
                         if (col.getOriginName() != null) {
                                 alterExpr.setOperation(AlterOperation.CHANGE);
@@ -324,10 +323,11 @@ public class MySQLExecutor extends SQLExecutor
                         alterColDataType.setColDataType(colDataType);
 
                         alterColDataType.addColumnSpecs(
-                                col.isNullable() ? "NULL" : "NOT NULL",
-                                "DEFAULT",
-                                col.getDefaultValue() == null ? null : col.getDefaultValue()
+                                col.isNullable() ? "NULL" : "NOT NULL"
                         );
+
+                        if (col.getDefaultValue() != null)
+                                alterColDataType.addColumnSpecs("DEFAULT", col.getDefaultValue());
 
                         if (col.getComment() != null)
                                 alterColDataType.addColumnSpecs("COMMENT", "'" + col.getComment() + "'");
@@ -335,7 +335,7 @@ public class MySQLExecutor extends SQLExecutor
                         alterExpr.addColDataType(alterColDataType);
 
                         Alter alter = new Alter();
-                        alter.setTable(new Table(col.getTable()));
+                        alter.setTable(new Table(tableMetaData.getName()));
                         alter.setAlterExpressions(List.of(alterExpr));
 
                         builder.append(alter).append(";");
