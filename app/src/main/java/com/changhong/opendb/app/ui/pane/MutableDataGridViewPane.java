@@ -79,7 +79,9 @@ public class MutableDataGridViewPane extends BorderPane
                 toolBar.getItems().addAll(
                         plus, minus,
                         new VFXSeparator(),
-                        check, cross, reload);
+                        check, cross,
+                        new VFXSeparator(),
+                        reload);
 
                 vContainer = new VBox(tableView);
                 VBox.setVgrow(tableView, Priority.ALWAYS);
