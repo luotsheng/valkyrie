@@ -73,6 +73,8 @@ public abstract class SQLExecutor
 
         }
 
+        public abstract List<String> getSchemas();
+
         public abstract List<String> getDatabases();
 
         public abstract List<TableMetaData> getTables(String db);

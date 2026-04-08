@@ -12,8 +12,6 @@ import com.changhong.opendb.app.exception.VFXRuntimeException;
 import com.changhong.opendb.app.utils.Catcher;
 import com.changhong.opendb.app.utils.ResultSets;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
@@ -45,6 +43,12 @@ public class MySQLExecutor extends SQLExecutor
         public MySQLExecutor(String name, VirtualDataSource ds)
         {
                 super(name, ds);
+        }
+
+        @Override
+        public List<String> getSchemas()
+        {
+                throw new UnsupportedOperationException("MySQL not supported yet.");
         }
 
         @Override
