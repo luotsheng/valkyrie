@@ -76,7 +76,7 @@ public class Application extends javafx.application.Application
                 javafx.application.Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
                 Scene scene = new Scene(new MainLayout(), 1200, 800);
                 initializeVFX(scene);
-                stage.setTitle("数据库可视化工具");
+                stage.setTitle("OpenDB-v1.0.3-Beta");
                 stage.setScene(scene);
                 stage.setMaximized(true);
 
