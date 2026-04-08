@@ -17,6 +17,12 @@ public class VFXTextFieldTableCell<S> extends TextFieldTableCell<S, String>
          */
         private TextField tf;
 
+        /**
+         * 当 TextField 检测到 ESC 被按下时，才设置为 true，
+         * 否则始终为 false
+         */
+        private boolean cancelByEsc = false;
+
         private boolean isCommit = false;
 
         /**
@@ -112,18 +118,20 @@ public class VFXTextFieldTableCell<S> extends TextFieldTableCell<S, String>
         }
 
         @Override
-        public void cancelEdit()
-        {
-                tf.setText(oldValue);
-                setGraphic(null);
-                updateItem(getItem(), false);
-        }
-
-        @Override
         public void commitEdit(String newValue)
         {
                 isCommit = true;
-                super.commitEdit(newValue);
+                super.commitEdit(tf.getText());
+        }
+
+        @Override
+        public void cancelEdit()
+        {
+                /* 如果不是按下 ESC 取消编辑，则始终提交 */
+                if (!cancelByEsc)
+                        return;
+
+                super.cancelEdit();
         }
 
         private void createTextField()
@@ -131,8 +139,23 @@ public class VFXTextFieldTableCell<S> extends TextFieldTableCell<S, String>
                 tf = new TextField(getString());
 
                 tf.focusedProperty().addListener((obs, oldVal, newVal) -> {
-                        if (!newVal)
-                                commitEdit(getConverter().fromString(tf.getText()));
+                        if (!newVal && isEditing()) {
+                                commitEdit(tf.getText());
+                                /* 清理单元格状态 */
+                                setGraphic(null);
+                                updateItem(getItem(), false);
+                        }
+                });
+
+                tf.setOnKeyPressed(event -> {
+                        switch (event.getCode()) {
+                                case ESCAPE -> {
+                                        cancelByEsc = true;
+                                        cancelEdit();
+                                        cancelByEsc = false;
+                                }
+                                case ENTER -> commitEdit(tf.getText());
+                        }
                 });
 
                 tf.setOnAction(event -> {
