@@ -49,10 +49,10 @@ public class SQL implements Iterable<SQLParsedStatement>
                 }
         }
 
-        public String getOnlyTable()
+        public String getSingleTable()
         {
                 if (sqlStatements.size() != 1)
-                        throw new CatcherException("sql statements is multi");
+                        return null;
 
                 return iterator().next().getSingleTable();
         }

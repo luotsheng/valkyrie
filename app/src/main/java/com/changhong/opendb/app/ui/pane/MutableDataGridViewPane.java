@@ -400,12 +400,6 @@ public class MutableDataGridViewPane extends BorderPane
                                 labelBuilder.append("\n# ")
                                         .append(columnMetaData.getType());
 
-                                if (columnMetaData.getLength() > 0) {
-                                        labelBuilder.append('(')
-                                                .append(columnMetaData.getLength())
-                                                .append(')');
-                                }
-
                                 if (columnMetaData.isPrimary())
                                         labelBuilder.append(" ").append("PK");
                         }

@@ -34,8 +34,9 @@ import static com.changhong.utils.TypeConverter.*;
 @SuppressWarnings({
         "SqlSourceToSinkFlow",
         "SqlDialectInspection",
-        "SqlNoDataSourceInspection"
-        , "RedundantSuppression"})
+        "SqlNoDataSourceInspection",
+        "RedundantSuppression"
+})
 public class MySQLExecutor extends SQLExecutor
 {
         private static final Logger LOG = LoggerFactory.getLogger(MySQLExecutor.class);
@@ -116,14 +117,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         String createTableDDL = showCreateTable(table.getDatabase(), table.getName());
 
-                        Map<String, ColumnDefaultSpec> defaultSpecs = SQLUtils.parseColumnDefaultSpec(createTableDDL);
-
-                        for (Map.Entry<String, ColumnDefaultSpec> entry : defaultSpecs.entrySet()) {
-                                var columnMetaData = columnMetaDataMap.get(entry.getKey());
-
-                                if (columnMetaData != null)
-                                        columnMetaData.setDefaultValue(entry.getValue().getDefaultValue());
-                        }
+                        SQLUtils.parseColumnDefSpec(createTableDDL, columnMetaDataMap);
 
                         return columns;
                 } catch (Exception e) {
@@ -227,14 +221,6 @@ public class MySQLExecutor extends SQLExecutor
                         }
 
                         ColDataType colDataType = new ColDataType(col.getType());
-
-                        if (JdbcTypes.isSupportLength(col.getJdbcType())) {
-                                if (col.getLength() > 0)
-                                        colDataType.setArgumentsStringList(List.of(atos(col.getLength())));
-
-                                if (col.getScale() > 0)
-                                        colDataType.setArgumentsStringList(List.of(atos(col.getLength()), atos(col.getScale())));
-                        }
 
                         var alterColDataType = new AlterExpression.ColumnDataType(false);
 
@@ -387,17 +373,6 @@ public class MySQLExecutor extends SQLExecutor
                         c.setName(rsMeta.getColumnName(i));
 
                         c.setType(rsMeta.getColumnTypeName(i));
-
-                        c.setJdbcType(rsMeta.getColumnType(i));
-
-                        if (JdbcTypes.isSupportLength(c.getJdbcType())) {
-
-                                if (!JdbcTypes.isTime(c.getJdbcType()))
-                                        c.setLength(rsMeta.getPrecision(i));
-
-                                c.setScale(rsMeta.getScale(i));
-
-                        }
 
                         c.setNullable(
                                 rsMeta.isNullable(i) == ResultSetMetaData.columnNullable

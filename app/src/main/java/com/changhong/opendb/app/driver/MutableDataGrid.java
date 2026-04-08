@@ -172,7 +172,7 @@ public class MutableDataGrid
 
                         var delete = new Delete();
 
-                        var table = new Table(origin.getOnlyTable());
+                        var table = new Table(origin.getSingleTable());
                         delete.setTable(table);
 
                         if (!pks.isEmpty()) {
@@ -241,7 +241,7 @@ public class MutableDataGrid
                         var update = new Update();
                         var row = entry.getValue();
 
-                        var table = new Table(origin.getOnlyTable());
+                        var table = new Table(origin.getSingleTable());
                         update.setTable(table);
 
                         for (int i = 0; i < row.size(); i++) {

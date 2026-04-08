@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.changhong.string.StringStaticize.strieq;
+import static com.changhong.string.StringStaticize.uppercase;
 
 /**
  * SQL 工具类
@@ -22,18 +23,23 @@ import static com.changhong.string.StringStaticize.strieq;
 public class SQLUtils
 {
         /**
-         * 从 DDL 中解析字段默认值
+         * 从 DDL 中解析字段权威类型和默认值
          */
-        public static Map<String, ColumnDefaultSpec> parseColumnDefaultSpec(String ddl)
+        public static void parseColumnDefSpec(String ddl, Map<String, ColumnMetaData> metas)
         {
-                Map<String, ColumnDefaultSpec> ret = Maps.newHashMap();
-
                 try {
                         var createTable = (CreateTable) CCJSqlParserUtil.parse(ddl);
 
                         List<ColumnDefinition> definitions = createTable.getColumnDefinitions();
 
                         for (ColumnDefinition definition : definitions) {
+                                ColumnMetaData columnMetaData = metas.get(toColumnName(definition));
+
+                                if (columnMetaData == null)
+                                        continue;
+
+                                columnMetaData.setType(toDataType(definition));
+
                                 boolean isDefault = false;
 
                                 List<String> specs = definition.getColumnSpecs();
@@ -52,7 +58,7 @@ public class SQLUtils
                                                         spec = spec + specs.get(next);
 
                                                 var columnDefaultSpec = newColumnDefaultSpec(definition, spec);
-                                                ret.put(columnDefaultSpec.getName(), columnDefaultSpec);
+                                                columnMetaData.setDefaultValue(columnDefaultSpec.getDefaultValue());
 
                                                 break;
                                         }
@@ -64,8 +70,16 @@ public class SQLUtils
                 } catch (Exception e) {
                         throw new VFXRuntimeException(e);
                 }
+        }
 
-                return ret;
+        private static String toColumnName(ColumnDefinition definition)
+        {
+                return definition.getColumnName().replaceAll("`", "");
+        }
+
+        private static String toDataType(ColumnDefinition definition)
+        {
+                return uppercase(definition.getColDataType().getDataType());
         }
 
         private static ColumnDefaultSpec newColumnDefaultSpec(ColumnDefinition definition, String spec)

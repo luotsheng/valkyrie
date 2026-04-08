@@ -181,8 +181,6 @@ public class TableDesignerTablePane extends DetailPane
                 // 列
                 TableColumn<ColumnMetaData, String> name = factory.createEditableColumn("名称", "name");
                 TableColumn<ColumnMetaData, String> type = factory.createEditableColumn("类型", "type");
-                TableColumn<ColumnMetaData, Integer> length = factory.createEditableColumn("长度", "length");
-                TableColumn<ColumnMetaData, Integer> scale = factory.createEditableColumn("小数位", "scale");
                 TableColumn<ColumnMetaData, String> defaultValue = factory.createEditableColumn("默认值", "defaultValue");
                 TableColumn<ColumnMetaData, Boolean> nullable = factory.createEditableColumn("是否允许NULL", "nullable");
                 TableColumn<ColumnMetaData, Boolean> primary = factory.createEditableColumn("主键", "primary");
@@ -192,8 +190,6 @@ public class TableDesignerTablePane extends DetailPane
                 name.setCellFactory(c -> new VFXTextFieldTableCell<>());
                 type.setCellFactory(c -> new VFXTextFieldTableCell<>());
                 defaultValue.setCellFactory(c -> new VFXTextFieldTableCell<>());
-                length.setCellFactory(c -> new TextFieldTableCell<>(new IntegerStringConverter()));
-                scale.setCellFactory(c -> new TextFieldTableCell<>(new IntegerStringConverter()));
                 comment.setCellFactory(c -> new VFXTextFieldTableCell<>());
                 nullable.setCellFactory(c -> new VFXCheckBoxTableCell<>());
                 primary.setCellFactory(c -> new VFXCheckBoxTableCell<>());
@@ -202,8 +198,6 @@ public class TableDesignerTablePane extends DetailPane
                 // 初始化宽度
                 name.setPrefWidth(150);
                 type.setPrefWidth(150);
-                length.setPrefWidth(120);
-                scale.setPrefWidth(100);
                 defaultValue.setPrefWidth(200);
                 nullable.setPrefWidth(120);
                 primary.setPrefWidth(50);
@@ -213,8 +207,6 @@ public class TableDesignerTablePane extends DetailPane
                 structureView.getColumns().addAll(
                         name,
                         type,
-                        length,
-                        scale,
                         nullable,
                         primary,
                         autoIncrement,

@@ -34,21 +34,6 @@ public class ColumnMetaData
         private String type;
 
         /**
-         * JDBC 类型（java.sql.Types）
-         */
-        private int jdbcType;
-
-        /**
-         * 字段长度
-         */
-        private int length;
-
-        /**
-         * 小数位数
-         */
-        private int scale;
-
-        /**
          * 是否允许 NULL
          */
         private boolean nullable;
