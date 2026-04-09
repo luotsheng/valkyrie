@@ -1,6 +1,6 @@
 package com.changhong.opendb.app.ui.pane;
 
-import com.changhong.opendb.app.Application;
+import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.driver.ColumnMetaData;
 import com.changhong.opendb.app.driver.Row;
 import com.changhong.opendb.app.driver.MutableDataGrid;
@@ -322,7 +322,7 @@ public class MutableDataGridViewPane extends BorderPane
 
                 builder.deleteCharAt(builder.length() - 1);
 
-                Application.copyToClipboard(builder.toString());
+                VFXApplication.copyToClipboard(builder.toString());
         }
 
         @SuppressWarnings({"rawtypes", "unchecked"})

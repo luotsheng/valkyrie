@@ -1,18 +1,15 @@
 package com.changhong.opendb.app.ui.navigator.node;
 
-import com.changhong.opendb.app.Application;
+import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.NewMutableDataGridPaneEvent;
 import com.changhong.opendb.app.core.event.OpenDesignTablePaneEvent;
-import com.changhong.opendb.app.driver.ColumnMetaData;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
 import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.resource.Assets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
-
-import java.util.List;
 
 /**
  * @author Luo Tiansheng
@@ -49,7 +46,7 @@ public class ODBNTable extends ODBNode
 
                 MenuItem copyTableNameItem = new MenuItem("复制表名");
                 copyTableNameItem.setOnAction(event -> {
-                        Application.copyToClipboard(getName());
+                        VFXApplication.copyToClipboard(getName());
                 });
 
                 MenuItem designTableItem = new MenuItem("设计表");

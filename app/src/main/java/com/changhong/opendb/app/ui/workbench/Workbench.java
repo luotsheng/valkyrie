@@ -1,8 +1,7 @@
 package com.changhong.opendb.app.ui.workbench;
 
-import com.changhong.opendb.app.Application;
+import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.core.event.*;
-import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.pane.TableDesignerTablePane;
 import com.changhong.opendb.app.ui.pane.PreviewTableDataPane;
@@ -91,7 +90,7 @@ public class Workbench extends VBox implements EventListener
                         closeRight,
                         closeOther);
 
-                Application.runLater((stage, scene) -> {
+                VFXApplication.runLater((stage, scene) -> {
                         scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
                                 if (tabPaneContextMenu.isShowing())
                                         tabPaneContextMenu.hide();

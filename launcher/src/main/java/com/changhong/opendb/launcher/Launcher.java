@@ -1,6 +1,6 @@
 package com.changhong.opendb.launcher;
 
-import com.changhong.opendb.app.Application;
+import com.changhong.opendb.app.VFXApplication;
 
 /**
  * 启动类
@@ -12,6 +12,6 @@ public class Launcher
 {
         public static void main(String[] args)
         {
-                Application.start();
+                VFXApplication.start();
         }
 }

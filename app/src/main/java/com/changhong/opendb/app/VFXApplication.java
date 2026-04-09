@@ -2,7 +2,7 @@ package com.changhong.opendb.app;
 
 import atlantafx.base.theme.CupertinoLight;
 import com.changhong.opendb.app.ui.layout.MainLayout;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -19,19 +19,19 @@ import java.util.List;
  * @author Luo Tiansheng
  * @since 2026/3/23
  */
-public class Application extends javafx.application.Application
+public class VFXApplication extends Application
 {
-        private static final Class<Application> aClass = Application.class;
-        private static final List<LauncherRunnable> runnables = new ArrayList<>();
+        private static final Class<VFXApplication> aClass = VFXApplication.class;
+        private static final List<LauncherTask> tasks = new ArrayList<>();
 
-        public interface LauncherRunnable
+        public interface LauncherTask
         {
                 void run(Stage stage, Scene scene);
         }
 
-        public static void runLater(LauncherRunnable runnable)
+        public static void runLater(LauncherTask runnable)
         {
-                runnables.add(runnable);
+                tasks.add(runnable);
         }
 
         public static void copyToClipboard(String text)
@@ -83,7 +83,7 @@ public class Application extends javafx.application.Application
                         stage.setY(bounds.getMinY());
                 }
 
-                runnables.forEach(runnable -> runnable.run(stage, scene));
+                tasks.forEach(task -> task.run(stage, scene));
 
                 stage.show();
         }
