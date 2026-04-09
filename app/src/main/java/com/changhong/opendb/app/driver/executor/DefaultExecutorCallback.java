@@ -2,6 +2,8 @@ package com.changhong.opendb.app.driver.executor;
 
 import com.changhong.opendb.app.ui.widgets.ErrorDialog;
 import javafx.application.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Luo Tiansheng
@@ -10,10 +12,12 @@ import javafx.application.Platform;
 public class DefaultExecutorCallback
         implements SQLExecutor.ExecuteCallback
 {
+        private static final Logger LOG = LoggerFactory.getLogger(DefaultExecutorCallback.class);
+
         @Override
         public void doCallback(String info, SQLExecutorStatus status)
         {
                 if (status == SQLExecutorStatus.ERROR)
-                        Platform.runLater(() -> ErrorDialog.showDialog(info));
+                        LOG.error(info);
         }
 }

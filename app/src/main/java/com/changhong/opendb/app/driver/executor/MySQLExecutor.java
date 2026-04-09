@@ -1,6 +1,7 @@
 package com.changhong.opendb.app.driver.executor;
 
 import com.changhong.collection.Lists;
+import com.changhong.exception.SystemRuntimeException;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.exception.CatcherException;
 import com.changhong.opendb.app.driver.*;
@@ -8,7 +9,6 @@ import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.app.driver.sql.SQL;
 import com.changhong.opendb.app.driver.sql.SQLCommandType;
 import com.changhong.opendb.app.driver.sql.SQLParsedStatement;
-import com.changhong.opendb.app.exception.VFXRuntimeException;
 import com.changhong.opendb.app.ui.widgets.Dialogs;
 import com.changhong.opendb.app.utils.ResultSets;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
@@ -188,7 +188,7 @@ public class MySQLExecutor extends SQLExecutor
                                 return rs.getString(2);
                         return null;
                 } catch (SQLException e) {
-                        throw new VFXRuntimeException(e);
+                        throw new SystemRuntimeException(e);
                 }
         }
 
@@ -306,14 +306,14 @@ public class MySQLExecutor extends SQLExecutor
                         if (callback instanceof DefaultExecutorCallback) {
 
                                 callback.doCallback(e.getMessage(), SQLExecutorStatus.ERROR);
-                                return null;
+
+                        } else if (current != null) {
+
+                                callback.doCallback(current.getScript(), SQLExecutorStatus.ERROR);
 
                         }
 
-                        if (current != null)
-                                callback.doCallback(current.getScript(), SQLExecutorStatus.ERROR);
-
-                        throw new CatcherException(e);
+                        throw new RuntimeException(e);
 
                 }
 

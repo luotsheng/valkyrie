@@ -1,8 +1,8 @@
 package com.changhong.opendb.app.ui.widgets;
 
+import com.changhong.exception.SystemRuntimeException;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.exception.CatcherException;
-import com.changhong.opendb.app.exception.VFXRuntimeException;
 import javafx.application.Platform;
 
 /**
@@ -26,7 +26,7 @@ public class Dialogs
 
         public static void openError(String message)
         {
-                openError(new VFXRuntimeException(message));
+                openError(new SystemRuntimeException(message));
         }
 
         /**

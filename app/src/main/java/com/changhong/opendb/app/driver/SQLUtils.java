@@ -1,9 +1,6 @@
 package com.changhong.opendb.app.driver;
 
-import com.changhong.collection.Maps;
-import com.changhong.opendb.app.exception.VFXRuntimeException;
-import com.changhong.utils.Captor;
-import javafx.scene.layout.Pane;
+import com.changhong.exception.SystemRuntimeException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.create.table.ColumnDefinition;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
@@ -68,7 +65,7 @@ public class SQLUtils
                                 }
                         }
                 } catch (Exception e) {
-                        throw new VFXRuntimeException(e);
+                        throw new SystemRuntimeException(e);
                 }
         }
 
