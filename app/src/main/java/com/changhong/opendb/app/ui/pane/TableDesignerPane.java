@@ -27,7 +27,7 @@ import java.util.*;
  * @author Luo Tiansheng
  * @since 2026/4/3
  */
-@SuppressWarnings({"FieldCanBeLocal", "unchecked"})
+@SuppressWarnings({"FieldCanBeLocal", "unchecked", "ExtractMethodRecommender"})
 public class TableDesignerPane extends DetailPane
 {
         private final Tab ownerTab;
@@ -45,6 +45,7 @@ public class TableDesignerPane extends DetailPane
         private List<TableIndexMetaData> indexes;
 
         private final Set<ColumnMetaData> columnMetaDataUpdateBuffer = new HashSet<>();
+        private final Set<ColumnMetaData> primaryUpdateBuffer = new LinkedHashSet<>();
         private final Map<Integer, TableIndexMetaData> tableIndexMetaDataUpdateBuffer = new HashMap<>();
 
         private Button reload;
@@ -189,7 +190,14 @@ public class TableDesignerPane extends DetailPane
 
                 VFXTableColumnFactory<ColumnMetaData> factory = new VFXTableColumnFactory<>();
 
-                factory.setOnEditCommitEventListener(newVal -> {
+                factory.setOnEditCommitEventListener((oldVal, newVal) -> {
+                        if (oldVal.isPrimary() != newVal.isPrimary() && newVal.isPrimary())
+                                primaryUpdateBuffer.add(newVal);
+
+                        if (!newVal.isPrimary())
+                                primaryUpdateBuffer.remove(newVal);
+
+                        /* 变更记录 */
                         columnMetaDataUpdateBuffer.add(newVal);
                 });
 
