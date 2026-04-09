@@ -285,8 +285,6 @@ public class MySQLExecutor extends SQLExecutor
 
                 try {
 
-                        connection.setAutoCommit(false);
-
                         try (Statement statement = ds.use(connection, sql.getDb())) {
 
                                 queue.put(sql.getTaskId(), statement);
@@ -300,8 +298,6 @@ public class MySQLExecutor extends SQLExecutor
 
                                         /* DQL 并且必须是最后一个 SQL 语句才执行查询 */
                                         if (ps.getType() == SQLCommandType.DQL && ps.isLast()) {
-
-                                                connection.commit();
 
                                                 MutableDataGrid grid = executeQueryGrid(
                                                         connection,
@@ -331,19 +327,12 @@ public class MySQLExecutor extends SQLExecutor
                                         callback.doCallback(ps.getScript(), skip ? SQLExecutorStatus.SKIP : SQLExecutorStatus.OK);
                                 }
 
-                        } catch (Exception e) {
-
-                                connection.rollback();
-
-                                throw e;
-
                         } finally {
 
                                 queue.remove(sql.getTaskId());
 
                         }
 
-                        connection.commit();
 
                 } catch (SQLException e) {
 
