@@ -119,7 +119,7 @@ public class TableDesignerTablePane extends DetailPane
                         applyReload();
                         columnMetaDataUpdateBuffer.clear();
                 } catch (Exception e) {
-                                Dialogs.openError(e);
+                        Dialogs.openError(e);
                 }
         }
 

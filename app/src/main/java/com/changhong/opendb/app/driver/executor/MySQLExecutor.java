@@ -23,8 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.*;
 
-import static com.changhong.string.StringStaticize.streq;
-import static com.changhong.string.StringStaticize.strwfmt;
+import static com.changhong.string.StringStaticize.*;
 import static com.changhong.utils.TypeConverter.*;
 
 /**
@@ -231,7 +230,7 @@ public class MySQLExecutor extends SQLExecutor
                                 col.isNullable() ? "NULL" : "NOT NULL"
                         );
 
-                        if (col.getDefaultValue() != null)
+                        if (strnempty(col.getDefaultValue()))
                                 alterColDataType.addColumnSpecs("DEFAULT", col.getDefaultValue());
 
                         if (col.getComment() != null)

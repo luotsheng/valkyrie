@@ -25,7 +25,7 @@ public class VFXTableView<S> extends TableView<S>
 
         public void playFlash()
         {
-                FadeTransition ft = new FadeTransition(Duration.millis(300), this);
+                FadeTransition ft = new FadeTransition(Duration.millis(1000), this);
                 ft.setFromValue(0.1);
                 ft.setToValue(1.0);
                 ft.setCycleCount(1);
