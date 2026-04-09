@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -63,7 +64,7 @@ public class VFXDialogHelper
          */
         public static void alert(String fmt, Object... args)
         {
-                showDialog(fmt, args);
+                showAlert(fmt, args);
         }
 
         /**
@@ -74,29 +75,34 @@ public class VFXDialogHelper
                 alert(Causes.message(e));
         }
 
-        private static void openDialog(Stage stage, String message, Node... children)
+        private static void createAndOpenDialog(Stage stage, String message, Node... children)
         {
                 Toolkit.getDefaultToolkit().beep();
 
                 stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setResizable(false);
                 stage.setTitle(VFXApplication.TITLE);
 
-                VFXCopyableLabel label = new VFXCopyableLabel(message);
+                Label label = new Label(message);
 
-                HBox hbox = new HBox(children);
-                hbox.setPadding(new Insets(10));
-                hbox.setAlignment(Pos.CENTER_RIGHT);
-                hbox.setSpacing(10);
+                HBox labelHBox = new HBox(label);
+                labelHBox.setAlignment(Pos.CENTER);
+                labelHBox.setPadding(new Insets(20, 0, 0, 0));
+
+                HBox containerHBox = new HBox(children);
+                containerHBox.setPadding(new Insets(10));
+                containerHBox.setAlignment(Pos.CENTER_RIGHT);
+                containerHBox.setSpacing(10);
 
                 BorderPane root = new BorderPane();
-                root.setCenter(label);
-                root.setBottom(hbox);
+                root.setCenter(labelHBox);
+                root.setBottom(containerHBox);
 
                 Dimension dimension = new Dimension(message);
                 Scene scene = new Scene(root, dimension.width, dimension.height);
 
+                stage.setResizable(false);
                 stage.setScene(scene);
+                stage.sizeToScene();
                 stage.showAndWait();
         }
 
@@ -132,7 +138,7 @@ public class VFXDialogHelper
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
 
-                openDialog(stage, strwfmt(fmt, args), checkBox, spacer, ok, cancel);
+                createAndOpenDialog(stage, strwfmt(fmt, args), checkBox, spacer, ok, cancel);
 
                 return flag.get();
         }
@@ -143,23 +149,43 @@ public class VFXDialogHelper
 
                 AtomicBoolean flag = new AtomicBoolean(true);
 
-                javafx.scene.control.Button ok = new javafx.scene.control.Button("确认");
+                Button ok = new Button("确认");
                 ok.setDefaultButton(true);
                 ok.setOnAction(e -> {
                         flag.set(true);
                         stage.close();
                 });
 
-                javafx.scene.control.Button cancel = new Button("取消");
+                Button cancel = new Button("取消");
                 cancel.setDefaultButton(true);
                 cancel.setOnAction(e -> {
                         flag.set(false);
                         stage.close();
                 });
 
-                openDialog(stage, strwfmt(fmt, args), ok, cancel);
+                createAndOpenDialog(stage, strwfmt(fmt, args), ok, cancel);
 
                 return flag.get();
+        }
+
+        private static void showAlert(String fmt, Object... args)
+        {
+                Stage stage = new Stage();
+
+                String text = strwfmt(fmt, args);
+
+                Button copyText = new Button("复制并关闭");
+                copyText.setDefaultButton(true);
+                copyText.setOnAction(e -> {
+                        VFXApplication.copyToClipboard(text);
+                        stage.close();
+                });
+
+                Button ok = new Button("确认");
+                ok.setDefaultButton(true);
+                ok.setOnAction(e -> stage.close());
+
+                createAndOpenDialog(stage, text, copyText, ok);
         }
 
 }
