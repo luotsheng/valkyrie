@@ -69,7 +69,7 @@ public class VFXApplication extends Application
         @Override
         public void start(Stage stage)
         {
-                javafx.application.Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
+                Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
                 Scene scene = new Scene(new MainLayout(), 1200, 800);
                 initializeVFX(scene);
                 stage.setTitle(TITLE);
