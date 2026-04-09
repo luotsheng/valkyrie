@@ -1,6 +1,7 @@
 package com.changhong.opendb.app.driver.sql;
 
 import com.changhong.exception.SystemRuntimeException;
+import com.changhong.opendb.app.driver.TableMetaData;
 import lombok.Getter;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -17,11 +18,16 @@ import java.util.*;
 public class SQL implements Iterable<SQLParsedStatement>
 {
         @Getter
-        private long taskId;
+        private final long taskId;
         @Getter
-        private String db;
+        private final String db;
 
         private final List<SQLParsedStatement> sqlStatements = new ArrayList<>();
+
+        public SQL(TableMetaData tableMetaData, String sqlText)
+        {
+                this(-1L, tableMetaData.getDatabase(), sqlText);
+        }
 
         public SQL(String db, String sqlText)
         {

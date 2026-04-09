@@ -2,6 +2,7 @@ package com.changhong.opendb.app.driver.executor;
 
 import com.changhong.collection.Lists;
 import com.changhong.exception.SystemRuntimeException;
+import com.changhong.io.IOUtils;
 import com.changhong.opendb.app.driver.*;
 import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.app.driver.sql.SQL;
@@ -9,6 +10,7 @@ import com.changhong.opendb.app.driver.sql.SQLCommandType;
 import com.changhong.opendb.app.driver.sql.SQLParsedStatement;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.utils.ResultSets;
+import com.changhong.utils.Captor;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.alter.Alter;
@@ -199,6 +201,33 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         @Override
+        public void alterPrimaryKey(TableMetaData tableMetaData, Collection<ColumnMetaData> primaryKeys)
+        {
+                if (primaryKeys.isEmpty())
+                        return;
+
+                StringBuilder script = new StringBuilder();
+
+                script.append(strwfmt("ALTER TABLE `%s` DROP PRIMARY KEY;", tableMetaData.getName()));
+
+                script.append("ALTER TABLE `")
+                        .append(tableMetaData.getName())
+                        .append("` ADD PRIMARY KEY (");
+
+                for (ColumnMetaData primaryKey : primaryKeys) {
+                        script.append("`")
+                                .append(primaryKey.getName())
+                                .append("`")
+                                .append(",");
+                }
+
+                script.delete(script.length() - 1, script.length());
+                script.append(");");
+
+                execute(new SQL(tableMetaData, atos(script)));
+        }
+
+        @Override
         @SuppressWarnings("ExtractMethodRecommender")
         public void alterChange(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas)
         {
@@ -252,49 +281,69 @@ public class MySQLExecutor extends SQLExecutor
         {
                 SQLParsedStatement current = null;
 
-                try (Connection connection = ds.getConnection();
-                     Statement statement = ds.use(connection, sql.getDb())) {
+                Connection connection = Captor.call(() -> ds.getConnection());
 
-                        queue.put(sql.getTaskId(), statement);
+                try {
 
-                        for (SQLParsedStatement ps : sql) {
+                        connection.setAutoCommit(false);
 
-                                current = ps;
-                                boolean skip = false;
+                        try (Statement statement = ds.use(connection, sql.getDb())) {
 
-                                LOG.info("Execute sql: \n{}", SqlFormatter.format(ps.getScript()));
+                                queue.put(sql.getTaskId(), statement);
 
-                                /* DQL 并且必须是最后一个 SQL 语句才执行查询 */
-                                if (ps.getType() == SQLCommandType.DQL && ps.isLast()) {
+                                for (SQLParsedStatement ps : sql) {
 
-                                        MutableDataGrid grid = executeQueryGrid(
-                                                connection,
-                                                statement,
-                                                sql,
-                                                ps
-                                        );
+                                        current = ps;
+                                        boolean skip = false;
 
-                                        callback.doCallback(ps.getScript(), SQLExecutorStatus.OK);
+                                        LOG.info("Execute sql: \n{}", SqlFormatter.format(ps.getScript()));
 
-                                        return grid;
+                                        /* DQL 并且必须是最后一个 SQL 语句才执行查询 */
+                                        if (ps.getType() == SQLCommandType.DQL && ps.isLast()) {
 
+                                                connection.commit();
+
+                                                MutableDataGrid grid = executeQueryGrid(
+                                                        connection,
+                                                        statement,
+                                                        sql,
+                                                        ps
+                                                );
+
+                                                callback.doCallback(ps.getScript(), SQLExecutorStatus.OK);
+
+                                                return grid;
+
+                                        }
+
+                                        if (ps.getType() == SQLCommandType.DML) {
+                                                statement.executeUpdate(ps.getScript());
+                                                callback.doCallback(ps.getScript(), SQLExecutorStatus.OK);
+                                                continue;
+                                        }
+
+                                        if (ps.getType() == SQLCommandType.DQL)
+                                                skip = true;
+
+                                        if (!skip)
+                                                statement.execute(ps.getScript());
+
+                                        callback.doCallback(ps.getScript(), skip ? SQLExecutorStatus.SKIP : SQLExecutorStatus.OK);
                                 }
 
-                                if (ps.getType() == SQLCommandType.DML) {
-                                        statement.executeUpdate(ps.getScript());
-                                        callback.doCallback(ps.getScript(), SQLExecutorStatus.OK);
-                                        continue;
-                                }
+                        } catch (Exception e) {
 
-                                if (ps.getType() == SQLCommandType.DQL)
-                                        skip = true;
+                                connection.rollback();
 
-                                statement.execute(ps.getScript());
+                                throw e;
 
-                                callback.doCallback(ps.getScript(), skip ? SQLExecutorStatus.SKIP : SQLExecutorStatus.OK);
+                        } finally {
+
+                                queue.remove(sql.getTaskId());
+
                         }
 
-                        queue.remove(sql.getTaskId());
+                        connection.commit();
 
                 } catch (SQLException e) {
 
@@ -310,7 +359,11 @@ public class MySQLExecutor extends SQLExecutor
 
                         }
 
-                        throw new RuntimeException(e);
+                        throw new SystemRuntimeException(e);
+
+                } finally {
+
+                        IOUtils.closeQuietly(connection);
 
                 }
 

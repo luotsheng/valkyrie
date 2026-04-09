@@ -117,8 +117,10 @@ public class TableDesignerPane extends DetailPane
         {
                 try {
                         executor.alterChange(tableMetaData, columnMetaDataUpdateBuffer);
-                        applyReload();
+                        executor.alterPrimaryKey(tableMetaData, primaryUpdateBuffer);
+                        primaryUpdateBuffer.clear();
                         columnMetaDataUpdateBuffer.clear();
+                        applyReload();
                 } catch (Exception e) {
                         VFXDialogHelper.alert(e);
                 }
@@ -191,11 +193,24 @@ public class TableDesignerPane extends DetailPane
                 VFXTableColumnFactory<ColumnMetaData> factory = new VFXTableColumnFactory<>();
 
                 factory.setOnEditCommitEventListener((oldVal, newVal) -> {
-                        if (oldVal.isPrimary() != newVal.isPrimary() && newVal.isPrimary())
-                                primaryUpdateBuffer.add(newVal);
+                        /* 检测到主键变动 */
+                        if (oldVal.isPrimary() != newVal.isPrimary()) {
 
-                        if (!newVal.isPrimary())
-                                primaryUpdateBuffer.remove(newVal);
+                                /* 如果主键列表为空初始化，如果表没有主键那就一直初始化（无伤大雅） */
+                                if (primaryUpdateBuffer.isEmpty()) {
+                                        for (ColumnMetaData columnMetaData : columnMetaDatas)
+                                                if (columnMetaData.isPrimary())
+                                                        primaryUpdateBuffer.add(columnMetaData);
+                                }
+
+                                if (newVal.isPrimary()) {
+                                        primaryUpdateBuffer.add(newVal);
+                                } else {
+                                        primaryUpdateBuffer.remove(newVal);
+                                }
+
+                                return;
+                        }
 
                         /* 变更记录 */
                         columnMetaDataUpdateBuffer.add(newVal);

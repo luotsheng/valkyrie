@@ -209,7 +209,7 @@ public class UField {
      * @param instance
      *        对象实例
      */
-    public Object read(Object instance) {
+    public Object get(Object instance) {
         return createFieldDescriptor(instance).get();
     }
 
@@ -243,7 +243,7 @@ public class UField {
      */
     public static void copy(Object src, Object dest, String name) {
         /* read value of src. */
-        Object value = new UField(name, src.getClass()).read(src);
+        Object value = new UField(name, src.getClass()).get(src);
         /* write to dest. */
         UField destUField = new UField(name, dest.getClass());
         destUField.set(dest, value);

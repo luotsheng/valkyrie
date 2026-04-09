@@ -151,7 +151,7 @@ public class UClass {
         UClass uClass = new UClass(aClass);
         for (UField field : uClass.fields.values()) {
             if (field.isStatic() && field.isFinal() && StringStaticize.streq(field.getName(), name))
-                return (T) field.read(null);
+                return (T) field.get(null);
         }
         return null;
     }
@@ -353,7 +353,7 @@ public class UClass {
         UField uField = fields.get(name);
         if (uField == null)
             return null;
-        return (R) uField.read(instance);
+        return (R) uField.get(instance);
     }
 
     /**
@@ -372,7 +372,7 @@ public class UClass {
     public <R> R readFieldValue(String name, Object instance) {
         UField uField = fields.get(name);
         Assert.notNull(fields.get(name), "未在 %s 类中找到 %s 属性。", getName(), name);
-        return (R) uField.read(instance);
+        return (R) uField.get(instance);
     }
 
     /**

@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -86,6 +87,8 @@ public abstract class SQLExecutor
         public abstract String showCreateTable(String db, String table);
 
         public abstract void dropTable(String db, String table) throws SQLException;
+
+        public abstract void alterPrimaryKey(TableMetaData tableMetaData, Collection<ColumnMetaData> primaryKeys);
 
         public abstract void alterChange(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas);
 

@@ -26,7 +26,7 @@ public class ColumnMetaData
         /**
          * 列序号（从 0 开始）
          */
-        private int index;
+        private Integer index;
 
         /**
          * 数据库字段类型

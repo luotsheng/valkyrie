@@ -134,7 +134,7 @@ public class BeanUtils {
             } else {
                 UField srcField = srcClass.getDeclaredField(dstField.getName());
                 if (srcField != null) {
-                    Object param = srcField.read(src);
+                    Object param = srcField.get(src);
                     if (param != null)
                         dstClass.invoke(dst, setMethod, param);
                 }

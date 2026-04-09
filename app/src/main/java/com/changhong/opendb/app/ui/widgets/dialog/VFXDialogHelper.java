@@ -1,5 +1,6 @@
 package com.changhong.opendb.app.ui.widgets.dialog;
 
+import com.changhong.exception.SystemRuntimeException;
 import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.workbench.VFXCopyableLabel;
@@ -31,15 +32,29 @@ import static com.changhong.string.StringStaticize.strwfmt;
 public class VFXDialogHelper
 {
         public interface DialogCallback {
-                void apply() throws Throwable;
+                void run() throws Throwable;
+        }
+
+        public interface DialogReturnValueCallback<T> {
+                T run() throws Throwable;
         }
 
         public static void runWith(DialogCallback callback)
         {
                 try {
-                        callback.apply();
+                        callback.run();
                 } catch (Throwable e) {
                         alert(e);
+                }
+        }
+
+        public static <T> T runWith(DialogReturnValueCallback<T> callback)
+        {
+                try {
+                        return callback.run();
+                } catch (Throwable e) {
+                        alert(e);
+                        throw new SystemRuntimeException(e);
                 }
         }
 

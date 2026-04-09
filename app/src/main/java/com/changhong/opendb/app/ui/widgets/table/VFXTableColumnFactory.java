@@ -65,8 +65,8 @@ public class VFXTableColumnFactory<S>
                                         Assert.notNull(propertyCellValueRef.field);
                                 }
 
-                                var oldVal = (S)
-                                        BeanUtils.copyProperties(rowValue, propertyCellValueRef.uClass.getDescriptor());
+                                var oldVal = (S) propertyCellValueRef.uClass.newInstance();
+                                BeanUtils.directCopy(rowValue, oldVal);
 
                                 propertyCellValueRef.field.set(rowValue, event.getNewValue());
 
