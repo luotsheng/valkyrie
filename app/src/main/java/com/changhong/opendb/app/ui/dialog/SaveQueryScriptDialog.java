@@ -1,4 +1,4 @@
-package com.changhong.opendb.app.ui.widgets;
+package com.changhong.opendb.app.ui.dialog;
 
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.RefreshQueryNodeEvent;

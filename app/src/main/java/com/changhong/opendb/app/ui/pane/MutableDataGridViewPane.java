@@ -6,6 +6,7 @@ import com.changhong.opendb.app.driver.Row;
 import com.changhong.opendb.app.driver.MutableDataGrid;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.widgets.*;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableView;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXTextFieldTableCell;
 import com.changhong.opendb.app.ui.workbench.ModifyCell;
@@ -15,8 +16,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -171,7 +170,7 @@ public class MutableDataGridViewPane extends BorderPane
                 if (indices == null || indices.isEmpty())
                         return;
 
-                if (!ConfirmDialog.showCheckDialog("选中%s条数据，是否删除？", indices.size()))
+                if (!VFXDialog.openCheckConfirm("选中%s条数据，是否删除？", indices.size()))
                         return;
 
                 setProgressIndicator();

@@ -1,4 +1,4 @@
-package com.changhong.opendb.app.ui.widgets;
+package com.changhong.opendb.app.ui.widgets.dialog;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,13 +12,16 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 
+import static com.changhong.string.StringStaticize.strwfmt;
+
 /**
  * @author Luo Tiansheng
  * @since 2026/3/26
  */
-public class ErrorDialog
+@SuppressWarnings("DuplicatedCode")
+class ErrorDialog
 {
-        public static void showDialog(String message) {
+        public static void showDialog(String fmt, Object... args) {
                 Toolkit.getDefaultToolkit().beep();
 
                 Stage stage = new Stage();
@@ -26,7 +29,7 @@ public class ErrorDialog
                 stage.setResizable(false);
                 stage.setTitle("数据库管理工具");
 
-                Label label = new Label(message);
+                Label label = new Label(strwfmt(fmt, args));
                 label.setWrapText(true);
 
                 Button ok = new Button("确认");

@@ -1,6 +1,5 @@
 package com.changhong.opendb.app.ui.navigator.node;
 
-import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
 import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.app.driver.datasource.MySQLDataSource;
@@ -8,8 +7,7 @@ import com.changhong.opendb.app.model.ConnectionInfo;
 import com.changhong.opendb.app.model.ODBNStatus;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.dialog.connection.ConnectionDialog;
-import com.changhong.opendb.app.ui.widgets.ConfirmDialog;
-import com.changhong.opendb.app.ui.widgets.Dialogs;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -71,7 +69,7 @@ public class ODBNConnection extends ODBNode
                                 setExpanded(true);
                                 openFlag = true;
                         } catch (Throwable e) {
-                                Dialogs.openError(e);
+                                VFXDialog.openError(e);
                         } finally {
                                 Platform.runLater(this::removeLoadingIndicator);
                         }
@@ -92,7 +90,7 @@ public class ODBNConnection extends ODBNode
 
                 databases.clear();
                 getChildren().clear();
-                Dialogs.tryCall(dataSource::close);
+                VFXDialog.tryCall(dataSource::close);
                 ODBNStatus.getInstance().removeConnection(this);
 
                 openFlag = false;
@@ -101,7 +99,7 @@ public class ODBNConnection extends ODBNode
         private void editConnection()
         {
                 if (openFlag) {
-                        if (ConfirmDialog.showDialog("编辑需要关闭当前连接，是否关闭？")) {
+                        if (VFXDialog.openConfirm("编辑需要关闭当前连接，是否关闭？")) {
                                 closeConnection();
                                 new ConnectionDialog(info).showAndWait();
                         }

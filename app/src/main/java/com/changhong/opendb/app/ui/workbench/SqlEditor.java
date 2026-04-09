@@ -6,12 +6,13 @@ import com.changhong.opendb.app.driver.MutableDataGrid;
 import com.changhong.opendb.app.model.ODBNStatus;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.resource.Assets;
+import com.changhong.opendb.app.ui.dialog.SaveQueryScriptDialog;
 import com.changhong.opendb.app.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
 import com.changhong.opendb.app.ui.pane.MutableDataGridViewPane;
 import com.changhong.opendb.app.ui.pane.SqlMessagePane;
 import com.changhong.opendb.app.ui.widgets.*;
-import com.changhong.opendb.app.ui.widgets.Dialogs;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
 import com.changhong.opendb.app.utils.Causes;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import javafx.application.Platform;
@@ -466,7 +467,7 @@ public class SqlEditor extends SplitPane
                                 int count = rw.read(buf);
                                 builder.append(buf, 0, count);
                         } catch (Throwable e) {
-                                Dialogs.openError(e);
+                                VFXDialog.openError(e);
                         }
 
                         codeArea.clear();
@@ -519,7 +520,7 @@ public class SqlEditor extends SplitPane
         public void close()
         {
                 if (!saveFlag) {
-                        if (ConfirmDialog.showDialog("%s 未保存，是否保存？", ownerTab.getText()))
+                        if (VFXDialog.openConfirm("%s 未保存，是否保存？", ownerTab.getText()))
                                 save();
                 }
         }

@@ -2,7 +2,7 @@ package com.changhong.opendb.app.repository;
 
 import com.changhong.opendb.app.Users;
 import com.changhong.opendb.app.model.ConnectionInfo;
-import com.changhong.opendb.app.ui.widgets.Dialogs;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
 import com.changhong.opendb.app.utils.FileUtils;
 import com.changhong.opendb.app.utils.JSONUtils;
 
@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileAlreadyExistsException;
 import java.text.Collator;
 import java.util.*;
 
@@ -30,12 +29,12 @@ public class ConnectionRepository
                 File odbc = new File(dir, ".odbc");
 
                 if (odbc.exists())
-                        Dialogs.openError(new FileAlreadyExistsException(name + "已存在！"));
+                        VFXDialog.openError(name + "已存在！");
 
                 dir.mkdirs();
 
                 if (!odbc.exists())
-                        Dialogs.tryCall(odbc::createNewFile);
+                        VFXDialog.tryCall(odbc::createNewFile);
 
                 try (FileOutputStream fos = new FileOutputStream(odbc)) {
 
@@ -44,7 +43,7 @@ public class ConnectionRepository
                 } catch (IOException e) {
                         /* 删除文件夹 */
                         FileUtils.forceDelete(dir);
-                        Dialogs.openError(e);
+                        VFXDialog.openError(e);
                 }
         }
 
@@ -86,7 +85,7 @@ public class ConnectionRepository
                                 String content = new String(bytes, StandardCharsets.UTF_8);
                                 ret.add(JSONUtils.toJavaObject(content, ConnectionInfo.class));
                         } catch (Exception e) {
-                                Dialogs.openError(e);
+                                VFXDialog.openError(e);
                         }
                 }
 

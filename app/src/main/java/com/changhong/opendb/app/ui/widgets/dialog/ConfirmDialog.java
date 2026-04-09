@@ -1,4 +1,4 @@
-package com.changhong.opendb.app.ui.widgets;
+package com.changhong.opendb.app.ui.widgets.dialog;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,7 +21,8 @@ import static com.changhong.string.StringStaticize.strwfmt;
  * @author Luo Tiansheng
  * @since 2026/3/26
  */
-public class ConfirmDialog
+@SuppressWarnings("DuplicatedCode")
+class ConfirmDialog
 {
         private static void openDialog(Stage stage, String message, Node... children)
         {

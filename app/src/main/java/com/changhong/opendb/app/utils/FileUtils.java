@@ -1,6 +1,6 @@
 package com.changhong.opendb.app.utils;
 
-import com.changhong.opendb.app.ui.widgets.Dialogs;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class FileUtils
                                 .isEmpty();
 
                 } catch (IOException e) {
-                        Dialogs.openError(e);
+                        VFXDialog.openError(e);
                 }
 
                 return false;
@@ -51,14 +51,14 @@ public class FileUtils
                 Path path = Paths.get(pathname);
 
                 if (Files.isRegularFile(path)) {
-                        Dialogs.tryCall(() -> Files.deleteIfExists(path));
+                        VFXDialog.tryCall(() -> Files.deleteIfExists(path));
                         return;
                 }
 
-                Dialogs.tryCall(() -> {
+                VFXDialog.tryCall(() -> {
                         Files.walk(path)
                                 .sorted(Comparator.reverseOrder())
-                                .forEach(pathVal -> Dialogs.tryCall(() -> Files.delete(pathVal)));
+                                .forEach(pathVal -> VFXDialog.tryCall(() -> Files.delete(pathVal)));
                 });
         }
 }

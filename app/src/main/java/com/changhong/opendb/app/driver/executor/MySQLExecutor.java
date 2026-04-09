@@ -7,7 +7,7 @@ import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.app.driver.sql.SQL;
 import com.changhong.opendb.app.driver.sql.SQLCommandType;
 import com.changhong.opendb.app.driver.sql.SQLParsedStatement;
-import com.changhong.opendb.app.ui.widgets.Dialogs;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
 import com.changhong.opendb.app.utils.ResultSets;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import net.sf.jsqlparser.schema.Table;
@@ -64,7 +64,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         return ret;
                 } catch (SQLException e) {
-                        Dialogs.openError(e);
+                        VFXDialog.openError(e);
                 }
 
                 return List.of();
@@ -95,7 +95,7 @@ public class MySQLExecutor extends SQLExecutor
                         metas.forEach(e -> e.setDatabase(db));
                         return metas;
                 } catch (SQLException e) {
-                        Dialogs.openError(e);
+                        VFXDialog.openError(e);
                 }
 
                 return List.of();
@@ -118,7 +118,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         return columns;
                 } catch (Exception e) {
-                        Dialogs.openError(e);
+                        VFXDialog.openError(e);
                         return List.of();
                 }
         }
@@ -340,7 +340,7 @@ public class MySQLExecutor extends SQLExecutor
         @Override
         public void cancel(Long id)
         {
-                Dialogs.tryCall(() -> {
+                VFXDialog.tryCall(() -> {
                         if (queue.containsKey(id))
                                 queue.get(id).cancel();
                 });

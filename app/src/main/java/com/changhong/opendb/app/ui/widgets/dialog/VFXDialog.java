@@ -1,13 +1,12 @@
-package com.changhong.opendb.app.ui.widgets;
+package com.changhong.opendb.app.ui.widgets.dialog;
 
 import com.changhong.opendb.app.utils.Causes;
-import javafx.application.Platform;
 
 /**
  * @author Luo Tiansheng
  * @since 2026/3/25
  */
-public class Dialogs
+public class VFXDialog
 {
         public interface DialogCallback {
                 void apply() throws Throwable;
@@ -22,9 +21,19 @@ public class Dialogs
                 }
         }
 
-        public static void openError(String message)
+        public static boolean openConfirm(String fmt, Object... args)
         {
-                Platform.runLater(() -> ErrorDialog.showDialog(message));
+                return ConfirmDialog.showDialog(fmt, args);
+        }
+
+        public static boolean openCheckConfirm(String fmt, Object... args)
+        {
+                return ConfirmDialog.showCheckDialog(fmt, args);
+        }
+
+        public static void openError(String fmt, Object... args)
+        {
+                ErrorDialog.showDialog(fmt, args);
         }
 
         /**

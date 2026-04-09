@@ -1,6 +1,6 @@
 package com.changhong.opendb.app.driver.sql;
 
-import com.changhong.opendb.app.ui.widgets.Dialogs;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
 import lombok.Getter;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -44,7 +44,7 @@ public class SQL implements Iterable<SQLParsedStatement>
                                 ));
                         }
                 } catch (JSQLParserException e) {
-                        Dialogs.openError(e);
+                        VFXDialog.openError(e);
                 }
         }
 

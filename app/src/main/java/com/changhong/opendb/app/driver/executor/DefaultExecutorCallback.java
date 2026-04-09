@@ -1,7 +1,5 @@
 package com.changhong.opendb.app.driver.executor;
 
-import com.changhong.opendb.app.ui.widgets.ErrorDialog;
-import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
