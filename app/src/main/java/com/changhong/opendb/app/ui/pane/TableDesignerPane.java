@@ -13,7 +13,7 @@ import com.changhong.opendb.app.ui.widgets.table.VFXTableColumnFactory;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableView;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXCheckBoxTableCell;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXTextFieldTableCell;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
@@ -119,7 +119,7 @@ public class TableDesignerPane extends DetailPane
                         applyReload();
                         columnMetaDataUpdateBuffer.clear();
                 } catch (Exception e) {
-                        VFXDialog.openError(e);
+                        VFXDialogHelper.warn(e);
                 }
         }
 
@@ -131,6 +131,13 @@ public class TableDesignerPane extends DetailPane
 
         private void applyMinus()
         {
+                ColumnMetaData selectedItem = structureView.getSelectedItem();
+
+                if (selectedItem == null) {
+                        VFXDialogHelper.warn();
+                        return;
+                }
+
         }
 
         private void beginReload()

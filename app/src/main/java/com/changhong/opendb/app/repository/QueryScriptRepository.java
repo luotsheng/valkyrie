@@ -4,7 +4,7 @@ import com.changhong.opendb.app.Users;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,7 +39,7 @@ public class QueryScriptRepository
         @SuppressWarnings("ResultOfMethodCallIgnored")
         public static File saveQueryScript(File sqlFile, String content)
         {
-                VFXDialog.tryCall(() -> {
+                VFXDialogHelper.runWith(() -> {
                         if (!sqlFile.exists()) {
                                 sqlFile.getParentFile().mkdirs();
                                 sqlFile.createNewFile();

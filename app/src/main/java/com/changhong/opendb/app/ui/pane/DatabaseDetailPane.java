@@ -9,7 +9,7 @@ import com.changhong.opendb.app.ui.widgets.*;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableColumn;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableView;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXDateTableCell;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
@@ -93,8 +93,8 @@ public class DatabaseDetailPane extends DetailPane
         {
                 TableMetaData table = tableView.getSelectionModel().getSelectedItem();
 
-                if (VFXDialog.openCheckConfirm("确认删除：%s？", table.getName())) {
-                        VFXDialog.tryCall(() -> database.drop(table));
+                if (VFXDialogHelper.askDangerous("确认删除：%s？", table.getName())) {
+                        VFXDialogHelper.runWith(() -> database.dropTable(table));
                         database.refreshTableNode();
                 }
         }

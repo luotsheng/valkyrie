@@ -7,7 +7,7 @@ import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.repository.QueryScriptRepository;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.pane.DatabaseDetailPane;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -107,9 +107,9 @@ public class ODBNDatabase extends ODBNode implements EventListener
                 tables.addAll(sqlExecutor.getTables(name));
         }
 
-        public final void drop(TableMetaData tbMetaData) throws SQLException
+        public final void dropTable(TableMetaData tbMetaData) throws SQLException
         {
-                sqlExecutor.drop(name, tbMetaData.getName());
+                sqlExecutor.dropTable(name, tbMetaData.getName());
         }
 
         @SuppressWarnings("unchecked")
@@ -136,7 +136,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
                                         openFlag = true;
                                 });
                         } catch (Throwable e) {
-                                VFXDialog.openError(e);
+                                VFXDialogHelper.warn(e);
                         } finally {
                                 Platform.runLater(this::removeLoadingIndicator);
                         }

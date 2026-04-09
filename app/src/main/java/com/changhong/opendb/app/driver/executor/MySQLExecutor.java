@@ -7,7 +7,7 @@ import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.app.driver.sql.SQL;
 import com.changhong.opendb.app.driver.sql.SQLCommandType;
 import com.changhong.opendb.app.driver.sql.SQLParsedStatement;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.utils.ResultSets;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import net.sf.jsqlparser.schema.Table;
@@ -64,7 +64,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         return ret;
                 } catch (SQLException e) {
-                        VFXDialog.openError(e);
+                        VFXDialogHelper.warn(e);
                 }
 
                 return List.of();
@@ -95,7 +95,7 @@ public class MySQLExecutor extends SQLExecutor
                         metas.forEach(e -> e.setDatabase(db));
                         return metas;
                 } catch (SQLException e) {
-                        VFXDialog.openError(e);
+                        VFXDialogHelper.warn(e);
                 }
 
                 return List.of();
@@ -118,7 +118,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         return columns;
                 } catch (Exception e) {
-                        VFXDialog.openError(e);
+                        VFXDialogHelper.warn(e);
                         return List.of();
                 }
         }
@@ -190,7 +190,7 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         @Override
-        public void drop(String db, String table) throws SQLException
+        public void dropTable(String db, String table) throws SQLException
         {
                 try (Connection connection = ds.getConnection();
                      Statement statement = ds.use(connection, db)) {
@@ -340,7 +340,7 @@ public class MySQLExecutor extends SQLExecutor
         @Override
         public void cancel(Long id)
         {
-                VFXDialog.tryCall(() -> {
+                VFXDialogHelper.runWith(() -> {
                         if (queue.containsKey(id))
                                 queue.get(id).cancel();
                 });

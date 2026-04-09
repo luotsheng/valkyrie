@@ -12,7 +12,7 @@ import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
 import com.changhong.opendb.app.ui.pane.MutableDataGridViewPane;
 import com.changhong.opendb.app.ui.pane.SqlMessagePane;
 import com.changhong.opendb.app.ui.widgets.*;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.utils.Causes;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import javafx.application.Platform;
@@ -467,7 +467,7 @@ public class SqlEditor extends SplitPane
                                 int count = rw.read(buf);
                                 builder.append(buf, 0, count);
                         } catch (Throwable e) {
-                                VFXDialog.openError(e);
+                                VFXDialogHelper.warn(e);
                         }
 
                         codeArea.clear();
@@ -520,7 +520,7 @@ public class SqlEditor extends SplitPane
         public void close()
         {
                 if (!saveFlag) {
-                        if (VFXDialog.openConfirm("%s 未保存，是否保存？", ownerTab.getText()))
+                        if (VFXDialogHelper.ask("%s 未保存，是否保存？", ownerTab.getText()))
                                 save();
                 }
         }

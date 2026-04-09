@@ -3,7 +3,6 @@ package com.changhong.opendb.app.ui.widgets.table;
 import com.changhong.reflect.UClass;
 import com.changhong.reflect.UField;
 import com.changhong.utils.Assert;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Setter;
 

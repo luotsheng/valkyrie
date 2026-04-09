@@ -1,7 +1,7 @@
 package com.changhong.opendb.app.driver.sql;
 
 import com.changhong.exception.SystemRuntimeException;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
 import lombok.Getter;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -56,7 +56,7 @@ public class SQLParsedStatement
 
                         initialize(beg(statements), true);
                 } catch (Exception e) {
-                        VFXDialog.openError(e);
+                        VFXDialogHelper.warn(e);
                 }
         }
 
@@ -73,7 +73,7 @@ public class SQLParsedStatement
                 this.star = false;
 
                 if (type == SQLCommandType.UNSUPPORTED)
-                        Platform.runLater(() -> VFXDialog.openError("Unsupported " + script));
+                        Platform.runLater(() -> VFXDialogHelper.warn("Unsupported " + script));
 
                 if (type == SQLCommandType.DQL && !(statement instanceof ShowIndexStatement)) {
                         TablesNamesFinder<Void> finder = new TablesNamesFinder<>();

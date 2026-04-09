@@ -3,7 +3,7 @@ package com.changhong.opendb.app.utils;
 import com.changhong.opendb.app.driver.ColumnMetaData;
 import com.changhong.opendb.app.driver.Row;
 import com.changhong.opendb.app.driver.MutableDataGrid;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -64,7 +64,7 @@ public class ResultSets
 
                         return JSONUtils.toJavaList(jsonArray, aClass);
                 } catch (Exception e) {
-                        VFXDialog.openError(e);
+                        VFXDialogHelper.warn(e);
                         return List.of();
                 }
         }

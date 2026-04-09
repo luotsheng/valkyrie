@@ -6,7 +6,7 @@ import com.changhong.opendb.app.driver.Row;
 import com.changhong.opendb.app.driver.MutableDataGrid;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.widgets.*;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableView;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXTextFieldTableCell;
 import com.changhong.opendb.app.ui.workbench.ModifyCell;
@@ -170,7 +170,7 @@ public class MutableDataGridViewPane extends BorderPane
                 if (indices == null || indices.isEmpty())
                         return;
 
-                if (!VFXDialog.openCheckConfirm("选中%s条数据，是否删除？", indices.size()))
+                if (!VFXDialogHelper.askDangerous("选中%s条数据，是否删除？", indices.size()))
                         return;
 
                 setProgressIndicator();

@@ -1,7 +1,6 @@
 package com.changhong.opendb.app.driver.sql;
 
 import com.changhong.exception.SystemRuntimeException;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
 import lombok.Getter;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;

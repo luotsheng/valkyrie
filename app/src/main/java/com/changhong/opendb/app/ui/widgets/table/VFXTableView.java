@@ -23,6 +23,14 @@ public class VFXTableView<S> extends TableView<S>
                 getItems().addListener(listener);
         }
 
+        /**
+         * 获取当前选中行对象
+         */
+        public S getSelectedItem()
+        {
+                return getSelectionModel().getSelectedItem();
+        }
+
         public void playFlash()
         {
                 FadeTransition ft = new FadeTransition(Duration.millis(600), this);

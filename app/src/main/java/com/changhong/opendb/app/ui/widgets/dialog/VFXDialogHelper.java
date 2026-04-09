@@ -3,13 +3,13 @@ package com.changhong.opendb.app.ui.widgets.dialog;
 import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.workbench.VFXCopyableLabel;
+import com.changhong.opendb.app.utils.Causes;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -23,12 +23,57 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.changhong.string.StringStaticize.strwfmt;
 
 /**
+ * Dialog
  * @author Luo Tiansheng
- * @since 2026/3/26
+ * @since 2026/3/25
  */
-@SuppressWarnings("DuplicatedCode")
-class WindowConfirm
+public class VFXDialogHelper
 {
+        public interface DialogCallback {
+                void apply() throws Throwable;
+        }
+
+        public static void runWith(DialogCallback callback)
+        {
+                try {
+                        callback.apply();
+                } catch (Throwable e) {
+                        error(e);
+                }
+        }
+
+        /**
+         * 普通询问提示框
+         */
+        public static boolean ask(String fmt, Object... args)
+        {
+                return showDialog(fmt, args);
+        }
+
+        /**
+         * 危险操作提示框
+         */
+        public static boolean askDangerous(String fmt, Object... args)
+        {
+                return showCheckDialog(fmt, args);
+        }
+
+        /**
+         * 警告提示框
+         */
+        public static void warn(String fmt, Object... args)
+        {
+                showDialog(fmt, args);
+        }
+
+        /**
+         * 异常提示框
+         */
+        public static void error(Throwable e)
+        {
+                warn(Causes.message(e));
+        }
+
         private static void openDialog(Stage stage, String message, Node... children)
         {
                 Toolkit.getDefaultToolkit().beep();
@@ -55,7 +100,7 @@ class WindowConfirm
                 stage.showAndWait();
         }
 
-        public static boolean showCheckDialog(String fmt, Object... args)
+        private static boolean showCheckDialog(String fmt, Object... args)
         {
                 Stage stage = new Stage();
 
@@ -65,7 +110,7 @@ class WindowConfirm
                 checkBox.setText("我晓得操作没法恢复！");
                 checkBox.setGraphic(Assets.use("warning@2x"));
 
-                Button ok = new Button("确认");
+                javafx.scene.control.Button ok = new javafx.scene.control.Button("确认");
                 ok.setDisable(true);
                 ok.setDefaultButton(true);
                 ok.setOnAction(e -> {
@@ -73,7 +118,7 @@ class WindowConfirm
                         stage.close();
                 });
 
-                Button cancel = new Button("取消");
+                javafx.scene.control.Button cancel = new javafx.scene.control.Button("取消");
                 cancel.setDefaultButton(true);
                 cancel.setOnAction(e -> {
                         flag.set(false);
@@ -92,20 +137,20 @@ class WindowConfirm
                 return flag.get();
         }
 
-        public static boolean showDialog(String fmt, Object... args)
+        private static boolean showDialog(String fmt, Object... args)
         {
                 Stage stage = new Stage();
 
                 AtomicBoolean flag = new AtomicBoolean(true);
 
-                Button ok = new Button("确认");
+                javafx.scene.control.Button ok = new javafx.scene.control.Button("确认");
                 ok.setDefaultButton(true);
                 ok.setOnAction(e -> {
                         flag.set(true);
                         stage.close();
                 });
 
-                Button cancel = new Button("取消");
+                javafx.scene.control.Button cancel = new Button("取消");
                 cancel.setDefaultButton(true);
                 cancel.setOnAction(e -> {
                         flag.set(false);
@@ -116,4 +161,5 @@ class WindowConfirm
 
                 return flag.get();
         }
+
 }

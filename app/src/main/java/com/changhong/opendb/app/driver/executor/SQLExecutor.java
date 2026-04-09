@@ -85,7 +85,7 @@ public abstract class SQLExecutor
 
         public abstract String showCreateTable(String db, String table);
 
-        public abstract void drop(String db, String table) throws SQLException;
+        public abstract void dropTable(String db, String table) throws SQLException;
 
         public abstract void alterChange(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas);
 

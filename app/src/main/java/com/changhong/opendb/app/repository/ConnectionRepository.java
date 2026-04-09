@@ -2,7 +2,7 @@ package com.changhong.opendb.app.repository;
 
 import com.changhong.opendb.app.Users;
 import com.changhong.opendb.app.model.ConnectionInfo;
-import com.changhong.opendb.app.ui.widgets.dialog.VFXDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.utils.FileUtils;
 import com.changhong.opendb.app.utils.JSONUtils;
 
@@ -29,12 +29,12 @@ public class ConnectionRepository
                 File odbc = new File(dir, ".odbc");
 
                 if (odbc.exists())
-                        VFXDialog.openError(name + "已存在！");
+                        VFXDialogHelper.warn(name + "已存在！");
 
                 dir.mkdirs();
 
                 if (!odbc.exists())
-                        VFXDialog.tryCall(odbc::createNewFile);
+                        VFXDialogHelper.runWith(odbc::createNewFile);
 
                 try (FileOutputStream fos = new FileOutputStream(odbc)) {
 
@@ -43,7 +43,7 @@ public class ConnectionRepository
                 } catch (IOException e) {
                         /* 删除文件夹 */
                         FileUtils.forceDelete(dir);
-                        VFXDialog.openError(e);
+                        VFXDialogHelper.warn(e);
                 }
         }
 
@@ -85,7 +85,7 @@ public class ConnectionRepository
                                 String content = new String(bytes, StandardCharsets.UTF_8);
                                 ret.add(JSONUtils.toJavaObject(content, ConnectionInfo.class));
                         } catch (Exception e) {
-                                VFXDialog.openError(e);
+                                VFXDialogHelper.warn(e);
                         }
                 }
 
