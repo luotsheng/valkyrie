@@ -83,32 +83,6 @@ public class Application extends javafx.application.Application
                         stage.setY(bounds.getMinY());
                 }
 
-                VFXDialog.openError("""
-                        用 VFXIconButton。
-                        
-                        理由：
-                        Java 类名遵循 UpperCamelCase（大驼峰） 规范，缩写词也按普通单词处理，不全部大写。
-                        
-                        规范来源：
-                        
-                        Google Java Style Guide
-                        https://google.github.io/styleguide/javaguide.html#s5.3-camel-case
-                        
-                        示例规则：
-                        
-                        XMLHttpRequest
-                        HttpURLConnection
-                        HtmlParser
-                        
-                        因此：
-                        
-                        写法	评价
-                        VFXICONButton	错误，连续全大写破坏可读性
-                        VFXIconButton	正确
-                        
-                        结论：使用 VFXIconButton。
-                        """);
-
                 runnables.forEach(runnable -> runnable.run(stage, scene));
 
                 stage.show();
