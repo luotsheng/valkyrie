@@ -1,5 +1,6 @@
 package com.changhong.opendb.app.ui.widgets.table;
 
+import com.changhong.bean.BeanUtils;
 import com.changhong.reflect.UClass;
 import com.changhong.reflect.UField;
 import com.changhong.utils.Assert;
@@ -14,7 +15,7 @@ public class VFXTableColumnFactory<S>
 {
         public interface EditCommitEventListener<S>
         {
-                void onCommit(S value);
+                void onCommit(S oldVal, S newVal);
         }
 
         @Setter
@@ -27,6 +28,10 @@ public class VFXTableColumnFactory<S>
                  */
                 private String property;
                 /**
+                 * 类反射对象
+                 */
+                private UClass uClass;
+                /**
                  * 字段反射对象
                  */
                 private UField field;
@@ -36,6 +41,7 @@ public class VFXTableColumnFactory<S>
         {
         }
 
+        @SuppressWarnings("unchecked")
         public <T> VFXTableColumn<S, T> createEditableColumn(String name, String property)
         {
                 VFXTableColumn<S, T> c = new VFXTableColumn<>(name, true);
@@ -54,13 +60,17 @@ public class VFXTableColumnFactory<S>
 
                                 if (propertyCellValueRef.field == null) {
                                         UClass uClass = new UClass(rowValue.getClass());
+                                        propertyCellValueRef.uClass = uClass;
                                         propertyCellValueRef.field = uClass.getDeclaredField(propertyCellValueRef.property);
                                         Assert.notNull(propertyCellValueRef.field);
                                 }
 
+                                var oldVal = (S)
+                                        BeanUtils.copyProperties(rowValue, propertyCellValueRef.uClass.getDescriptor());
+
                                 propertyCellValueRef.field.set(rowValue, event.getNewValue());
 
-                                onEditCommitEventListener.onCommit(rowValue);
+                                onEditCommitEventListener.onCommit(oldVal, rowValue);
                         }
                 });
 
