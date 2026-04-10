@@ -16,6 +16,7 @@ import com.changhong.opendb.app.ui.widgets.table.cell.VFXTextFieldTableCell;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -37,6 +38,10 @@ public class TableStructureDesignerPane extends DetailPane
         private final VFXTableView<TableIndexMetaData> indexView = new VFXTableView<>();
         private final ToolBar toolBar = new ToolBar();
         private final TabPane tabPane = new TabPane();
+
+        private final Button saveButton = new VFXIconButton("保存", "storage");
+        private final Button plusButton = new VFXIconButton("新增行", "plus");
+        private final Button minusButton = new VFXIconButton("删除行", "minus");
 
         private Node oldGraphic;
         private final ProgressIndicator progressIndicator = Assets.newProgressIndicator();
@@ -91,23 +96,18 @@ public class TableStructureDesignerPane extends DetailPane
 
         private void setupToolBar()
         {
-                Button save = new VFXIconButton("保存", "storage");
-                save.setOnAction(e -> applySave());
-
-                Button plus = new VFXIconButton("新增行", "plus");
-                plus.setOnAction(e -> applyPlus());
-
-                Button minus = new VFXIconButton("删除行", "minus");
-                minus.setOnAction(e -> applyMinus());
+                saveButton.setOnAction(e -> applySave());
+                plusButton.setOnAction(e -> applyPlus());
+                minusButton.setOnAction(e -> applyMinus());
 
                 reload = new VFXIconButton("刷新", "reload");
                 reload.setOnAction(e -> applyReload());
 
                 toolBar.getItems().addAll(
-                        save,
+                        saveButton,
                         new VFXSeparator(),
-                        plus,
-                        minus,
+                        plusButton,
+                        minusButton,
                         new VFXSeparator(),
                         reload
                 );
@@ -134,12 +134,30 @@ public class TableStructureDesignerPane extends DetailPane
 
         private void applyMinus()
         {
-                ColumnMetaData selectedItem = structureView.getSelectedItem();
+                ObservableList<ColumnMetaData> items = structureView.getSelectionModel().getSelectedItems();
 
-                if (selectedItem == null) {
+                if (items.isEmpty())
                         return;
-                }
 
+                if (!VFXDialogHelper.askDangerous("确认删除%d条数据？", items.size()))
+                        return;
+
+                beginReload();
+                minusButton.setDisable(true);
+
+                new Thread(() -> {
+                        try {
+                                executor.deleteColumns(tableMetaData, items);
+                                doReload();
+                        } catch (Exception e) {
+                                VFXDialogHelper.alert(e);
+                        } finally {
+                                Platform.runLater(() -> {
+                                        endReload();
+                                        minusButton.setDisable(false);
+                                });
+                        }
+                }).start();
         }
 
         private void beginReload()
@@ -166,22 +184,27 @@ public class TableStructureDesignerPane extends DetailPane
                 beginReload();
                 new Thread(() -> {
                         try {
-                                this.columnMetaDatas = executor.getColumns(tableMetaData);
-                                this.indexes = executor.getIndexes(tableMetaData);
-                                Platform.runLater(() -> {
-                                        structureView.getItems().setAll(FXCollections.observableArrayList(columnMetaDatas));
-                                        indexView.getItems().setAll(FXCollections.observableArrayList(indexes));
-
-                                        structureView.refresh();
-                                        structureView.playFlash();
-
-                                        indexView.refresh();
-                                        indexView.playFlash();
-                                });
+                                doReload();
                         } finally {
                                 endReload();
                         }
                 }).start();
+        }
+
+        private void doReload()
+        {
+                this.columnMetaDatas = executor.getColumns(tableMetaData);
+                this.indexes = executor.getIndexes(tableMetaData);
+                Platform.runLater(() -> {
+                        structureView.getItems().setAll(FXCollections.observableArrayList(columnMetaDatas));
+                        indexView.getItems().setAll(FXCollections.observableArrayList(indexes));
+
+                        structureView.refresh();
+                        structureView.playFlash();
+
+                        indexView.refresh();
+                        indexView.playFlash();
+                });
         }
 
         private void setupStructureView()

@@ -2,6 +2,7 @@ package com.changhong.opendb.app.ui.widgets.table;
 
 import javafx.animation.FadeTransition;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -68,19 +69,6 @@ public class VFXTableView<S> extends TableView<S>
                 return null;
         }
 
-        public void addItemListener(ListChangeListener<? super S> listener)
-        {
-                getItems().addListener(listener);
-        }
-
-        /**
-         * 获取当前选中行对象
-         */
-        public S getSelectedItem()
-        {
-                return getSelectionModel().getSelectedItem();
-        }
-
         public void playFlash()
         {
                 FadeTransition ft = new FadeTransition(Duration.millis(600), this);
@@ -99,4 +87,5 @@ public class VFXTableView<S> extends TableView<S>
         {
                 super.refresh();
         }
+
 }

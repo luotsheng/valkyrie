@@ -282,6 +282,22 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         @Override
+        public void deleteColumns(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas)
+        {
+                StringBuilder script = new StringBuilder();
+
+                script.append(strwfmt("ALTER TABLE `%s` ", tableMetaData.getName()));
+
+                for (ColumnMetaData col : columnMetaDatas)
+                        script.append(strwfmt("DROP COLUMN `%s`, ", col.getName()));
+
+                script.delete(script.length() - 2, script.length());
+                script.append(";");
+
+                execute(new SQL(tableMetaData, atos(script)));
+        }
+
+        @Override
         @SuppressWarnings("resource")
         public MutableDataGrid execute(SQL sql, ExecuteCallback callback)
         {

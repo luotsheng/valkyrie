@@ -4,6 +4,7 @@ import com.changhong.exception.SystemRuntimeException;
 import com.changhong.opendb.app.driver.*;
 import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.app.driver.sql.SQL;
+import javafx.collections.ObservableList;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +92,8 @@ public abstract class SQLExecutor
         public abstract void alterPrimaryKey(TableMetaData tableMetaData, Collection<ColumnMetaData> primaryKeys);
 
         public abstract void alterChange(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas);
+
+        public abstract void deleteColumns(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas);
 
         public MutableDataGrid execute(SQL sql) {
               return execute(sql, new DefaultExecutorCallback());
