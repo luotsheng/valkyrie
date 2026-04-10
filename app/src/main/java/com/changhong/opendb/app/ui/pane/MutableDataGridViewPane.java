@@ -54,7 +54,6 @@ public class MutableDataGridViewPane extends BorderPane
         private final Node progressIndicator = Assets.newProgressIndicator();
 
         private MutableDataGrid grid;
-        private TablePosition<?, ?> start;
 
         public interface ReloadProgressListener {
                 void start();
@@ -239,28 +238,9 @@ public class MutableDataGridViewPane extends BorderPane
                 }).start();
         }
 
-        @SuppressWarnings({"unchecked", "rawtypes"})
         private void setupTableView()
         {
-                tableView.setEditable(true);
-                tableView.getSelectionModel().setCellSelectionEnabled(true);
-                tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-                tableView.setOnMousePressed(event -> {
-                        start = getTablePosition(event);
-                });
-
-                tableView.setOnMouseDragged(event -> {
-                        var cur = getTablePosition(event);
-
-                        if (start != null && cur != null) {
-                                tableView.getSelectionModel().clearSelection();
-                                tableView.getSelectionModel().selectRange(
-                                        start.getRow(), (TableColumn) start.getTableColumn(),
-                                        cur.getRow(), cur.getTableColumn()
-                                );
-                        }
-                });
+                tableView.enableRectangularSelection();
 
                 tableView.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                         if ((event.isControlDown() || event.isShortcutDown())
@@ -323,26 +303,6 @@ public class MutableDataGridViewPane extends BorderPane
                 builder.deleteCharAt(builder.length() - 1);
 
                 VFXApplication.copyToClipboard(builder.toString());
-        }
-
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        private TablePosition getTablePosition(MouseEvent event)
-        {
-                var pick = event.getPickResult();
-                Node node = pick.getIntersectedNode();
-
-                while (node != null && !(node instanceof TableCell<?, ?>))
-                        node = node.getParent();
-
-                if (node instanceof TableCell cell && !cell.isEmpty()) {
-                        return new TablePosition<>(
-                                tableView,
-                                cell.getIndex(),
-                                cell.getTableColumn()
-                        );
-                }
-
-                return null;
         }
 
         public void selectResultSetFirst()

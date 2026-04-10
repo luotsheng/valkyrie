@@ -1,9 +1,10 @@
 package com.changhong.opendb.app.ui.widgets.table;
 
-
 import javafx.animation.FadeTransition;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.TableView;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
 /**
@@ -12,10 +13,59 @@ import javafx.util.Duration;
  */
 public class VFXTableView<S> extends TableView<S>
 {
+        private TablePosition<?, ?> start;
+
         public VFXTableView()
         {
                 getStyleClass().add("vfx-table-view");
                 setFixedCellSize(26);
+        }
+
+        /**
+         * 启用矩形选择
+         */
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        public void enableRectangularSelection()
+        {
+                setEditable(true);
+                getSelectionModel().setCellSelectionEnabled(true);
+                getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+                setOnMousePressed(event -> {
+                        start = getTablePosition(event);
+                });
+
+                setOnMouseDragged(event -> {
+                        var cur = getTablePosition(event);
+
+                        if (start != null && cur != null) {
+                                getSelectionModel().clearSelection();
+                                getSelectionModel().selectRange(
+                                        start.getRow(), (TableColumn) start.getTableColumn(),
+                                        cur.getRow(), cur.getTableColumn()
+                                );
+                        }
+                });
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private TablePosition getTablePosition(MouseEvent event)
+        {
+                var pick = event.getPickResult();
+                Node node = pick.getIntersectedNode();
+
+                while (node != null && !(node instanceof TableCell<?, ?>))
+                        node = node.getParent();
+
+                if (node instanceof TableCell cell && !cell.isEmpty()) {
+                        return new TablePosition<>(
+                                this,
+                                cell.getIndex(),
+                                cell.getTableColumn()
+                        );
+                }
+
+                return null;
         }
 
         public void addItemListener(ListChangeListener<? super S> listener)
