@@ -297,8 +297,7 @@ public class TableStructureDesignerPane extends DetailPane
 
                 VFXTableColumnFactory<TableIndexMetaData> factory = new VFXTableColumnFactory<>();
 
-                factory.setOnEditCommitEventListener((oldVal, newVal) -> {
-                });
+                factory.setOnEditCommitEventListener(indexColumnDesigner::onCommitEdit);
 
                 TableColumn<TableIndexMetaData, String> name = factory.createEditableColumn("名称", "name");
                 TableColumn<TableIndexMetaData, String> columns = factory.createEditableColumn("索引列", "columnsText");
@@ -315,7 +314,7 @@ public class TableStructureDesignerPane extends DetailPane
                 indexView.getColumns().addAll(name, columns, type);
 
                 if (executor.getProductMetaData().getMajorVersion() >= MySQL.VERSION_8x) {
-                        TableColumn<TableIndexMetaData, Boolean> visible = new VFXTableColumn<>("是否可见", true);
+                        TableColumn<TableIndexMetaData, Boolean> visible = factory.createEditableColumn("是否可见", "visible");
                         visible.setCellValueFactory(new PropertyValueFactory<>("visible"));
                         visible.setCellFactory(c -> new VFXCheckBoxTableCell<>());
                         visible.setPrefWidth(120);

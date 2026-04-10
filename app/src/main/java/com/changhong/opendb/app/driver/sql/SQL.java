@@ -29,12 +29,22 @@ public class SQL implements Iterable<SQLParsedStatement>
                 this(-1L, tableMetaData.getDatabase(), sqlText);
         }
 
+        public SQL(TableMetaData tableMetaData, SQLCommandType type, String sqlText)
+        {
+                this(-1L, tableMetaData.getDatabase(), type, sqlText);
+        }
+
         public SQL(String db, String sqlText)
         {
                 this(-1L, db, sqlText);
         }
 
         public SQL(Long taskId, String db, String sqlText)
+        {
+                this(taskId, db, null, sqlText);
+        }
+
+        public SQL(Long taskId, String db, SQLCommandType type, String sqlText)
         {
                 try {
                         this.taskId = taskId;
@@ -44,10 +54,13 @@ public class SQL implements Iterable<SQLParsedStatement>
                         int size = statements.size();
 
                         for (int i = 0; i < size; i++) {
-                                sqlStatements.add(new SQLParsedStatement(
-                                        statements.get(i),
-                                        i == size - 1
-                                ));
+                                var statement =
+                                        new SQLParsedStatement(statements.get(i), i == size - 1);
+
+                                if (type != null)
+                                        statement.type = type;
+
+                                sqlStatements.add(statement);
                         }
                 } catch (JSQLParserException e) {
                         throw new SystemRuntimeException(e);

@@ -38,7 +38,7 @@ public class SQLParsedStatement
         @Getter
         private String script;
         @Getter
-        private SQLCommandType type;
+        SQLCommandType type;
         @Getter
         private boolean last;
         @Getter

@@ -5,6 +5,8 @@ import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.driver.executor.SQLExecutor;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Luo Tiansheng
@@ -12,6 +14,8 @@ import java.util.Collection;
  */
 public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
 {
+        private final Set<TableIndexMetaData> alterBuffer = new LinkedHashSet<>();
+
         public MySQLIndexStructureDesigner(TableMetaData tableMetaData, SQLExecutor executor, String name)
         {
                 super(tableMetaData, executor, name);
@@ -20,30 +24,41 @@ public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
         @Override
         public void onReload(Collection<TableIndexMetaData> values)
         {
-
+                alterBuffer.clear();
         }
 
         @Override
         public void onCommitEdit(TableIndexMetaData oldVal, TableIndexMetaData newVal)
         {
-
+                addAlterBuffer(newVal);
         }
 
         @Override
         public void applySave()
         {
-
+                executor.dropIndexKeys(tableMetaData, alterBuffer);
+                executor.alterIndexKeys(tableMetaData, alterBuffer);
         }
 
         @Override
         public void applyPlus(TableIndexMetaData newObject)
         {
-                /* DO NOTHING... */
+                addAlterBuffer(newObject);
         }
 
         @Override
         public void applyMinus(Collection<TableIndexMetaData> selectionItems)
         {
+                executor.dropIndexKeys(tableMetaData, selectionItems);
+        }
 
+        private void addAlterBuffer(TableIndexMetaData index)
+        {
+                if (index.isIntegrityValid()) {
+                        alterBuffer.remove(index);
+                        return;
+                }
+
+                alterBuffer.add(index);
         }
 }
