@@ -5,7 +5,6 @@ import com.changhong.opendb.app.driver.executor.SQLExecutor;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.widgets.VFXIconButton;
 import com.changhong.opendb.app.ui.widgets.VFXSeparator;
-import com.changhong.opendb.app.ui.widgets.table.VFXTableColumn;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableColumnFactory;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableView;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXCheckBoxTableCell;
@@ -21,8 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 
 import java.util.*;
-
-import static com.changhong.io.IOUtils.printf;
 
 /**
  * @author Luo Tiansheng

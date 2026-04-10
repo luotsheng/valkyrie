@@ -177,8 +177,10 @@ public class MySQLExecutor extends SQLExecutor
                                 index.setType(Index_type);
                         }
 
-                        if (productMetaData.getMajorVersion() >= MySQL.VERSION_8x)
+                        if (productMetaData.getMajorVersion() >= MySQL.VERSION_8x) {
                                 index.setVisible(atobool(dataGrid.getRowValue("Visible", i)));
+                                index.setOriginVisible(index.isVisible());
+                        }
 
                         index.getColumnMetaDatas().add(indexColumn);
 
@@ -342,6 +344,24 @@ public class MySQLExecutor extends SQLExecutor
                 }
 
                 execute(new SQL(tableMetaData, SQLCommandType.DDL, atos(scripts)));
+        }
+
+        @Override
+        public void alterVisible(TableMetaData tableMetaData, Collection<TableIndexMetaData> indexes)
+        {
+                StringBuilder scripts = new StringBuilder();
+
+                for (TableIndexMetaData index : indexes) {
+                        String isVisible = index.isVisible() ? "VISIBLE" : "INVISIBLE";
+                        scripts.append(
+                                strwfmt("ALTER TABLE `%s` ALTER INDEX `%s` %s;",
+                                        tableMetaData.getName(),
+                                        index.getName(),
+                                        isVisible)
+                        );
+                }
+
+                execute(new SQL(tableMetaData, atos(scripts)));
         }
 
         @Override

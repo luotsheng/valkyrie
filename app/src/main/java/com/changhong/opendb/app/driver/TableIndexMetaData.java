@@ -49,6 +49,10 @@ public class TableIndexMetaData
         @Setter
         private String originName;
 
+        @Getter
+        @Setter
+        private boolean originVisible;
+
         /**
          * 索引列
          */
@@ -71,7 +75,7 @@ public class TableIndexMetaData
         public String computeIntegrityCode()
         {
                 return Codec.toByteHex(
-                        (strip(name) + strip(columnsText) + strip(type) + visible).getBytes()
+                        (strip(name) + strip(columnsText) + strip(type)).getBytes()
                 );
         }
 

@@ -95,6 +95,8 @@ public abstract class SQLExecutor
 
         public abstract void alterIndexKeys(TableMetaData tableMetaData, Collection<TableIndexMetaData> indexes);
 
+        public abstract void alterVisible(TableMetaData tableMetaData, Collection<TableIndexMetaData> indexes);
+
         public abstract void alterChange(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas);
 
         public abstract void deleteColumns(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas);

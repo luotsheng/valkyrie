@@ -15,6 +15,7 @@ import java.util.Set;
 public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
 {
         private final Set<TableIndexMetaData> alterBuffer = new LinkedHashSet<>();
+        private final Set<TableIndexMetaData> visibleBuffer = new LinkedHashSet<>();
 
         public MySQLIndexStructureDesigner(TableMetaData tableMetaData, SQLExecutor executor, String name)
         {
@@ -25,6 +26,7 @@ public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
         public void onReload(Collection<TableIndexMetaData> values)
         {
                 alterBuffer.clear();
+                visibleBuffer.clear();
         }
 
         @Override
@@ -36,8 +38,13 @@ public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
         @Override
         public void applySave()
         {
-                executor.dropIndexKeys(tableMetaData, alterBuffer);
-                executor.alterIndexKeys(tableMetaData, alterBuffer);
+                if (!alterBuffer.isEmpty()) {
+                        executor.dropIndexKeys(tableMetaData, alterBuffer);
+                        executor.alterIndexKeys(tableMetaData, alterBuffer);
+                }
+
+                if (!visibleBuffer.isEmpty())
+                        executor.alterVisible(tableMetaData, visibleBuffer);
         }
 
         @Override
@@ -55,6 +62,11 @@ public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
 
         private void addAlterBuffer(TableIndexMetaData index)
         {
+                if (index.isVisible() != index.isOriginVisible()) {
+                        visibleBuffer.add(index);
+                        return;
+                }
+
                 if (index.isIntegrityValid()) {
                         alterBuffer.remove(index);
                         return;
