@@ -1,5 +1,6 @@
 package com.changhong.opendb.app.ui.navigator.node;
 
+import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.NewQueryScriptEvent;
 import com.changhong.opendb.app.core.event.RefreshQueryNodeEvent;
@@ -7,10 +8,13 @@ import com.changhong.opendb.app.core.event.RemoveSqlEditorTabEvent;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.dialog.RenameQueryScriptDialog;
+import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseEvent;
+
+import java.awt.*;
 
 /**
  * @author Luo Tiansheng
@@ -38,9 +42,15 @@ public class ODBNQuery extends ODBNode
                 MenuItem openNewTabQueryItem = new MenuItem("在新标签打开");
                 openNewTabQueryItem.setOnAction(event -> openNewTabQuery());
 
-                MenuItem renameQueryItem = new MenuItem("重命名");
+                MenuItem renameQueryItem = new MenuItem("重命名查询");
                 renameQueryItem.setOnAction(event -> renameQuery());
-                
+
+                MenuItem copyPathItem = new MenuItem("复制文件路径");
+                copyPathItem.setOnAction(event -> copyFilePath());
+
+                MenuItem openDesktopItem = new MenuItem("打开文件所在目录");
+                openDesktopItem.setOnAction(event -> openDesktop());
+
                 MenuItem deleteQueryItem = new MenuItem("删除查询");
                 deleteQueryItem.setOnAction(event -> deleteQuery());
 
@@ -48,10 +58,18 @@ public class ODBNQuery extends ODBNode
                         openNewTabQueryItem,
                         new SeparatorMenuItem(),
                         renameQueryItem,
+                        copyPathItem,
+                        openDesktopItem,
+                        new SeparatorMenuItem(),
                         deleteQueryItem
                 );
 
                 return menu;
+        }
+
+        private void openNewTabQuery()
+        {
+                EventBus.publish(new NewQueryScriptEvent(queryInfo));
         }
 
         private void renameQuery()
@@ -59,9 +77,17 @@ public class ODBNQuery extends ODBNode
                 RenameQueryScriptDialog.showDialog(queryInfo);
         }
 
-        private void openNewTabQuery()
+        private void copyFilePath()
         {
-                EventBus.publish(new NewQueryScriptEvent(queryInfo));
+                VFXApplication.copyToClipboard(queryInfo.getSqlFile().getAbsolutePath());
+        }
+
+        private void openDesktop()
+        {
+                VFXDialogHelper.runWith(() -> {
+                        Desktop desktop = Desktop.getDesktop();
+                        desktop.browseFileDirectory(queryInfo.getSqlFile());
+                });
         }
 
         private void deleteQuery()
