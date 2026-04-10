@@ -76,4 +76,12 @@ public class QueryScriptRepository
 
                 return queryInfos;
         }
+
+        @SuppressWarnings("ResultOfMethodCallIgnored")
+        public static File renameQueryScript(File src, String name)
+        {
+                var newFile = new File(src.getParentFile(), name);
+                src.renameTo(newFile);
+                return newFile;
+        }
 }

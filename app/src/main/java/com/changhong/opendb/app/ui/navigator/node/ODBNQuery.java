@@ -6,8 +6,10 @@ import com.changhong.opendb.app.core.event.RefreshQueryNodeEvent;
 import com.changhong.opendb.app.core.event.RemoveSqlEditorTabEvent;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.resource.Assets;
+import com.changhong.opendb.app.ui.dialog.RenameQueryScriptDialog;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -36,15 +38,25 @@ public class ODBNQuery extends ODBNode
                 MenuItem openNewTabQueryItem = new MenuItem("在新标签打开");
                 openNewTabQueryItem.setOnAction(event -> openNewTabQuery());
 
+                MenuItem renameQueryItem = new MenuItem("重命名");
+                renameQueryItem.setOnAction(event -> renameQuery());
+                
                 MenuItem deleteQueryItem = new MenuItem("删除查询");
                 deleteQueryItem.setOnAction(event -> deleteQuery());
 
                 menu.getItems().addAll(
                         openNewTabQueryItem,
+                        new SeparatorMenuItem(),
+                        renameQueryItem,
                         deleteQueryItem
                 );
 
                 return menu;
+        }
+
+        private void renameQuery()
+        {
+                RenameQueryScriptDialog.showDialog(queryInfo);
         }
 
         private void openNewTabQuery()
