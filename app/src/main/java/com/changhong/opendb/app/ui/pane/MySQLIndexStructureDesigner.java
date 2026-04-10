@@ -43,6 +43,7 @@ public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
         @Override
         public void applyPlus(TableIndexMetaData newObject)
         {
+                newObject.setType("NORMAL");
                 addAlterBuffer(newObject);
         }
 
