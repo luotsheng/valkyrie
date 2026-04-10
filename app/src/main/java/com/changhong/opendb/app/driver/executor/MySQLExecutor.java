@@ -1,13 +1,13 @@
 package com.changhong.opendb.app.driver.executor;
 
 import com.changhong.collection.Lists;
-import com.changhong.exception.SystemRuntimeException;
 import com.changhong.io.IOUtils;
 import com.changhong.opendb.app.driver.*;
 import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
 import com.changhong.opendb.app.driver.sql.SQL;
 import com.changhong.opendb.app.driver.sql.SQLCommandType;
 import com.changhong.opendb.app.driver.sql.SQLParsedStatement;
+import com.changhong.opendb.app.exception.JdbcDriverException;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.utils.ResultSets;
 import com.changhong.utils.Captor;
@@ -67,7 +67,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         return ret;
                 } catch (SQLException e) {
-                        throw new SystemRuntimeException(e);
+                        throw new JdbcDriverException(e);
                 }
         }
 
@@ -96,10 +96,8 @@ public class MySQLExecutor extends SQLExecutor
                         metas.forEach(e -> e.setDatabase(db));
                         return metas;
                 } catch (SQLException e) {
-                        VFXDialogHelper.alert(e);
+                        throw new JdbcDriverException(e);
                 }
-
-                return List.of();
         }
 
         @Override
@@ -186,16 +184,18 @@ public class MySQLExecutor extends SQLExecutor
                                 return rs.getString(2);
                         return null;
                 } catch (SQLException e) {
-                        throw new SystemRuntimeException(e);
+                        throw new JdbcDriverException(e);
                 }
         }
 
         @Override
-        public void dropTable(String db, String table) throws SQLException
+        public void dropTable(String db, String table)
         {
                 try (Connection connection = ds.getConnection();
                      Statement statement = ds.use(connection, db)) {
                         statement.execute(strwfmt("DROP TABLE `%s`;", table));
+                } catch (SQLException e) {
+                        throw new JdbcDriverException(e);
                 }
         }
 
@@ -347,7 +347,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         }
 
-                        throw new SystemRuntimeException(e);
+                        throw new JdbcDriverException(e);
 
                 } finally {
 
