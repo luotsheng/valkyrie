@@ -87,7 +87,7 @@ public class ConnectionDialog extends Stage
                 Button cancel = new Button("取消");
                 cancel.setOnAction(event -> close());
 
-                buttonBar = new HBox(10, test, save, cancel);
+                buttonBar = new HBox(10, test, cancel, save);
                 buttonBar.setAlignment(Pos.CENTER_RIGHT);
                 buttonBar.setPadding(new Insets(10, 10, 10, 10));
         }

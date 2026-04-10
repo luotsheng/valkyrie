@@ -29,6 +29,7 @@ import static com.changhong.string.StringStaticize.strwfmt;
  * @author Luo Tiansheng
  * @since 2026/3/25
  */
+@SuppressWarnings("DuplicatedCode")
 public class VFXDialogHelper
 {
         public interface DialogCallback {
@@ -131,7 +132,7 @@ public class VFXDialogHelper
                 checkBox.setText("我晓得操作没法恢复！");
                 checkBox.setGraphic(Assets.use("warning@2x"));
 
-                javafx.scene.control.Button ok = new javafx.scene.control.Button("确认");
+                Button ok = new Button("确认");
                 ok.setDisable(true);
                 ok.setDefaultButton(true);
                 ok.setOnAction(e -> {
@@ -139,7 +140,7 @@ public class VFXDialogHelper
                         stage.close();
                 });
 
-                javafx.scene.control.Button cancel = new javafx.scene.control.Button("取消");
+                Button cancel = new Button("取消");
                 cancel.setDefaultButton(true);
                 cancel.setOnAction(e -> {
                         flag.set(false);
@@ -153,7 +154,7 @@ public class VFXDialogHelper
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
 
-                createAndOpenDialog(stage, strwfmt(fmt, args), checkBox, spacer, ok, cancel);
+                createAndOpenDialog(stage, strwfmt(fmt, args), checkBox, spacer, cancel, ok);
 
                 return flag.get();
         }
@@ -178,7 +179,7 @@ public class VFXDialogHelper
                         stage.close();
                 });
 
-                createAndOpenDialog(stage, strwfmt(fmt, args), ok, cancel);
+                createAndOpenDialog(stage, strwfmt(fmt, args), cancel, ok);
 
                 return flag.get();
         }
