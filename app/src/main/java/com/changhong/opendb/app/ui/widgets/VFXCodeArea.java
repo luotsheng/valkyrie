@@ -56,13 +56,13 @@ public class VFXCodeArea extends CodeArea
                 setStyle("-fx-font-weight: normal;");
 
                 if (OS.isMac())
-                        setStyle("-fx-font-family: 'Monaco'; -fx-font-size: 19px;");
+                        setStyle("-fx-font-family: 'Menlo'; -fx-font-size: 16px;");
 
                 if (OS.isWindows())
-                        setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 19px;");
+                        setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 16px;");
 
                 if (OS.isLinux())
-                        setStyle("-fx-font-family: 'DejaVu Sans Mono'; -fx-font-size: 19px;");
+                        setStyle("-fx-font-family: 'DejaVu Sans Mono'; -fx-font-size: 16px;");
 
                 getStyleClass().add("vfx-code-area");
                 setParagraphGraphicFactory(LineNumberFactory.get(this));
