@@ -59,7 +59,7 @@ public class VFXCodeArea extends CodeArea
                         setStyle("-fx-font-family: 'Menlo'; -fx-font-size: 16px;");
 
                 if (OS.isWindows())
-                        setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 16px;");
+                        setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 18px;");
 
                 if (OS.isLinux())
                         setStyle("-fx-font-family: 'DejaVu Sans Mono'; -fx-font-size: 16px;");
