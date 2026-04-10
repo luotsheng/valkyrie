@@ -14,6 +14,7 @@ import com.changhong.opendb.app.utils.ResultSets;
 import com.changhong.utils.Captor;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import javafx.application.Platform;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
@@ -155,8 +156,26 @@ public class MySQLExecutor extends SQLExecutor
                         }
 
                         TableIndexMetaData index = new TableIndexMetaData();
+
                         index.setName(keyName);
-                        index.setType(dataGrid.getRowValue("Index_type", i));
+                        index.setOriginName(keyName);
+
+                        String Non_unique = dataGrid.getRowValue("Non_unique", i);
+                        String Index_type = dataGrid.getRowValue("Index_type", i);
+
+                        if (streq(Non_unique, "1") && streq(Index_type, "BTREE")) {
+                                index.setType("NORMAL");
+                        } else if (streq(Non_unique, "0") && streq(Index_type, "BTREE")) {
+                                index.setType("UNIQUE");
+                        } else if (streq(Index_type, "FULLTEXT")) {
+                                index.setType("FULLTEXT");
+                        } else if (streq(Index_type, "SPATIAL")) {
+                                index.setType("SPATIAL");
+                        } else if (streq(Index_type, "HASH")) {
+                                index.setType("HASH");
+                        } else {
+                                index.setType(Index_type);
+                        }
 
                         if (productMetaData.getMajorVersion() >= MySQL.VERSION_8x)
                                 index.setVisible(atobool(dataGrid.getRowValue("Visible", i)));
@@ -169,7 +188,12 @@ public class MySQLExecutor extends SQLExecutor
 
                 List<TableIndexMetaData> ret = Lists.newArrayList(indexes.values());
 
-                ret.forEach(TableIndexMetaData::generateColumnText);
+                ret.forEach(idx -> {
+                        /* 生成索引列 */
+                        idx.generateColumnText();
+                        /* 生成完整性校验码 */
+                        idx.finalIntegrityCode();
+                });
 
                 return ret;
         }
@@ -246,6 +270,81 @@ public class MySQLExecutor extends SQLExecutor
         }
 
         @Override
+        public void alterIndexKeys(TableMetaData tableMetaData, Collection<TableIndexMetaData> indexes)
+        {
+                StringBuilder scripts = new StringBuilder();
+
+                for (TableIndexMetaData index : indexes) {
+
+                        String type = index.getType();
+                        String name = index.getName();
+                        String table = tableMetaData.getName();
+                        String columns = index.getColumnsText();
+
+                        if (streq(type, "NORMAL")) {
+                                scripts.append(
+                                        strwfmt(
+                                                "CREATE INDEX `%s` ON `%s`(%s);\n",
+                                                name,
+                                                table,
+                                                columns
+                                        )
+                                );
+                                continue;
+                        }
+
+                        if (streq(type, "UNIQUE")) {
+                                scripts.append(
+                                        strwfmt(
+                                                "CREATE UNIQUE INDEX `%s` ON `%s`(%s);\n",
+                                                name,
+                                                table,
+                                                columns
+                                        )
+                                );
+                                continue;
+                        }
+
+                        if (streq(type, "FULLTEXT")) {
+                                scripts.append(
+                                        strwfmt(
+                                                "CREATE FULLTEXT INDEX `%s` ON `%s`(%s);\n",
+                                                name,
+                                                table,
+                                                columns
+                                        )
+                                );
+                                continue;
+                        }
+
+                        if (streq(type, "SPATIAL")) {
+                                scripts.append(
+                                        strwfmt(
+                                                "CREATE SPATIAL INDEX `%s` ON `%s`(%s);\n",
+                                                name,
+                                                table,
+                                                columns
+                                        )
+                                );
+                                continue;
+                        }
+
+                        if (streq(type, "HASH")) {
+                                scripts.append(
+                                        strwfmt(
+                                                "CREATE INDEX `%s` ON `%s`(%s) USING HASH;\n",
+                                                name,
+                                                table,
+                                                columns
+                                        )
+                                );
+                        }
+                }
+
+                execute(new SQL(tableMetaData, SQLCommandType.DDL, atos(scripts)));
+        }
+
+        @Override
         @SuppressWarnings("ExtractMethodRecommender")
         public void alterChange(TableMetaData tableMetaData, Collection<ColumnMetaData> columnMetaDatas)
         {
@@ -310,6 +409,27 @@ public class MySQLExecutor extends SQLExecutor
                 script.append(";");
 
                 execute(new SQL(tableMetaData, atos(script)));
+        }
+
+        @Override
+        public void dropIndexKeys(TableMetaData tableMetaData, Collection<TableIndexMetaData> selectionItems)
+        {
+                StringBuilder scripts = new StringBuilder();
+
+                for (TableIndexMetaData index : selectionItems) {
+
+                        String name = streq(index.getName(), index.getOriginName())
+                                ? index.getName()
+                                : index.getOriginName();
+
+                        String table = tableMetaData.getName();
+
+                        scripts.append(
+                                strwfmt("ALTER TABLE `%s` DROP INDEX `%s`;\n", table, name)
+                        );
+                }
+
+                Captor.icall(() -> execute(new SQL(tableMetaData, atos(scripts))));
         }
 
         @Override

@@ -15,8 +15,8 @@ import java.util.Set;
  */
 public class MySQLTableStructureDesigner extends Designer<ColumnMetaData>
 {
-        private final Set<ColumnMetaData> columnMetaDataUpdateBuffer = new HashSet<>();
-        private final Set<ColumnMetaData> primaryUpdateBuffer = new LinkedHashSet<>();
+        private final Set<ColumnMetaData> updateBuffer = new HashSet<>();
+        private final Set<ColumnMetaData> primaryBuffer = new LinkedHashSet<>();
 
         public MySQLTableStructureDesigner(TableMetaData tableMetaData, SQLExecutor executor, String name)
         {
@@ -26,11 +26,11 @@ public class MySQLTableStructureDesigner extends Designer<ColumnMetaData>
         @Override
         public void onReload(Collection<ColumnMetaData> values)
         {
-                primaryUpdateBuffer.clear();
+                primaryBuffer.clear();
 
                 for (ColumnMetaData columnMetaData : values)
                         if (columnMetaData.isPrimary())
-                                primaryUpdateBuffer.add(columnMetaData);
+                                primaryBuffer.add(columnMetaData);
         }
 
         @Override
@@ -39,25 +39,25 @@ public class MySQLTableStructureDesigner extends Designer<ColumnMetaData>
                 /* 检测到主键变动 */
                 if (oldVal.isPrimary() != newVal.isPrimary()) {
                         if (newVal.isPrimary()) {
-                                primaryUpdateBuffer.add(newVal);
+                                primaryBuffer.add(newVal);
                         } else {
-                                primaryUpdateBuffer.remove(newVal);
+                                primaryBuffer.remove(newVal);
                         }
 
                         return;
                 }
 
                 /* 变更记录 */
-                columnMetaDataUpdateBuffer.add(newVal);
+                updateBuffer.add(newVal);
         }
 
         @Override
         public void applySave()
         {
-                executor.alterChange(tableMetaData, columnMetaDataUpdateBuffer);
-                executor.alterPrimaryKey(tableMetaData, primaryUpdateBuffer);
-                primaryUpdateBuffer.clear();
-                columnMetaDataUpdateBuffer.clear();
+                executor.alterChange(tableMetaData, updateBuffer);
+                executor.alterPrimaryKey(tableMetaData, primaryBuffer);
+                primaryBuffer.clear();
+                updateBuffer.clear();
         }
 
         @Override
