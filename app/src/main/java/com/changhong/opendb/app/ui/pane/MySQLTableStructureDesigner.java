@@ -48,6 +48,11 @@ public class MySQLTableStructureDesigner extends Designer<ColumnMetaData>
                         return;
                 }
 
+                if (newVal.isIntegrityValid()) {
+                        updateBuffer.remove(newVal);
+                        return;
+                }
+
                 /* 变更记录 */
                 updateBuffer.add(newVal);
         }

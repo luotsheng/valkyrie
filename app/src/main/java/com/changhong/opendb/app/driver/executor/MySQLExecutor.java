@@ -117,6 +117,9 @@ public class MySQLExecutor extends SQLExecutor
 
                         SQLUtils.parseColumnDefSpec(createTableDDL, columnMetaDataMap);
 
+                        /* 防篡改码生成 */
+                        columns.forEach(ColumnMetaData::finalIntegrityCode);
+
                         return columns;
                 } catch (Exception e) {
                         Platform.runLater(() -> VFXDialogHelper.alert(e));

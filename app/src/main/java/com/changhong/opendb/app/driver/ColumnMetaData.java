@@ -1,7 +1,10 @@
 package com.changhong.opendb.app.driver;
 
+import com.changhong.security.Codec;
 import lombok.Getter;
 import lombok.Setter;
+
+import static com.changhong.string.StringStaticize.strip;
 
 /**
  * 列元数据
@@ -11,7 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ColumnMetaData
+public class ColumnMetaData extends Sealable
 {
         /**
          * 列名（自定义 AS 语句）
@@ -72,4 +75,19 @@ public class ColumnMetaData
          * 所属 schema
          */
         private String schema;
+
+        @Override
+        public String computeIntegrityCode()
+        {
+                return Codec.toByteHex(
+                        (strip(name) +
+                         strip(index) +
+                         strip(type) +
+                         strip(nullable) +
+                         strip(primary) +
+                         strip(autoIncrement) +
+                         strip(defaultValue) +
+                         strip(comment)).getBytes()
+                );
+        }
 }
