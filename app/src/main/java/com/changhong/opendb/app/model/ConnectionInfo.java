@@ -9,6 +9,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.changhong.utils.TypeConverter.atobool;
+
 /**
  * 连接属性
  *
@@ -29,6 +31,7 @@ public class ConnectionInfo
         private final StringProperty jdbcUrl = new SimpleStringProperty();
         private final StringProperty timezone = new SimpleStringProperty();
         private final BooleanProperty useSSL = new SimpleBooleanProperty();
+        private final BooleanProperty tinyint1isBit = new SimpleBooleanProperty();
 
         /* jdbc url 属性 */
         private final Map<String, String> jdbcQuery = new HashMap<>();
@@ -45,6 +48,7 @@ public class ConnectionInfo
                 this.port.set("3306");
                 this.username.set("root");
                 this.useSSL.set(true);
+                this.tinyint1isBit.set(false);
 
                 this.type.set(type);
 
@@ -57,6 +61,7 @@ public class ConnectionInfo
                 port.addListener(event -> update());
                 timezone.addListener(event -> update());
                 useSSL.addListener(event -> update());
+                tinyint1isBit.addListener(event -> update());
 
                 jdbcUrl.addListener(event -> parse());
         }
@@ -89,10 +94,13 @@ public class ConnectionInfo
                 }
 
                 String jqUseSSL = jdbcQuery.get("useSSL");
-                useSSL.set(jqUseSSL != null && jqUseSSL.equals("true"));
+                useSSL.set(atobool(jqUseSSL));
 
                 String jqTimezone = jdbcQuery.get("timezone");
                 timezone.set(jqTimezone);
+
+                String jqTinyInt1isBit = jdbcQuery.get("tinyint1isBit");
+                tinyint1isBit.set(atobool(jqTinyInt1isBit));
         }
 
         private void update()
@@ -103,6 +111,7 @@ public class ConnectionInfo
 
                 jdbcQuery.put("timezone", timezone.get());
                 jdbcQuery.put("useSSL", String.valueOf(useSSL.get()));
+                jdbcQuery.put("tinyint1isBit", String.valueOf(tinyint1isBit.get()));
 
                 updateQuery(builder);
 
@@ -151,6 +160,7 @@ public class ConnectionInfo
         public StringProperty jdbcUrlProperty() { return jdbcUrl; }
         public StringProperty timezoneProperty() { return timezone; }
         public BooleanProperty useSSLProperty() { return useSSL; }
+        public BooleanProperty tinyint1isBitProperty() { return tinyint1isBit; }
 
         /* get */
         public String getName() { return name.get();  }
@@ -164,6 +174,7 @@ public class ConnectionInfo
         public String getJdbcUrl() { return jdbcUrl.get();  }
         public String getTimezone() { return timezone.get();  }
         public Boolean getUseSSL() { return useSSL.get();  }
+        public Boolean getTinyint1isBit() { return tinyint1isBit.get();  }
 
         /* get */
         public void setName(String name) { this.name.set(name);  }
@@ -177,4 +188,5 @@ public class ConnectionInfo
         public void setJdbcUrl(String jdbcUrl) { this.jdbcUrl.set(jdbcUrl);  }
         public void setTimezone(String timezone) { this.timezone.set(timezone);  }
         public void setUseSSL(Boolean useSSL) { this.useSSL.set(useSSL);  }
+        public void setTinyint1isBit(Boolean tinyint1isBit) { this.tinyint1isBit.set(tinyint1isBit);  }
 }

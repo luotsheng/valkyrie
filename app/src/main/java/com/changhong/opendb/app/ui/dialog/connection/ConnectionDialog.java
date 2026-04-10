@@ -36,7 +36,7 @@ public class ConnectionDialog extends Stage
         private final ConnectionInfo newInfo;
         private final Label status = new Label();
 
-        private static final int WW = 650;
+        private static final int WW = 700;
         private static final int WH = 500;
 
         public ConnectionDialog()
@@ -94,7 +94,7 @@ public class ConnectionDialog extends Stage
 
         private void setupScene()
         {
-                setTitle("新增连接");
+                setTitle(isUpdate ? "编辑连接" : "新增连接");
 
                 HBox statusBar = new HBox(status);
                 statusBar.setPadding(new Insets(20, 0, 0, 20));

@@ -17,6 +17,7 @@ class ConnectionAdvancedPane extends PropertyGridPane
         private final TextField jdbcUrl = new TextField("jdbc:mysql://");
         private final VFXComboBox<String> timezone = new VFXComboBox<>();
         private final CheckBox useSSL = new CheckBox("使用 SSL");
+        private final CheckBox tinyint1isBit = new CheckBox("TINYINT 转布尔类型");
 
         private static final String[] TIMEZONES = new String[]{
                 "UTC",
@@ -50,6 +51,7 @@ class ConnectionAdvancedPane extends PropertyGridPane
                 jdbcUrl.textProperty().bindBidirectional(info.jdbcUrlProperty());
                 timezone.valueProperty().bindBidirectional(info.timezoneProperty());
                 useSSL.selectedProperty().bindBidirectional(info.useSSLProperty());
+                tinyint1isBit.selectedProperty().bindBidirectional(info.tinyint1isBitProperty());
         }
 
         private void setupTimezone()
@@ -64,5 +66,6 @@ class ConnectionAdvancedPane extends PropertyGridPane
                 addRow("JDBC URL：", jdbcUrl);
                 addRow("时区：", timezone);
                 addRow(null, useSSL);
+                addRow(null, tinyint1isBit);
         }
 }
