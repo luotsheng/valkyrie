@@ -12,6 +12,7 @@ import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.utils.ResultSets;
 import com.changhong.utils.Captor;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import javafx.application.Platform;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
@@ -66,10 +67,8 @@ public class MySQLExecutor extends SQLExecutor
 
                         return ret;
                 } catch (SQLException e) {
-                        VFXDialogHelper.alert(e);
+                        throw new SystemRuntimeException(e);
                 }
-
-                return List.of();
         }
 
         @Override
@@ -120,7 +119,7 @@ public class MySQLExecutor extends SQLExecutor
 
                         return columns;
                 } catch (Exception e) {
-                        VFXDialogHelper.alert(e);
+                        Platform.runLater(() -> VFXDialogHelper.alert(e));
                         return List.of();
                 }
         }
