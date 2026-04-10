@@ -124,7 +124,7 @@ public class VFXDialogHelper
 
         private static boolean showCheckDialog(String fmt, Object... args)
         {
-                Stage stage = new Stage();
+                Stage stage = VFXApplication.createByPrimaryStage();
 
                 AtomicBoolean flag = new AtomicBoolean(true);
 
@@ -161,7 +161,7 @@ public class VFXDialogHelper
 
         private static boolean showDialog(String fmt, Object... args)
         {
-                Stage stage = new Stage();
+                Stage stage = VFXApplication.createByPrimaryStage();
 
                 AtomicBoolean flag = new AtomicBoolean(true);
 
@@ -186,7 +186,7 @@ public class VFXDialogHelper
 
         private static void showAlert(String fmt, Object... args)
         {
-                Stage stage = new Stage();
+                Stage stage = VFXApplication.createByPrimaryStage();
 
                 String text = strwfmt(fmt, args);
 

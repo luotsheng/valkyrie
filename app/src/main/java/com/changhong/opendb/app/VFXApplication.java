@@ -8,6 +8,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -25,6 +26,8 @@ public class VFXApplication extends Application
 
         private static final Class<VFXApplication> aClass = VFXApplication.class;
         private static final List<LauncherTask> tasks = new ArrayList<>();
+
+        private static Stage primaryStage = null;
 
         public interface LauncherTask
         {
@@ -59,6 +62,17 @@ public class VFXApplication extends Application
 
         }
 
+        public static Stage createByPrimaryStage()
+        {
+                Stage stage = new Stage();
+                
+                stage.initOwner(primaryStage);
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.centerOnScreen();
+
+                return stage;
+        }
+
         static void initializeVFX(Scene scene)
         {
                 addVFXStylesheet(scene, "/css/vfx-table-view.css");
@@ -69,6 +83,8 @@ public class VFXApplication extends Application
         @Override
         public void start(Stage stage)
         {
+                primaryStage = stage;
+
                 Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
                 Scene scene = new Scene(new MainLayout(), 1200, 800);
                 initializeVFX(scene);

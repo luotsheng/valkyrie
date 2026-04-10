@@ -1,5 +1,6 @@
 package com.changhong.opendb.app.ui.dialog;
 
+import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.RefreshQueryNodeEvent;
 import com.changhong.opendb.app.repository.QueryScriptRepository;
@@ -112,7 +113,7 @@ public class SaveQueryScriptDialog extends DetailPane
 
         public static void showDialog(SqlEditor sqlEditor)
         {
-                Stage stage = new Stage();
+                Stage stage = VFXApplication.createByPrimaryStage();
 
                 SaveQueryScriptDialog dialog = new SaveQueryScriptDialog(stage, sqlEditor);
 

@@ -1,5 +1,6 @@
 package com.changhong.opendb.app.ui.dialog;
 
+import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.RefreshQueryNodeEvent;
 import com.changhong.opendb.app.model.QueryInfo;
@@ -80,7 +81,7 @@ public class RenameQueryScriptDialog extends DetailPane
 
         public static void showDialog(QueryInfo queryInfo)
         {
-                Stage stage = new Stage();
+                Stage stage = VFXApplication.createByPrimaryStage();
 
                 RenameQueryScriptDialog dialog = new RenameQueryScriptDialog(stage, queryInfo);
 
