@@ -27,6 +27,7 @@ public class MySQLTableStructureDesigner extends Designer<ColumnMetaData>
         public void onReload(Collection<ColumnMetaData> values)
         {
                 primaryBuffer.clear();
+                updateBuffer.clear();
 
                 for (ColumnMetaData columnMetaData : values)
                         if (columnMetaData.isPrimary())
@@ -56,8 +57,6 @@ public class MySQLTableStructureDesigner extends Designer<ColumnMetaData>
         {
                 executor.alterChange(tableMetaData, updateBuffer);
                 executor.alterPrimaryKey(tableMetaData, primaryBuffer);
-                primaryBuffer.clear();
-                updateBuffer.clear();
         }
 
         @Override
