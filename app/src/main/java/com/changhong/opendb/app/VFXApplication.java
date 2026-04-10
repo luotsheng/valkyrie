@@ -81,6 +81,7 @@ public class VFXApplication extends Application
         }
 
         @Override
+        @SuppressWarnings("CommentedOutCode")
         public void start(Stage stage)
         {
                 primaryStage = stage;
@@ -92,14 +93,14 @@ public class VFXApplication extends Application
                 stage.setScene(scene);
                 stage.setMaximized(true);
 
-                ObservableList<Screen> screens = Screen.getScreens();
-
-                if (screens.size() > 1) {
-                        Screen second = screens.get(1);
-                        Rectangle2D bounds = second.getVisualBounds();
-                        stage.setX(bounds.getMinX());
-                        stage.setY(bounds.getMinY());
-                }
+                // ObservableList<Screen> screens = Screen.getScreens();
+                //
+                // if (screens.size() > 1) {
+                //         Screen second = screens.get(1);
+                //         Rectangle2D bounds = second.getVisualBounds();
+                //         stage.setX(bounds.getMinX());
+                //         stage.setY(bounds.getMinY());
+                // }
 
                 tasks.forEach(task -> task.run(stage, scene));
 
