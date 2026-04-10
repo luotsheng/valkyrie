@@ -205,9 +205,13 @@ public class MySQLExecutor extends SQLExecutor
                 if (primaryKeys.isEmpty())
                         return;
 
-                StringBuilder script = new StringBuilder();
+                try {
+                        execute(new SQL(tableMetaData, strwfmt("ALTER TABLE `%s` DROP PRIMARY KEY;", tableMetaData.getName())));
+                } catch (Exception e) {
+                        /* ignore */
+                }
 
-                script.append(strwfmt("ALTER TABLE `%s` DROP PRIMARY KEY;", tableMetaData.getName()));
+                StringBuilder script = new StringBuilder();
 
                 script.append("ALTER TABLE `")
                         .append(tableMetaData.getName())
@@ -255,6 +259,9 @@ public class MySQLExecutor extends SQLExecutor
                         alterColDataType.addColumnSpecs(
                                 col.isNullable() ? "NULL" : "NOT NULL"
                         );
+
+                        if (col.isAutoIncrement())
+                                alterColDataType.addColumnSpecs("AUTO_INCREMENT");
 
                         if (strnempty(col.getDefaultValue()))
                                 alterColDataType.addColumnSpecs("DEFAULT", col.getDefaultValue());
