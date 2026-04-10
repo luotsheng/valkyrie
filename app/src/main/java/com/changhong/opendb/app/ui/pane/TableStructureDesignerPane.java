@@ -151,7 +151,10 @@ public class TableStructureDesignerPane extends DetailPane
                         }
 
                         case MySQLIndexStructureDesigner inst -> {
-
+                                TableIndexMetaData indexMetaData = new TableIndexMetaData();
+                                inst.applyPlus(indexMetaData);
+                                indexView.getItems().add(indexMetaData);
+                                indexView.refresh();
                         }
 
                         default -> throw new UnsupportedOperationException("Unsupported designer object instance");
