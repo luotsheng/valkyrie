@@ -3,11 +3,19 @@ package com.changhong.driver.mysql;
 import com.changhong.collection.Lists;
 import com.changhong.driver.api.*;
 import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.sql.SQLCommandType;
+import com.changhong.driver.api.sql.SQLParsedStatement;
 import com.changhong.driver.exception.SQLRuntimeException;
+import com.changhong.driver.api.sql.SQL;
+import com.changhong.driver.api.sql.SQLExecutor;
+import com.changhong.driver.utils.ResultSets;
+import com.changhong.utils.Captor;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.changhong.string.StringStaticize.strwfmt;
 
@@ -20,6 +28,10 @@ import static com.changhong.string.StringStaticize.strwfmt;
 @SuppressWarnings("SqlSourceToSinkFlow")
 public class MySQLDriver extends Driver implements SQLExecutor
 {
+        private final MySQLDialect dialect = new MySQLDialect();
+
+        private final Map<Long, Statement> taskQueue = new ConcurrentHashMap<>();
+
         public MySQLDriver(DataSource dataSource)
         {
                 super(dataSource);
@@ -43,7 +55,7 @@ public class MySQLDriver extends Driver implements SQLExecutor
                             FROM
                             	information_schema.TABLES
                             WHERE
-                            	TABLE_SCHEMA = '%s'
+                            	TABLE_SCHEMA = '%s';
                         """, session.schema());
 
                         try (var rs = statement.executeQuery(sql)) {
@@ -67,14 +79,36 @@ public class MySQLDriver extends Driver implements SQLExecutor
         }
 
         @Override
-        public DataGrid execute(long jobId, SQL job)
+        public DataGrid execute(long jobId, Session session, SQL sql)
         {
+                executeQuery(session, statement -> {
+
+                        taskQueue.put(jobId, statement);
+
+                        SQLParsedStatement endStatement = sql.popupEnd();
+
+                        for (SQLParsedStatement ps : sql) {
+                                switch (ps.getCommand()) {
+                                        case EXECUTE -> statement.execute(ps.toString());
+                                        case EXECUTE_UPDATE -> statement.executeUpdate(ps.toString());
+                                        case EXECUTE_QUERY -> {}
+                                }
+                        }
+
+                        if (endStatement.getCommand() == SQLCommandType.EXECUTE_QUERY) {
+                                ResultSet rs = statement.executeQuery(endStatement.toString());
+                                ResultSets.toDataGrid(rs);
+                        }
+
+                });
+
                 return null;
         }
 
         @Override
         public void cancel(long jobId)
         {
-
+                if (taskQueue.containsKey(jobId))
+                        Captor.call(() -> taskQueue.remove(jobId).cancel());
         }
 }

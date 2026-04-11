@@ -1,4 +1,7 @@
-package com.changhong.driver.api;
+package com.changhong.driver.api.sql;
+
+import com.changhong.driver.api.DataGrid;
+import com.changhong.driver.api.Session;
 
 /**
  * SQL 执行器（统一入口）
@@ -43,10 +46,10 @@ public interface SQLExecutor
          * - 该方法可能为异步执行，结果返回不代表任务已完成（视实现而定）
          *
          * @param jobId 执行任务唯一标识（由调用方生成）
-         * @param job 待执行 SQL 任务
+         * @param sql 待执行 SQL 任务
          * @return 查询结果集（非查询语句返回 null）
          */
-        DataGrid execute(long jobId, SQL job);
+        DataGrid execute(long jobId, Session session, SQL sql);
 
         /**
          * 取消 SQL 执行任务

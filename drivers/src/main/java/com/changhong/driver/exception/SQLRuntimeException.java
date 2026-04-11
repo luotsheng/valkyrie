@@ -12,6 +12,6 @@ public class SQLRuntimeException extends RuntimeException
 {
         public SQLRuntimeException(SQLException exception)
         {
-                super(exception.getCause());
+                super(exception);
         }
 }

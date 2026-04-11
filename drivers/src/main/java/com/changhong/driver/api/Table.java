@@ -22,9 +22,11 @@ package com.changhong.driver.api;
  * @param size       表占用的存储空间大小（单位：MB），可为 {@code null} 如果无法计算
  * @param rows       表中的估算行数（非精确值，通常来自统计信息），可为 {@code null} 如果数据库不支持行数估算
  * @param comment    表的注释/说明文本，可为 {@code null} 或空字符串
+ *
+ * @see java.sql.DatabaseMetaData#getTables(String, String, String, String[])
+ *
  * @author Luo Tiansheng
  * @since 2026/4/11
- * @see java.sql.DatabaseMetaData#getTables(String, String, String, String[])
  */
 public record Table(
         String name,
