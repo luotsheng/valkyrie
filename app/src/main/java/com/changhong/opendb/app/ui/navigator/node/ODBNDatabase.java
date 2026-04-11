@@ -7,7 +7,7 @@ import com.changhong.opendb.app.core.event.*;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.repository.QueryScriptRepository;
 import com.changhong.opendb.app.resource.Assets;
-import com.changhong.opendb.app.ui.pane.DatabaseDetailPane;
+import com.changhong.opendb.app.ui.pane.CatalogBrowserPane;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -50,7 +50,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
         private MenuItem openOrCloseMenuItem;
         private MenuItem newQueryMenuItem;
 
-        private final DatabaseDetailPane detailPane = new DatabaseDetailPane(this);
+        private final CatalogBrowserPane detailPane = new CatalogBrowserPane(this);
         private final OpenWorkbenchPaneEvent openWorkbenchPaneEvent = new OpenWorkbenchPaneEvent(detailPane);
         private final CloseWorkbenchPaneEvent closeWorkbenchPaneEvent = new CloseWorkbenchPaneEvent(detailPane);
 

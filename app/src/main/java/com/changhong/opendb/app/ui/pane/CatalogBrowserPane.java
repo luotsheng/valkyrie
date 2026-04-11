@@ -24,11 +24,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * Catalog 预览面板
+ *
  * @author Luo Tiansheng
  * @since 2026/3/27
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DatabaseDetailPane extends DetailPane
+public class CatalogBrowserPane extends DetailPane
 {
         private final TableView<Table> tableView;
         private final ToolBar toolBar;
@@ -45,7 +47,7 @@ public class DatabaseDetailPane extends DetailPane
 
         private ObservableList<Table> obs;
 
-        public DatabaseDetailPane(ODBNDatabase database)
+        public CatalogBrowserPane(ODBNDatabase database)
         {
                 this.database = database;
 
