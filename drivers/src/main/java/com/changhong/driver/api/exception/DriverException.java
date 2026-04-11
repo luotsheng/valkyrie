@@ -1,4 +1,4 @@
-package com.changhong.driver.exception;
+package com.changhong.driver.api.exception;
 
 /**
  * 驱动运行时异常

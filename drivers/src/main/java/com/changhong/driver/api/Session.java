@@ -26,4 +26,10 @@ package com.changhong.driver.api;
  * @see java.sql.Connection#setCatalog(String)
  * @see java.sql.Connection#setSchema(String)
  */
-public record Session(String catalog, String schema) {}
+public record Session(String catalog, String schema)
+{
+        public Session(String catalog)
+        {
+                this(catalog, null);
+        }
+}

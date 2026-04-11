@@ -1,7 +1,7 @@
 package com.changhong.driver.api;
 
 import com.changhong.collection.Lists;
-import com.changhong.driver.exception.DriverException;
+import com.changhong.driver.api.exception.DriverException;
 import com.changhong.exception.SystemRuntimeException;
 
 import javax.sql.DataSource;
@@ -41,6 +41,7 @@ import java.util.Objects;
  * @since 2026/4/11
  *
  */
+@SuppressWarnings("SpellCheckingInspection")
 public abstract class Driver
 {
         /**
@@ -162,6 +163,26 @@ public abstract class Driver
                 return connection;
         }
 
+        /**
+         * 生成用于查看指定表的创建语句的 SQL。
+         * <p>
+         * 不同数据库获取表定义 DDL 的语法差异较大，该方法应返回针对当前方言适配后的可执行 SQL。
+         * <p>
+         * <b>常见数据库实现示例：</b>
+         * <ul>
+         *   <li>MySQL: {@code SHOW CREATE TABLE table_name}</li>
+         *   <li>PostgreSQL: {@code SELECT pg_get_tabledef('schema.table_name')} 或使用 {@code pg_dump} 相关函数</li>
+         *   <li>Oracle: {@code SELECT DBMS_METADATA.GET_DDL('TABLE', 'table_name') FROM DUAL}</li>
+         *   <li>SQL Server: {@code sp_helptext 'table_name'} 或查询系统视图</li>
+         * </ul>
+         *
+         * @param session 会话上下文，包含 catalog 和 schema 信息以定位表（不能为 {@code null}）
+         * @param table   表名称（不能为 {@code null} 或空白字符串）
+         * @return 可执行的 SQL 语句字符串，执行后可获取表的完整创建 DDL
+         * @throws NullPointerException     如果 {@code session} 或 {@code table} 为 {@code null}
+         * @throws IllegalArgumentException 如果 {@code table} 为空白字符串
+         * @throws UnsupportedOperationException 如果底层数据库不支持获取表的创建语句
+         */
         public abstract String showCreateTable(Session session, String table);
 
         /**
@@ -239,6 +260,37 @@ public abstract class Driver
          */
         public abstract List<Table> getTables(Session session);
 
+        /**
+         * 获取指定数据库表的列元信息列表。
+         * <p>
+         * 根据当前方言的实现，从数据库元数据中提取指定表的所有列的详细信息，
+         * 包括列名、数据类型、是否可空、是否主键、默认值、注释等。
+         * <p>
+         * <b>实现要求：</b>
+         * <ul>
+         *   <li>返回的列表顺序应与表定义中的列顺序一致（通常按 {@code ORDINAL_POSITION} 升序）</li>
+         *   <li>应通过 {@link java.sql.DatabaseMetaData#getColumns(String, String, String, String)} 获取原始元数据</li>
+         *   <li>对于不支持 catalog 或 schema 的数据库，对应的 {@code session} 参数中的属性可为 {@code null}</li>
+         * </ul>
+         * <p>
+         * <b>使用示例：</b>
+         * <pre>{@code
+         * Session session = new Session("my_db", "public");
+         * List<Column> columns = dialect.getColumns(session, "user_table");
+         * for (Column col : columns) {
+         *     System.out.println(col.name() + " : " + col.type());
+         * }
+         * }</pre>
+         *
+         * @param session 会话上下文，包含 catalog 和 schema 信息以定位表（不能为 {@code null}）
+         * @param table   表名称（不能为 {@code null} 或空白字符串）
+         * @return 包含表所有列元数据的不可变列表（若表不存在或无权限，返回空列表）
+         * @throws NullPointerException     如果 {@code session} 或 {@code table} 为 {@code null}
+         * @throws IllegalArgumentException 如果 {@code table} 为空白字符串
+         * @throws SystemRuntimeException   如果底层 JDBC 访问发生错误（包装 {@link java.sql.SQLException}）
+         * @see java.sql.DatabaseMetaData#getColumns(String, String, String, String)
+         * @see Column
+         */
         public abstract List<Column> getColumns(Session session, String table);
 
         /**

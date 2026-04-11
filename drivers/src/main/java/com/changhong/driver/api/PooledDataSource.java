@@ -1,59 +1,44 @@
-package com.changhong.opendb.app.driver.datasource;
+package com.changhong.driver.api;
 
-import com.changhong.driver.api.Session;
-import com.changhong.driver.api.sql.SQL;
-import com.changhong.driver.mysql.MySQLDriver;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
-import com.changhong.opendb.app.model.ConnectionInfo;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
 /**
- * 代理数据源
+ * 带池化功能的连接池数据源对象
  *
  * @author Luo Tiansheng
  * @since 2026/3/27
  */
-public abstract class VirtualDataSource
+public abstract class PooledDataSource
         implements DataSource, AutoCloseable
 {
         private final HikariDataSource ds;
 
-        private MySQLDriver driver;
-
-        public VirtualDataSource(ConnectionInfo info)
+        public PooledDataSource(ConnectionConfig connectionConfig)
         {
                 HikariConfig conf = new HikariConfig();
 
-                conf.setJdbcUrl(info.getJdbcUrl());
-                conf.setUsername(info.getUsername());
-                conf.setPassword(info.getPassword());
+                conf.setJdbcUrl(connectionConfig.getJdbcUrl());
+                conf.setUsername(connectionConfig.getUsername());
+                conf.setPassword(connectionConfig.getPassword());
 
                 conf.setMaximumPoolSize(16);
                 conf.setMinimumIdle(1);
                 conf.setConnectionTimeout(30000);
 
                 ds = new HikariDataSource(conf);
-
-                driver = new MySQLDriver(ds);
-                driver.showCreateTable(new Session("worktable"), "addresses");
-                driver.execute(-1, new Session("worktable"), new SQL("SELECT * FROM addresses"));
-
-                System.out.println();
         }
 
-        public abstract Statement use(Connection connection, String database)
-                throws SQLException;
-
-        /**
-         * 创建 Jdbc 模板
-         */
-        public abstract SQLExecutor newSQLExecutor(String name);
+        /* ******************************************************************************** */
+        /*                            DATASOURCE PROXY IMPLEMENTS                           */
+        /* ******************************************************************************** */
 
         @Override
         public Connection getConnection() throws SQLException

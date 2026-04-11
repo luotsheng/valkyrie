@@ -1,6 +1,7 @@
-package com.changhong.driver.mysql;
+package com.changhong.driver.utils;
 
 import com.changhong.driver.api.Column;
+import com.changhong.driver.mysql.ColumnDefaultSpec;
 import com.changhong.exception.SystemRuntimeException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.create.table.ColumnDefinition;

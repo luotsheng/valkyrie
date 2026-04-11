@@ -5,10 +5,11 @@ import com.changhong.driver.api.*;
 import com.changhong.driver.api.Driver;
 import com.changhong.driver.api.sql.SQLCommandType;
 import com.changhong.driver.api.sql.SQLParsedStatement;
-import com.changhong.driver.exception.DriverException;
+import com.changhong.driver.api.exception.DriverException;
 import com.changhong.driver.api.sql.SQL;
 import com.changhong.driver.api.sql.SQLExecutor;
 import com.changhong.driver.utils.ResultSets;
+import com.changhong.driver.utils.SQLUtils;
 import com.changhong.utils.Captor;
 
 import javax.sql.DataSource;
