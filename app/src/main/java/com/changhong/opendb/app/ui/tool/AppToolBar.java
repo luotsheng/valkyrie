@@ -1,7 +1,7 @@
 package com.changhong.opendb.app.ui.tool;
 
 import com.changhong.opendb.app.core.event.EventBus;
-import com.changhong.opendb.app.core.event.NewQueryScriptEvent;
+import com.changhong.opendb.app.core.event.OpenQueryScriptEvent;
 import com.changhong.opendb.app.model.ODBNStatus;
 import com.changhong.opendb.app.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.app.ui.widgets.VFXIconButton;
@@ -35,6 +35,6 @@ public class AppToolBar extends ToolBar
         {
                 ODBNStatus instance = ODBNStatus.getInstance();
                 ODBNConnection selectedConnection = instance.getSelectedConnection();
-                EventBus.publish(new NewQueryScriptEvent(selectedConnection == null ? null : selectedConnection.getInfo()));
+                EventBus.publish(new OpenQueryScriptEvent(selectedConnection == null ? null : selectedConnection.getInfo()));
         }
 }

@@ -2,7 +2,7 @@ package com.changhong.opendb.app.ui.navigator.node;
 
 import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.core.event.EventBus;
-import com.changhong.opendb.app.core.event.NewQueryScriptEvent;
+import com.changhong.opendb.app.core.event.OpenQueryScriptEvent;
 import com.changhong.opendb.app.core.event.RefreshQueryNodeEvent;
 import com.changhong.opendb.app.core.event.RemoveSqlEditorTabEvent;
 import com.changhong.opendb.app.model.QueryInfo;
@@ -69,7 +69,7 @@ public class ODBNQuery extends ODBNode
 
         private void openNewTabQuery()
         {
-                EventBus.publish(new NewQueryScriptEvent(queryInfo));
+                EventBus.publish(new OpenQueryScriptEvent(queryInfo));
         }
 
         private void renameQuery()

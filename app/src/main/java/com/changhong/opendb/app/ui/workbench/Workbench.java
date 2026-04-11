@@ -54,7 +54,7 @@ public class Workbench extends VBox implements EventListener
                 // 订阅事件
                 EventBus.subscribe(OpenWorkbenchPaneEvent.class, this);
                 EventBus.subscribe(CloseWorkbenchPaneEvent.class, this);
-                EventBus.subscribe(NewQueryScriptEvent.class, this);
+                EventBus.subscribe(OpenQueryScriptEvent.class, this);
                 EventBus.subscribe(OpenDataGridPaneEvent.class, this);
                 EventBus.subscribe(RemoveSqlEditorTabEvent.class, this);
                 EventBus.subscribe(OpenDesignTablePaneEvent.class, this);
@@ -142,7 +142,7 @@ public class Workbench extends VBox implements EventListener
                         case OpenWorkbenchPaneEvent e      -> handleOpenWorkbenchPaneEvent(e);
                         case CloseWorkbenchPaneEvent e     -> handleCloseWorkbenchPaneEvent(e);
                         case RemoveSqlEditorTabEvent e     -> handleRemoveSqlEditorTabEvent(e);
-                        case NewQueryScriptEvent e         -> handleNewQueryScriptEvent(e);
+                        case OpenQueryScriptEvent e        -> handleOpenQueryScriptEvent(e);
                         case OpenDataGridPaneEvent e       -> handleOpenDataGridPaneEvent(e);
                         case OpenDesignTablePaneEvent e    -> handleOpenDesignTablePaneEvent(e);
                         default -> {}
@@ -170,7 +170,7 @@ public class Workbench extends VBox implements EventListener
                 }
         }
 
-        private void handleNewQueryScriptEvent(NewQueryScriptEvent event)
+        private void handleOpenQueryScriptEvent(OpenQueryScriptEvent event)
         {
                 Tab queryTab = new Tab();
                 queryTab.setGraphic(Assets.use("sql"));

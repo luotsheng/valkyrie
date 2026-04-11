@@ -190,7 +190,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
         private void newQueryScript()
         {
-                EventBus.publish(new NewQueryScriptEvent(connection.getInfo()));
+                EventBus.publish(new OpenQueryScriptEvent(connection.getInfo()));
         }
 
         public void setupListenerEvent()

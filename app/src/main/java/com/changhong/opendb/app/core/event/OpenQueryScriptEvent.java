@@ -7,17 +7,17 @@ import com.changhong.opendb.app.model.QueryInfo;
  * @author Luo Tiansheng
  * @since 2026/3/26
  */
-public class NewQueryScriptEvent extends Event
+public class OpenQueryScriptEvent extends Event
 {
         public ConnectionProperty connectionInfo;
         public QueryInfo queryInfo;
 
-        public NewQueryScriptEvent(ConnectionProperty info)
+        public OpenQueryScriptEvent(ConnectionProperty info)
         {
                 this.connectionInfo = info;
         }
 
-        public NewQueryScriptEvent(QueryInfo info)
+        public OpenQueryScriptEvent(QueryInfo info)
         {
                 this.queryInfo = info;
         }
