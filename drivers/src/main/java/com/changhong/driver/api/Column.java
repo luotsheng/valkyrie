@@ -105,6 +105,13 @@ public class Column extends Sealable
         private String comment;
 
         /**
+         * 原始列名
+         * <p>
+         * 用于校验是否更新操作
+         */
+        private String originalName;
+
+        /**
          * 计算当前列对象的完整性码。
          * <p>
          * 该方法将列的所有关键属性（name、index、type、nullable、primary、autoIncrement、

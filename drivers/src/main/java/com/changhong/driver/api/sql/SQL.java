@@ -40,13 +40,22 @@ public class SQL implements Iterable<SQLParsedStatement>
 
         public SQL(String raw)
         {
+                this(null, raw);
+
+        }
+        public SQL(SQLCommandType type, String raw)
+        {
                 this.raw = raw;
 
                 Statements statements =
                         Captor.call(() -> CCJSqlParserUtil.parseStatements(raw));
 
-                for (Statement statement : statements)
-                        this.statements.add(new SQLParsedStatement(statement));
+                for (Statement statement : statements) {
+                        SQLParsedStatement sqlParsedStatement = new SQLParsedStatement(statement);
+                        if (type != null)
+                                sqlParsedStatement.setCommand(type);
+                        this.statements.add(sqlParsedStatement);
+                }
         }
 
         public SQLParsedStatement popupEnd()

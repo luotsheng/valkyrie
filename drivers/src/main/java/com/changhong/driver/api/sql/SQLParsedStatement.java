@@ -1,6 +1,7 @@
 package com.changhong.driver.api.sql;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.sf.jsqlparser.statement.*;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.create.index.CreateIndex;
@@ -37,7 +38,8 @@ public class SQLParsedStatement
         /**
          * 命令类型
          */
-        private final SQLCommandType command;
+        @Setter
+        private SQLCommandType command;
 
         /**
          * SQL 语句中的所有表名称

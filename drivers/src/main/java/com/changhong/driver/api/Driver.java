@@ -6,6 +6,7 @@ import com.changhong.exception.SystemRuntimeException;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -292,6 +293,200 @@ public abstract class Driver
          * @see Column
          */
         public abstract List<Column> getColumns(Session session, String table);
+
+        /**
+         * 删除指定的数据库表。
+         * <p>
+         * 执行 DDL 操作移除整个表及其所有数据、索引、约束等。不同数据库的删除语法基本一致
+         * （{@code DROP TABLE table_name}），但可能需要处理 {@code IF EXISTS} 子句或级联选项。
+         * <p>
+         * <b>实现注意事项：</b>
+         * <ul>
+         *   <li>应考虑数据库是否支持 {@code IF EXISTS} 子句以避免表不存在时抛出异常</li>
+         *   <li>可能需要处理 {@code CASCADE} 选项以删除依赖该表的视图、外键等（如 PostgreSQL）</li>
+         *   <li>该操作不可逆，实现时应注意事务语义（通常 DDL 在大多数数据库中隐式提交）</li>
+         * </ul>
+         *
+         * @param session 当前会话上下文，包含 catalog 和 schema 信息
+         * @param table 要删除的表名（不能为 {@code null} 或空白字符串）
+         * @throws NullPointerException     如果 {@code table} 为 {@code null}
+         * @throws IllegalArgumentException 如果 {@code table} 为空白字符串
+         * @throws SystemRuntimeException   如果执行 DDL 失败（包装 {@link java.sql.SQLException}）
+         */
+        public abstract void dropTable(Session session, String table);
+
+        /**
+         * 删除指定表中的多个列。
+         * <p>
+         * 执行 DDL 操作从表中移除一个或多个列。不同数据库对删除列的支持差异较大：
+         * <ul>
+         *   <li>MySQL: {@code ALTER TABLE table_name DROP COLUMN col1, DROP COLUMN col2}</li>
+         *   <li>PostgreSQL: 支持在单个 {@code ALTER TABLE} 中多次使用 {@code DROP COLUMN}</li>
+         *   <li>Oracle: 每个 {@code DROP COLUMN} 需要单独的 {@code ALTER TABLE} 语句或使用 {@code SET UNUSED}</li>
+         * </ul>
+         * <p>
+         * <b>实现要求：</b>
+         * <ul>
+         *   <li>应尽量在单条 DDL 语句中完成所有列的删除（若数据库支持）以提高性能</li>
+         *   <li>需处理列不存在的情况（根据方言策略选择忽略或抛出异常）</li>
+         *   <li>注意删除列可能导致的依赖对象失效（如索引、约束），可考虑 {@code CASCADE} 选项</li>
+         * </ul>
+         *
+         * @param session 当前会话上下文，包含 catalog 和 schema 信息
+         * @param table   目标表元数据（包含表名及所在 catalog/schema，不能为 {@code null}）
+         * @param columns 要删除的列集合（不能为 {@code null} 或空集合）
+         * @throws NullPointerException     如果 {@code table} 或 {@code columns} 为 {@code null}
+         * @throws IllegalArgumentException 如果 {@code columns} 为空集合，或任一列未绑定到该表
+         * @throws SystemRuntimeException   如果执行 DDL 失败
+         */
+        public abstract void dropColumns(Session session, Table table, Collection<Column> columns);
+
+        /**
+         * 删除指定表上的多个索引。
+         * <p>
+         * 执行 DDL 操作移除一个或多个索引。不同数据库对删除索引的语法和支持程度存在差异：
+         * <ul>
+         *   <li>MySQL: {@code DROP INDEX index_name ON table_name}，支持在单条语句中删除多个索引（需重复子句）</li>
+         *   <li>PostgreSQL: {@code DROP INDEX index_name1, index_name2}（需指定索引名，无需表名，因为索引在数据库中全局或 schema 内唯一）</li>
+         *   <li>Oracle: {@code DROP INDEX index_name}（索引独立于表，需指定索引名）</li>
+         *   <li>SQL Server: {@code DROP INDEX table_name.index_name} 或 {@code DROP INDEX index_name ON table_name}</li>
+         * </ul>
+         * <p>
+         * <b>实现要求：</b>
+         * <ul>
+         *   <li>需要根据数据库方言选择正确的语法格式（表名前缀、是否支持多索引删除）</li>
+         *   <li>若某个索引不存在，实现应根据策略选择忽略或抛出异常（建议提供配置选项）</li>
+         * </ul>
+         *
+         * @param session 当前会话上下文，包含 catalog 和 schema 信息
+         * @param table 目标表元数据（包含表名及所在 catalog/schema，不能为 {@code null}）
+         * @param selectionItems 要删除的索引集合（每个 {@link Index} 应至少包含索引名称，不能为 {@code null} 或空集合）
+         * @throws NullPointerException 如果 {@code table} 或 {@code selectionItems} 为 {@code null}
+         * @throws IllegalArgumentException 如果 {@code selectionItems} 为空集合，或任一索引缺少必要的名称信息
+         * @throws UnsupportedOperationException 如果数据库方言不支持删除索引操作
+         * @throws SystemRuntimeException 如果执行 DDL 失败（包装 {@link java.sql.SQLException}）
+         * @see Index
+         */
+        public abstract void dropIndexKeys(Session session, Table table, Collection<Index> selectionItems);
+
+        /**
+         * 修改表的主键约束。
+         * <p>
+         * 重新定义指定表的主键，通常需要先删除旧的主键约束，再添加新的主键约束。
+         * 不同数据库的语法差异示例：
+         * <ul>
+         *   <li>MySQL: {@code ALTER TABLE table_name DROP PRIMARY KEY, ADD PRIMARY KEY (col1, col2)}</li>
+         *   <li>PostgreSQL: {@code ALTER TABLE table_name DROP CONSTRAINT pk_name, ADD PRIMARY KEY (col1, col2)}</li>
+         *   <li>Oracle: 类似 PostgreSQL，需要知道主键约束名称</li>
+         * </ul>
+         * <p>
+         * <b>实现注意事项：</b>
+         * <ul>
+         *   <li>若 {@code primaryKeys} 为空集合，表示删除所有主键（即表不再有主键）</li>
+         *   <li>实现应能自动获取当前主键约束名称（通过 {@link DatabaseMetaData#getPrimaryKeys}）</li>
+         *   <li>添加新主键前应验证所有列存在于表中且数据类型合适</li>
+         *   <li>建议将操作包装在事务中（如果数据库支持 DDL 事务）以保证原子性</li>
+         * </ul>
+         *
+         * @param session 当前会话上下文，包含 catalog 和 schema 信息
+         * @param table 目标表元数据（不能为 {@code null}）
+         * @param primaryKeys 新主键列的集合（按顺序），为空表示删除现有主键；集合中列的顺序决定了复合主键中各列的顺序
+         * @throws NullPointerException     如果 {@code table} 或 {@code primaryKeys} 为 {@code null}
+         * @throws IllegalArgumentException 如果任一列不属于该表，或列数量为 0 但数据库不允许无主键表
+         * @throws SystemRuntimeException   如果执行 DDL 失败
+         */
+        public abstract void alterPrimaryKey(Session session, Table table, Collection<Column> primaryKeys);
+
+        /**
+         * 修改指定表上的多个索引定义（如索引列、索引类型等）。
+         * <p>
+         * 该方法用于变更一个或多个索引的结构，典型场景包括：
+         * <ul>
+         *   <li>为现有索引添加或删除列（改变索引键）</li>
+         *   <li>修改索引类型（如从 B-Tree 改为 Hash）</li>
+         *   <li>调整索引的排序方向（ASC/DESC）</li>
+         *   <li>更改索引的存储参数或并发选项</li>
+         * </ul>
+         * <p>
+         * <b>实现注意事项：</b>
+         * <ul>
+         *   <li>大多数数据库不直接支持“修改索引”操作，通常的实现方式是：
+         *       <ol>
+         *         <li>根据 {@link Index} 对象中的新定义生成创建索引的 DDL</li>
+         *         <li>删除旧索引（如果名称相同但定义不同）</li>
+         *         <li>创建新索引</li>
+         *       </ol>
+         *   </li>
+         *   <li>应考虑操作的原子性：如果可能，将操作包装在事务中；否则需提供回滚或错误恢复建议</li>
+         *   <li>对于生产环境，建议使用 {@code CONCURRENTLY} 等选项避免锁表（如 PostgreSQL 支持）</li>
+         *   <li>若索引不存在或新定义与现有定义相同，应忽略或根据策略抛出异常</li>
+         *   <li>应优先使用数据库原生的 {@code ALTER INDEX} 语法（如 Oracle 的 {@code ALTER INDEX ... REBUILD}，
+         *       但该语法通常不修改索引键，仅重建）—— 实际修改键时仍需删除重建</li>
+         * </ul>
+         * <p>
+         * <b>参数 {@code indexes} 说明：</b>
+         * <ul>
+         *   <li>每个 {@link Index} 对象应包含索引名称以及完整的索引新定义（包含列名、索引类型等）</li>
+         *   <li>若某个 {@code Index} 对象中的索引名称在表上不存在，实现应抛出 {@link IllegalArgumentException}</li>
+         *   <li>若 {@code Index} 中的定义与其当前定义相同，可跳过该索引的修改</li>
+         * </ul>
+         * <p>
+         * <b>使用示例：</b>
+         * <pre>{@code
+         * Session session = new Session("my_db", "public");
+         * Table userTable = ...;
+         * Index newIndexDef = Index.builder()
+         *         .name("idx_username")
+         *         .columns(List.of("last_name", "first_name"))  // 修改为复合索引
+         *         .type(IndexType.BTREE)
+         *         .build();
+         * dialect.alterIndexKeys(session, userTable, List.of(newIndexDef));
+         * }</pre>
+         *
+         * @param session 会话上下文，用于获取连接及设置 catalog/schema（不能为 {@code null}）
+         * @param table   目标表元数据（包含表名及所在 catalog/schema，不能为 {@code null}）
+         * @param indexes 需要修改的索引定义集合（不能为 {@code null} 或空集合），每个元素包含索引名称及新定义
+         * @throws NullPointerException              如果 {@code session}、{@code table} 或 {@code indexes} 为 {@code null}
+         * @throws IllegalArgumentException          如果 {@code indexes} 为空集合，或任一索引缺少名称，或索引不存在于表上，
+         *                                           或新定义与现有定义相同但策略要求不忽略
+         * @throws UnsupportedOperationException     如果数据库方言不支持索引修改（包括删除重建的方式）
+         * @throws SystemRuntimeException            如果执行 DDL 失败（包装 {@link java.sql.SQLException}）
+         * @see Index
+         */
+        public abstract void alterIndexKeys(Session session, Table table, Collection<Index> indexes);
+
+        /**
+         * 修改表中多个列的定义（变更列属性）。
+         * <p>
+         * 该方法用于执行列的“更改”操作，包括修改列的数据类型、默认值、是否可空、注释等，
+         * 但不包括删除列或重命名列（重命名应使用专门的 {@code renameColumn} 方法）。
+         * <p>
+         * <b>典型变更内容：</b>
+         * <ul>
+         *   <li>修改数据类型：{@code ALTER TABLE t MODIFY col VARCHAR(255)}</li>
+         *   <li>修改默认值：{@code ALTER TABLE t ALTER COLUMN col SET DEFAULT 0}</li>
+         *   <li>修改可空性：{@code ALTER TABLE t MODIFY col NOT NULL}</li>
+         *   <li>修改注释：{@code ALTER TABLE t MODIFY col COMMENT 'new comment'}</li>
+         * </ul>
+         * <p>
+         * <b>实现要求：</b>
+         * <ul>
+         *   <li>应尽量生成单条 DDL 语句完成所有列的修改（若数据库支持）</li>
+         *   <li>不同数据库的语法差异很大（MySQL 的 {@code MODIFY}，PostgreSQL 的 {@code ALTER COLUMN}，
+         *       Oracle 的 {@code MODIFY} 等），实现类需针对目标数据库适配</li>
+         *   <li>仅修改 {@link Column} 对象中实际发生变化的属性，避免不必要的变更</li>
+         *   <li>对于不支持某些修改操作的数据库，应抛出 {@code UnsupportedOperationException}</li>
+         * </ul>
+         *
+         * @param session 当前会话上下文，包含 catalog 和 schema 信息
+         * @param table   目标表元数据（不能为 {@code null}）
+         * @param columns 需要变更的列集合，每个 {@link Column} 应包含完整的新定义（不能为 {@code null} 或空集合）
+         * @throws NullPointerException             如果 {@code table} 或 {@code columns} 为 {@code null}
+         * @throws IllegalArgumentException         如果 {@code columns} 为空集合，或任一列未包含必要的标识信息（如列名）
+         * @throws UnsupportedOperationException    如果数据库方言不支持列修改操作
+         * @throws SystemRuntimeException           如果执行 DDL 失败
+         */
+        public abstract void alterChange(Session session, Table table, Collection<Column> columns);
 
         /**
          * 执行返回布尔值的数据库操作（如 DDL、部分存储过程调用）。
