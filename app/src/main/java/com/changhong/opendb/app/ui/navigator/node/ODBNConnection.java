@@ -1,9 +1,9 @@
 package com.changhong.opendb.app.ui.navigator.node;
 
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
-import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
-import com.changhong.opendb.app.driver.datasource.MySQLDataSource;
-import com.changhong.opendb.app.model.ConnectionInfo;
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.PooledDataSource;
+import com.changhong.driver.mysql.MySQLDriver;
+import com.changhong.opendb.app.model.ConnectionProperty;
 import com.changhong.opendb.app.model.ODBNStatus;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.dialog.connection.ConnectionDialog;
@@ -27,13 +27,13 @@ import java.util.List;
 public class ODBNConnection extends ODBNode
 {
         @Getter
-        private final ConnectionInfo info;
+        private final ConnectionProperty info;
 
         private boolean openFlag = false;
-        private VirtualDataSource dataSource;
+        private PooledDataSource dataSource;
 
         @Getter
-        private SQLExecutor sqlExecutor;
+        private Driver driver;
 
         // Menu Items
         private MenuItem openOrCloseMenuItem;
@@ -46,7 +46,7 @@ public class ODBNConnection extends ODBNode
         @Getter
         private ODBNDatabase selectedDatabase;
 
-        public ODBNConnection(ConnectionInfo info)
+        public ODBNConnection(ConnectionProperty info)
         {
                 super(info.getName());
                 setGraphic(Assets.use("database0"));
@@ -63,13 +63,13 @@ public class ODBNConnection extends ODBNode
 
                 new Thread(() -> {
                         try {
-                                dataSource = new MySQLDataSource(info);
-                                sqlExecutor = dataSource.newSQLExecutor(getName());
-                                setupDatabases(sqlExecutor.getDatabases());
+                                dataSource = new PooledDataSource(info.toConnectionConfig());
+                                driver = new MySQLDriver(dataSource);
+                                setupDatabases(driver.getCatalogs());
                                 setExpanded(true);
                                 openFlag = true;
                         } catch (Throwable e) {
-                                VFXDialogHelper.alert(e);
+                                Platform.runLater(() -> VFXDialogHelper.alert(e));
                         } finally {
                                 Platform.runLater(this::removeLoadingIndicator);
                         }
@@ -155,10 +155,11 @@ public class ODBNConnection extends ODBNode
         private void setupDatabases(List<String> databaseNames)
         {
                 for (String name : databaseNames)
-                        databases.add(new ODBNDatabase(this, sqlExecutor, name));
+                        databases.add(new ODBNDatabase(this, driver, name));
                 getChildren().addAll(databases);
         }
 
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         public boolean isOpen()
         {
                 return openFlag;

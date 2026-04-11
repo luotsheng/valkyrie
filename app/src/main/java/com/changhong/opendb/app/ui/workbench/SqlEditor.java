@@ -1,17 +1,21 @@
 package com.changhong.opendb.app.ui.workbench;
 
-import com.changhong.opendb.app.driver.sql.SQL;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
-import com.changhong.opendb.app.driver.MutableDataGrid;
+import com.changhong.driver.api.DataGrid;
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.Session;
+import com.changhong.driver.api.sql.SQL;
 import com.changhong.opendb.app.model.ODBNStatus;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.dialog.SaveQueryScriptDialog;
 import com.changhong.opendb.app.ui.navigator.node.ODBNConnection;
 import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
-import com.changhong.opendb.app.ui.pane.MutableDataGridViewPane;
+import com.changhong.opendb.app.ui.pane.DataGridViewPane;
 import com.changhong.opendb.app.ui.pane.SqlMessagePane;
-import com.changhong.opendb.app.ui.widgets.*;
+import com.changhong.opendb.app.ui.widgets.VFXCodeArea;
+import com.changhong.opendb.app.ui.widgets.VFXComboBox;
+import com.changhong.opendb.app.ui.widgets.VFXIconButton;
+import com.changhong.opendb.app.ui.widgets.VFXSeparator;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.utils.Causes;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
@@ -52,7 +56,7 @@ public class SqlEditor extends SplitPane
         private final VFXCodeArea codeArea;
         private final VirtualizedScrollPane<CodeArea> virtualizedScrollPane;
         private final BorderPane topBorderPane;
-        private final MutableDataGridViewPane mutableDataGridViewPane;
+        private final DataGridViewPane mutableDataGridViewPane;
         private final Tab sqlMessageTab;
         private final SqlMessagePane sqlMessagePane;
 
@@ -62,7 +66,7 @@ public class SqlEditor extends SplitPane
         private File sqlFile;
         private Node oldGraphic;
         private QueryInfo queryInfo;
-        private SQLExecutor sqlExecutor = null;
+        private Driver driver = null;
         private long currentTaskId = System.currentTimeMillis();
         private boolean saveFlag = true;
         private VFXComboBox<ODBNConnection> connectionComboBox;
@@ -91,7 +95,7 @@ public class SqlEditor extends SplitPane
                 toolBar = new ToolBar();
                 codeArea = new VFXCodeArea();
                 virtualizedScrollPane = new VirtualizedScrollPane<>(codeArea);
-                mutableDataGridViewPane = new MutableDataGridViewPane(false);
+                mutableDataGridViewPane = new DataGridViewPane(false);
                 sqlMessagePane = new SqlMessagePane();
                 virtualizedScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
@@ -378,21 +382,13 @@ public class SqlEditor extends SplitPane
                                 ODBNDatabase database = databaseComboBox.getSelectionModel()
                                         .getSelectedItem();
 
-                                sqlExecutor = connection.getSqlExecutor();
+                                driver = connection.getDriver();
                                 currentTaskId = System.currentTimeMillis();
 
-                                String db = database.getName();
-                                SQL sql = new  SQL(currentTaskId, db, scriptText);
+                                Session session = database.getSession();
+                                SQL sql = new  SQL(scriptText);
 
-                                MutableDataGrid grid = sqlExecutor.execute(sql, (info, status) -> {
-                                        Platform.runLater(() -> {
-                                                switch (status) {
-                                                        case OK -> sqlMessagePane.appendInfo(info);
-                                                        case SKIP -> sqlMessagePane.appendSkip(info);
-                                                        case ERROR -> sqlMessagePane.appendError(info);
-                                                }
-                                        });
-                                });
+                                DataGrid grid = driver.execute(currentTaskId, session, sql);
 
                                 if (grid != null) {
                                         Platform.runLater(() -> {
@@ -425,8 +421,8 @@ public class SqlEditor extends SplitPane
 
         private void stopTask()
         {
-                if (sqlExecutor != null)
-                        sqlExecutor.cancel(currentTaskId);
+                if (driver != null)
+                        driver.cancel(currentTaskId);
         }
 
         private void beautifySQL()

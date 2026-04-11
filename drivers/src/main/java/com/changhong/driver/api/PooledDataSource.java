@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Luo Tiansheng
  * @since 2026/3/27
  */
-public abstract class PooledDataSource
+public class PooledDataSource
         implements DataSource, AutoCloseable
 {
         private final HikariDataSource ds;

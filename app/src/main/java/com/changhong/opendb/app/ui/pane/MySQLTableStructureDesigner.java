@@ -1,8 +1,9 @@
 package com.changhong.opendb.app.ui.pane;
 
-import com.changhong.opendb.app.driver.ColumnMetaData;
-import com.changhong.opendb.app.driver.TableMetaData;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
+import com.changhong.driver.api.Column;
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.Session;
+import com.changhong.driver.api.Table;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,29 +14,29 @@ import java.util.Set;
  * @author Luo Tiansheng
  * @since 2026/4/10
  */
-public class MySQLTableStructureDesigner extends Designer<ColumnMetaData>
+public class MySQLTableStructureDesigner extends Designer<Column>
 {
-        private final Set<ColumnMetaData> updateBuffer = new HashSet<>();
-        private final Set<ColumnMetaData> primaryBuffer = new LinkedHashSet<>();
+        private final Set<Column> updateBuffer = new HashSet<>();
+        private final Set<Column> primaryBuffer = new LinkedHashSet<>();
 
-        public MySQLTableStructureDesigner(TableMetaData tableMetaData, SQLExecutor executor, String name)
+        public MySQLTableStructureDesigner(Session session, Driver driver, Table table, String name)
         {
-                super(tableMetaData, executor, name);
+                super(session, driver, table, name);
         }
 
         @Override
-        public void onReload(Collection<ColumnMetaData> values)
+        public void onReload(Collection<Column> values)
         {
                 primaryBuffer.clear();
                 updateBuffer.clear();
 
-                for (ColumnMetaData columnMetaData : values)
+                for (Column columnMetaData : values)
                         if (columnMetaData.isPrimary())
                                 primaryBuffer.add(columnMetaData);
         }
 
         @Override
-        public void onCommitEdit(ColumnMetaData oldVal, ColumnMetaData newVal)
+        public void onCommitEdit(Column oldVal, Column newVal)
         {
                 /* 检测到主键变动 */
                 if (oldVal.isPrimary() != newVal.isPrimary()) {
@@ -60,19 +61,19 @@ public class MySQLTableStructureDesigner extends Designer<ColumnMetaData>
         @Override
         public void applySave()
         {
-                executor.alterChange(tableMetaData, updateBuffer);
-                executor.alterPrimaryKey(tableMetaData, primaryBuffer);
+                driver.alterChange(session, table, updateBuffer);
+                driver.alterPrimaryKey(session, table, primaryBuffer);
         }
 
         @Override
-        public void applyPlus(ColumnMetaData newObject)
+        public void applyPlus(Column newObject)
         {
                 /* DO NOTHING... */
         }
 
         @Override
-        public void applyMinus(Collection<ColumnMetaData> selectionItems)
+        public void applyMinus(Collection<Column> selectionItems)
         {
-                executor.deleteColumns(tableMetaData, selectionItems);
+                driver.dropColumns(session, table, selectionItems);
         }
 }

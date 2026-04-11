@@ -28,11 +28,13 @@ public class ResultSets
         /**
          * 结果集转 QueryResultSet 对象
          */
-        public static DataGrid toDataGrid(Connection connection, SQLParsedStatement ps, ResultSet rs)
+        public static DataGrid toDataGrid(Connection connection,
+                                          SQLParsedStatement ps,
+                                          ResultSet rs,
+                                          DataGrid dataGrid)
                 throws SQLException
         {
                 SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT_PATTERN);
-                DataGrid dataGrid = new DataGrid();
 
                 /* COL */
                 setColumns(connection, ps, rs, dataGrid);

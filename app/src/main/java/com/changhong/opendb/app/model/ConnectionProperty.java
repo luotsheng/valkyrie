@@ -1,5 +1,7 @@
 package com.changhong.opendb.app.model;
 
+import com.changhong.driver.api.ConnectionConfig;
+import com.changhong.driver.api.DriverType;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,7 +20,7 @@ import static com.changhong.utils.TypeConverter.atobool;
  * @since 2026/3/26
  */
 @SuppressWarnings("unused")
-public class ConnectionInfo
+public class ConnectionProperty
 {
         private final StringProperty name = new SimpleStringProperty();
         private final StringProperty type = new SimpleStringProperty();
@@ -36,12 +38,12 @@ public class ConnectionInfo
         /* jdbc url 属性 */
         private final Map<String, String> jdbcQuery = new HashMap<>();
 
-        public ConnectionInfo()
+        public ConnectionProperty()
         {
                 /* DO NOTHING */
         }
 
-        public ConnectionInfo(String type)
+        public ConnectionProperty(String type)
         {
                 this.name.set("本地数据库");
                 this.host.set("127.0.0.1");
@@ -189,4 +191,18 @@ public class ConnectionInfo
         public void setTimezone(String timezone) { this.timezone.set(timezone);  }
         public void setUseSSL(Boolean useSSL) { this.useSSL.set(useSSL);  }
         public void setTinyint1isBit(Boolean tinyint1isBit) { this.tinyint1isBit.set(tinyint1isBit);  }
+
+        public ConnectionConfig toConnectionConfig()
+        {
+                ConnectionConfig config = new ConnectionConfig();
+
+                config.setType(DriverType.toDriverType(getType()));
+                config.setHost(getHost());
+                config.setPort(getPort());
+                config.setUsername(getUsername());
+                config.setPassword(getPassword());
+                config.setJdbcUrl(getJdbcUrl());
+
+                return config;
+        }
 }

@@ -1,8 +1,9 @@
 package com.changhong.opendb.app.ui.pane;
 
-import com.changhong.opendb.app.driver.TableIndexMetaData;
-import com.changhong.opendb.app.driver.TableMetaData;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.Index;
+import com.changhong.driver.api.Session;
+import com.changhong.driver.api.Table;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -12,25 +13,25 @@ import java.util.Set;
  * @author Luo Tiansheng
  * @since 2026/4/10
  */
-public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
+public class MySQLIndexStructureDesigner extends Designer<Index>
 {
-        private final Set<TableIndexMetaData> alterBuffer = new LinkedHashSet<>();
-        private final Set<TableIndexMetaData> visibleBuffer = new LinkedHashSet<>();
+        private final Set<Index> alterBuffer = new LinkedHashSet<>();
+        private final Set<Index> visibleBuffer = new LinkedHashSet<>();
 
-        public MySQLIndexStructureDesigner(TableMetaData tableMetaData, SQLExecutor executor, String name)
+        public MySQLIndexStructureDesigner(Session session, Driver driver, Table table, String name)
         {
-                super(tableMetaData, executor, name);
+                super(session, driver, table, name);
         }
 
         @Override
-        public void onReload(Collection<TableIndexMetaData> values)
+        public void onReload(Collection<Index> values)
         {
                 alterBuffer.clear();
                 visibleBuffer.clear();
         }
 
         @Override
-        public void onCommitEdit(TableIndexMetaData oldVal, TableIndexMetaData newVal)
+        public void onCommitEdit(Index oldVal, Index newVal)
         {
                 addAlterBuffer(newVal);
         }
@@ -39,30 +40,30 @@ public class MySQLIndexStructureDesigner extends Designer<TableIndexMetaData>
         public void applySave()
         {
                 if (!alterBuffer.isEmpty()) {
-                        executor.dropIndexKeys(tableMetaData, alterBuffer);
-                        executor.alterIndexKeys(tableMetaData, alterBuffer);
+                        driver.dropIndexKeys(session, table, alterBuffer);
+                        driver.alterIndexKeys(session, table, alterBuffer);
                 }
 
                 if (!visibleBuffer.isEmpty())
-                        executor.alterVisible(tableMetaData, visibleBuffer);
+                        driver.alterVisible(session, table, visibleBuffer);
         }
 
         @Override
-        public void applyPlus(TableIndexMetaData newObject)
+        public void applyPlus(Index newObject)
         {
                 newObject.setType("NORMAL");
                 addAlterBuffer(newObject);
         }
 
         @Override
-        public void applyMinus(Collection<TableIndexMetaData> selectionItems)
+        public void applyMinus(Collection<Index> selectionItems)
         {
-                executor.dropIndexKeys(tableMetaData, selectionItems);
+                driver.dropIndexKeys(session, table, selectionItems);
         }
 
-        private void addAlterBuffer(TableIndexMetaData index)
+        private void addAlterBuffer(Index index)
         {
-                if (index.isVisible() != index.isOriginVisible()) {
+                if (index.isVisible() != index.isOriginalVisible()) {
                         visibleBuffer.add(index);
                         return;
                 }

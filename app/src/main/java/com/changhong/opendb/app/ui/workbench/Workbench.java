@@ -31,8 +31,8 @@ public class Workbench extends VBox implements EventListener
         private final Tab detailTab = new Tab("详情");
         private final List<SqlEditor> editors = new ArrayList<>();
         
-        private final Map<String, Tab> mutableDataGridMgr = new HashMap<>();
-        private final Map<String, Tab> tableMetaDataMgr = new HashMap<>();
+        private final Map<String, Tab> dataGridMgr = new HashMap<>();
+        private final Map<String, Tab> TableMgr = new HashMap<>();
 
         private final ContextMenu tabPaneContextMenu = new ContextMenu();
         private final MenuItem closeCurrent = new MenuItem("关闭当前");;
@@ -55,7 +55,7 @@ public class Workbench extends VBox implements EventListener
                 EventBus.subscribe(OpenWorkbenchPaneEvent.class, this);
                 EventBus.subscribe(CloseWorkbenchPaneEvent.class, this);
                 EventBus.subscribe(NewQueryScriptEvent.class, this);
-                EventBus.subscribe(NewMutableDataGridPaneEvent.class, this);
+                EventBus.subscribe(OpenDataGridPaneEvent.class, this);
                 EventBus.subscribe(RemoveSqlEditorTabEvent.class, this);
                 EventBus.subscribe(OpenDesignTablePaneEvent.class, this);
         }
@@ -143,7 +143,7 @@ public class Workbench extends VBox implements EventListener
                         case CloseWorkbenchPaneEvent e     -> handleCloseWorkbenchPaneEvent(e);
                         case RemoveSqlEditorTabEvent e     -> handleRemoveSqlEditorTabEvent(e);
                         case NewQueryScriptEvent e         -> handleNewQueryScriptEvent(e);
-                        case NewMutableDataGridPaneEvent e -> handleNewMutableDataGridPaneEvent(e);
+                        case OpenDataGridPaneEvent e       -> handleOpenDataGridPaneEvent(e);
                         case OpenDesignTablePaneEvent e    -> handleOpenDesignTablePaneEvent(e);
                         default -> {}
                 }
@@ -194,17 +194,17 @@ public class Workbench extends VBox implements EventListener
                 tabPane.select(queryTab);
         }
 
-        private void handleNewMutableDataGridPaneEvent(NewMutableDataGridPaneEvent event)
+        private void handleOpenDataGridPaneEvent(OpenDataGridPaneEvent event)
         {
                 String id = strwfmt("%s@%s (%s)",
-                        event.info.getName(),
-                        event.database,
-                        event.sqlExecutor.getConnectionName());
+                        event.table.getName(),
+                        event.session.catalog(),
+                        event.connectionName);
 
                 Tab tab;
 
-                if (mutableDataGridMgr.containsKey(id)) {
-                        tab = mutableDataGridMgr.get(id);
+                if (dataGridMgr.containsKey(id)) {
+                        tab = dataGridMgr.get(id);
                         tabPane.select(tab);
                         return;
                 } else {
@@ -213,33 +213,33 @@ public class Workbench extends VBox implements EventListener
 
                 PreviewTableDataPane pane = new PreviewTableDataPane(
                         tab,
-                        event.sqlExecutor,
-                        event.database,
-                        event.info
+                        event.session,
+                        event.driver,
+                        event.table
                 );
 
                 tab.setGraphic(Assets.use("table"));
                 tab.setContent(pane);
                 tab.setOnCloseRequest(closeEvent -> {
                         Tab closeTab = (Tab) closeEvent.getTarget();
-                        mutableDataGridMgr.remove(closeTab.getText());
+                        dataGridMgr.remove(closeTab.getText());
                 });
 
                 tabPane.addAndSelect(tab);
-                mutableDataGridMgr.put(id, tab);
+                dataGridMgr.put(id, tab);
 
                 pane.asyncUpdate();
         }
 
         private void handleOpenDesignTablePaneEvent(OpenDesignTablePaneEvent e)
         {
-                Tab tab = tableMetaDataMgr.get(e.id());
+                Tab tab = TableMgr.get(e.id());
 
                 if (tab == null) {
                         tab = new Tab(e.id());
-                        tab.setContent(new TableStructureDesignerPane(tab, e.executor, e.table));
+                        tab.setContent(new TableStructureDesignerPane(tab, e.session, e.driver, e.table));
                         tab.setGraphic(Assets.use("struct1"));
-                        tableMetaDataMgr.put(e.id(), tab);
+                        TableMgr.put(e.id(), tab);
                 }
 
                 tabPane.addAndSelect(tab);

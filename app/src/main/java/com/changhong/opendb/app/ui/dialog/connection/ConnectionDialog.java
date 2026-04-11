@@ -1,10 +1,9 @@
 package com.changhong.opendb.app.ui.dialog.connection;
 
+import com.changhong.driver.api.PooledDataSource;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.RefreshConnectionEvent;
-import com.changhong.opendb.app.driver.datasource.MySQLDataSource;
-import com.changhong.opendb.app.driver.datasource.VirtualDataSource;
-import com.changhong.opendb.app.model.ConnectionInfo;
+import com.changhong.opendb.app.model.ConnectionProperty;
 import com.changhong.opendb.app.repository.ConnectionRepository;
 import com.changhong.opendb.app.utils.Causes;
 import com.changhong.opendb.app.utils.JSONUtils;
@@ -32,8 +31,8 @@ public class ConnectionDialog extends Stage
         private TabPane tabPane;
         private HBox buttonBar;
         private final boolean isUpdate;
-        private final ConnectionInfo oldInfo;
-        private final ConnectionInfo newInfo;
+        private final ConnectionProperty oldProperty;
+        private final ConnectionProperty newProperty;
         private final Label status = new Label();
 
         private static final int WW = 700;
@@ -44,16 +43,16 @@ public class ConnectionDialog extends Stage
                 this(null);
         }
 
-        public ConnectionDialog(ConnectionInfo newInfo)
+        public ConnectionDialog(ConnectionProperty newProperty)
         {
-                this.isUpdate = newInfo != null;
+                this.isUpdate = newProperty != null;
 
-                this.newInfo = isUpdate
-                        ? newInfo
-                        : new ConnectionInfo("MySQL");
+                this.newProperty = isUpdate
+                        ? newProperty
+                        : new ConnectionProperty("MySQL");
 
-                this.oldInfo = isUpdate
-                        ? JSONUtils.deepCopy(newInfo)
+                this.oldProperty = isUpdate
+                        ? JSONUtils.deepCopy(newProperty)
                         : null;
 
                 setupTabPane();
@@ -67,11 +66,11 @@ public class ConnectionDialog extends Stage
 
                 Tab generalTab = new Tab("常规属性");
                 generalTab.setClosable(false);
-                generalTab.setContent(new ConnectionGeneralPane(newInfo));
+                generalTab.setContent(new ConnectionGeneralPane(newProperty));
 
                 Tab advanceTab = new Tab("高级属性");
                 advanceTab.setClosable(false);
-                advanceTab.setContent(new ConnectionAdvancedPane(newInfo));
+                advanceTab.setContent(new ConnectionAdvancedPane(newProperty));
 
                 tabPane.getTabs().addAll(generalTab, advanceTab);
         }
@@ -112,7 +111,7 @@ public class ConnectionDialog extends Stage
         })
         public void testConnection()
         {
-                try (VirtualDataSource dataSource = new MySQLDataSource(newInfo);
+                try (PooledDataSource dataSource = new PooledDataSource(newProperty.toConnectionConfig());
                      Connection connection = dataSource.getConnection()) {
                         status.setText("Connected successfully...");
                         status.setStyle("-fx-text-fill: #28a745;");
@@ -124,12 +123,12 @@ public class ConnectionDialog extends Stage
 
         private void saveConnection()
         {
-                String content = JSONUtils.toJSONString(newInfo, SerializationFeature.INDENT_OUTPUT);
+                String content = JSONUtils.toJSONString(newProperty, SerializationFeature.INDENT_OUTPUT);
 
                 if (isUpdate) {
-                        ConnectionRepository.updateConnection(oldInfo.getName(), newInfo.getName(), content);
+                        ConnectionRepository.updateConnection(oldProperty.getName(), newProperty.getName(), content);
                 } else {
-                        ConnectionRepository.saveConnection(newInfo.getName(), content);
+                        ConnectionRepository.saveConnection(newProperty.getName(), content);
                 }
 
                 close();

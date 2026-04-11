@@ -5,6 +5,7 @@ import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.workbench.VFXCopyableLabel;
 import com.changhong.opendb.app.utils.Causes;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

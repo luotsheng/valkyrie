@@ -1,8 +1,9 @@
 package com.changhong.opendb.app.ui.navigator.node;
 
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.Session;
+import com.changhong.driver.api.Table;
 import com.changhong.opendb.app.core.event.*;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
-import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.repository.QueryScriptRepository;
 import com.changhong.opendb.app.resource.Assets;
@@ -33,9 +34,11 @@ public class ODBNDatabase extends ODBNode implements EventListener
         @Getter
         private final ODBNConnection connection;
         @Getter
-        private final SQLExecutor sqlExecutor;
+        private final Driver driver;
         private boolean openFlag = false;
-        private final List<TableMetaData> tables = new ArrayList<>();
+        private final List<Table> tables = new ArrayList<>();
+        @Getter
+        private final Session session;
 
         // Tree Items
         final TreeItem<String> tableItem
@@ -73,13 +76,14 @@ public class ODBNDatabase extends ODBNode implements EventListener
         }
 
         public ODBNDatabase(ODBNConnection connection,
-                            SQLExecutor sqlExecutor,
+                            Driver driver,
                             String name)
         {
                 super(name);
                 this.connection = connection;
                 setGraphic(Assets.use("database1"));
-                this.sqlExecutor = sqlExecutor;
+                this.session = new Session(name);
+                this.driver = driver;
 
                 setupTableNode();
                 setupListenerEvent();
@@ -101,15 +105,15 @@ public class ODBNDatabase extends ODBNode implements EventListener
                 node.setContextMenu(nodeContextMenu);
         }
 
-        private void reloadTableMetadata()
+        private void reloadTable()
         {
                 tables.clear();
-                tables.addAll(sqlExecutor.getTables(name));
+                tables.addAll(driver.getTables(session));
         }
 
-        public final void dropTable(TableMetaData tbMetaData) throws SQLException
+        public final void dropTable(Table table) throws SQLException
         {
-                sqlExecutor.dropTable(name, tbMetaData.getName());
+                driver.dropTable(session, table.getName());
         }
 
         @SuppressWarnings("unchecked")
@@ -122,7 +126,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
                 new Thread(() -> {
                         try {
-                                reloadTableMetadata();
+                                reloadTable();
 
                                 Platform.runLater(() -> {
                                         getChildren().addAll(tableItem, queryItem);
@@ -157,12 +161,12 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
         public void refreshTableNode()
         {
-                reloadTableMetadata();
+                reloadTable();
 
                 tableItem.getChildren().clear();
 
-                for (TableMetaData table : tables) {
-                        ODBNTable tableNode = new ODBNTable(sqlExecutor, this, table);
+                for (Table table : tables) {
+                        ODBNTable tableNode = new ODBNTable(driver, this, table);
                         tableNode.setSelectedEvent(this::onSelected);
                         tableItem.getChildren().add(tableNode);
                 }

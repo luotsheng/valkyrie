@@ -1,6 +1,6 @@
 package com.changhong.opendb.app.ui.dialog.connection;
 
-import com.changhong.opendb.app.model.ConnectionInfo;
+import com.changhong.opendb.app.model.ConnectionProperty;
 import com.changhong.opendb.app.ui.pane.PropertyGridPane;
 import javafx.scene.control.CheckBox;
 import com.changhong.opendb.app.ui.widgets.VFXComboBox;
@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
  */
 class ConnectionAdvancedPane extends PropertyGridPane
 {
-        private final ConnectionInfo info;
+        private final ConnectionProperty info;
 
         private final TextField jdbcUrl = new TextField("jdbc:mysql://");
         private final VFXComboBox<String> timezone = new VFXComboBox<>();
@@ -37,7 +37,7 @@ class ConnectionAdvancedPane extends PropertyGridPane
                 "Asia/Tokyo",
         };
 
-        public ConnectionAdvancedPane(ConnectionInfo info)
+        public ConnectionAdvancedPane(ConnectionProperty info)
         {
                 super();
                 this.info = info;

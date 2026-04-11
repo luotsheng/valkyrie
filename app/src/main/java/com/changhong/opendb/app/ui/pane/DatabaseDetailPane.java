@@ -1,8 +1,8 @@
 package com.changhong.opendb.app.ui.pane;
 
+import com.changhong.driver.api.Table;
 import com.changhong.opendb.app.core.event.EventBus;
-import com.changhong.opendb.app.core.event.NewMutableDataGridPaneEvent;
-import com.changhong.opendb.app.driver.TableMetaData;
+import com.changhong.opendb.app.core.event.OpenDataGridPaneEvent;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
 import com.changhong.opendb.app.ui.widgets.*;
@@ -30,20 +30,20 @@ import java.util.List;
 @SuppressWarnings("FieldCanBeLocal")
 public class DatabaseDetailPane extends DetailPane
 {
-        private final TableView<TableMetaData> tableView;
+        private final TableView<Table> tableView;
         private final ToolBar toolBar;
 
         private final ODBNDatabase database;
 
-        private TableColumn<TableMetaData, String> name;
-        private TableColumn<TableMetaData, Date> createTime;
-        private TableColumn<TableMetaData, Date> updateTime;
-        private TableColumn<TableMetaData, String> engine;
-        private TableColumn<TableMetaData, Float> size;
-        private TableColumn<TableMetaData, String> rows;
-        private TableColumn<TableMetaData, String> comment;
+        private TableColumn<Table, String> name;
+        private TableColumn<Table, Date> createTime;
+        private TableColumn<Table, Date> updateTime;
+        private TableColumn<Table, String> engine;
+        private TableColumn<Table, Float> size;
+        private TableColumn<Table, String> rows;
+        private TableColumn<Table, String> comment;
 
-        private ObservableList<TableMetaData> obs;
+        private ObservableList<Table> obs;
 
         public DatabaseDetailPane(ODBNDatabase database)
         {
@@ -91,7 +91,7 @@ public class DatabaseDetailPane extends DetailPane
 
         private void deleteTable()
         {
-                TableMetaData table = tableView.getSelectionModel().getSelectedItem();
+                Table table = tableView.getSelectionModel().getSelectedItem();
 
                 if (VFXDialogHelper.askDangerous("确认删除：%s？", table.getName())) {
                         VFXDialogHelper.runWith(() -> database.dropTable(table));
@@ -141,13 +141,17 @@ public class DatabaseDetailPane extends DetailPane
                 );
 
                 tableView.setRowFactory(tv -> {
-                        TableRow<TableMetaData> row = new TableRow<>();
+                        TableRow<Table> row = new TableRow<>();
 
                         row.setOnMouseClicked(e -> {
 
                                 if (e.getClickCount() == 2 && !row.isEmpty()) {
-                                        TableMetaData data = row.getItem();
-                                        EventBus.publish(new NewMutableDataGridPaneEvent(database.getSqlExecutor(), database.getName(), data));
+                                        Table data = row.getItem();
+                                        EventBus.publish(new OpenDataGridPaneEvent(database.getSession(),
+                                                database.getDriver(),
+                                                database.getName(),
+                                                data,
+                                                database.getConnection().getName()));
                                 }
 
                         });
@@ -202,7 +206,7 @@ public class DatabaseDetailPane extends DetailPane
                 updateTime.setCellFactory(col -> new VFXDateTableCell<>());
         }
 
-        public void update(List<TableMetaData> tables)
+        public void update(List<Table> tables)
         {
                 if (obs == null) {
                         obs = FXCollections.observableArrayList();

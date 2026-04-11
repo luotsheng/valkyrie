@@ -10,6 +10,8 @@ import net.sf.jsqlparser.statement.Statements;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.changhong.collection.Lists.end;
+
 /**
  * SQL 执行单元
  *
@@ -63,9 +65,19 @@ public class SQL implements Iterable<SQLParsedStatement>
                 return statements.remove(statements.size() - 1);
         }
 
+        public void pushback(SQLParsedStatement statement)
+        {
+                statements.add(statement);
+        }
+
         @Override
         public Iterator<SQLParsedStatement> iterator()
         {
                 return statements.iterator();
+        }
+
+        public String getSingleTableName()
+        {
+                return end(statements).getSingleTableName();
         }
 }

@@ -1,7 +1,8 @@
 package com.changhong.opendb.app.core.event;
 
-import com.changhong.opendb.app.driver.TableMetaData;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.Session;
+import com.changhong.driver.api.Table;
 
 import static com.changhong.string.StringStaticize.strwfmt;
 
@@ -13,16 +14,19 @@ import static com.changhong.string.StringStaticize.strwfmt;
  */
 public class OpenDesignTablePaneEvent extends Event
 {
-        public final SQLExecutor executor;
         public final String connectionName;
-        public final TableMetaData table;
+        public final Session session;
+        public final Driver driver;
+        public final Table table;
 
-        public OpenDesignTablePaneEvent(SQLExecutor executor,
-                                        String connectionName,
-                                        TableMetaData table)
+        public OpenDesignTablePaneEvent(String connectionName,
+                                        Session session,
+                                        Driver driver,
+                                        Table table)
         {
-                this.executor = executor;
                 this.connectionName = connectionName;
+                this.session = session;
+                this.driver = driver;
                 this.table = table;
         }
 
@@ -30,7 +34,7 @@ public class OpenDesignTablePaneEvent extends Event
         {
                 return strwfmt("%s@%s(%s)",
                         table.getName(),
-                        table.getDatabase(),
+                        session.catalog(),
                         connectionName);
         }
 

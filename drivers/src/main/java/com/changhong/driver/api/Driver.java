@@ -2,13 +2,16 @@ package com.changhong.driver.api;
 
 import com.changhong.collection.Lists;
 import com.changhong.driver.api.exception.DriverException;
+import com.changhong.driver.api.sql.SQLExecutor;
 import com.changhong.exception.SystemRuntimeException;
+import lombok.Getter;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * JDBC 驱动抽象层。
@@ -43,7 +46,7 @@ import java.util.Objects;
  *
  */
 @SuppressWarnings("SpellCheckingInspection")
-public abstract class Driver
+public abstract class Driver implements SQLExecutor
 {
         /**
          * 底层数据源，用于获取数据库连接。
@@ -51,6 +54,12 @@ public abstract class Driver
          * 该引用为 {@code protected}，允许子类直接访问以支持更灵活的连接管理。
          */
         protected final DataSource dataSource;
+
+        /**
+         * 数据库产品元数据
+         */
+        @Getter
+        protected final ProductMetaData productMetaData;
 
         /**
          * 执行 {@link Statement#execute(String)} 或 {@link Statement#execute(String, int)}
@@ -117,6 +126,17 @@ public abstract class Driver
         public Driver(DataSource dataSource)
         {
                 this.dataSource = Objects.requireNonNull(dataSource, "DataSource must not be null");
+
+                try (var conn = dataSource.getConnection()) {
+                        DatabaseMetaData db = conn.getMetaData();
+                        productMetaData = new ProductMetaData();
+                        productMetaData.setProductName(db.getDatabaseProductName());
+                        productMetaData.setVersion(db.getDatabaseProductVersion());
+                        productMetaData.setMajorVersion(db.getDatabaseMajorVersion());
+                        productMetaData.setMinorVersion(db.getDatabaseMinorVersion());
+                } catch (Exception e) {
+                        throw new DriverException(e);
+                }
         }
 
         /**
@@ -293,6 +313,77 @@ public abstract class Driver
          * @see Column
          */
         public abstract List<Column> getColumns(Session session, String table);
+
+        public List<Column> getColumns(Session session, Table table)
+        {
+                return getColumns(session, table.getName());
+        }
+
+        /**
+         * 获取指定数据库表的所有索引信息。
+         * <p>
+         * 该方法通过 {@link java.sql.DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
+         * 获取目标表上定义的所有索引（包括主键索引、唯一索引、普通索引等），并将每个索引封装为 {@link Index} 对象。
+         * <p>
+         * <b>返回的索引信息包含：</b>
+         * <ul>
+         *   <li>索引名称（{@link Index#getName()} ()}）</li>
+         *   <li>索引类型（唯一索引、普通索引、全文索引等）</li>
+         *   <li>索引的排序方向（ASC/DESC）</li>
+         *   <li>索引的过滤条件（部分索引，如 PostgreSQL 的 WHERE 子句）</li>
+         * </ul>
+         * <p>
+         * <b>实现要求：</b>
+         * <ul>
+         *   <li>应按照索引名称和列在索引中的位置（ORDINAL_POSITION）进行排序返回</li>
+         *   <li>主键索引可能被某些数据库视为特殊的索引（如 MySQL 中主键约束对应 {@code PRIMARY} 索引），应一并返回</li>
+         *   <li>应过滤掉系统生成的内部索引（如外键自动创建的索引），避免信息冗余</li>
+         *   <li>若表不存在或无任何索引，返回空列表（而非 {@code null}）</li>
+         *   <li>需要处理不同数据库对索引元数据返回的差异（如 Oracle 的索引与约束关系）</li>
+         * </ul>
+         *
+         * @param session 会话上下文，包含 catalog 和 schema 信息以定位表（不能为 {@code null}）
+         * @param table   目标表元数据（包含表名及所在 catalog/schema，不能为 {@code null}）
+         * @return 包含表所有索引信息的列表，按索引名称及列顺序排列；若无索引则返回空列表（永不为 {@code null}）
+         * @throws NullPointerException      如果 {@code session} 或 {@code table} 为 {@code null}
+         * @throws SystemRuntimeException    如果获取元数据过程中发生 {@link java.sql.SQLException}
+         * @see java.sql.DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
+         * @see Index
+         */
+        public abstract List<Index> getIndexes(Session session, Table table);
+
+        /**
+         * 获取当前数据库方言支持的所有索引类型名称。
+         * <p>
+         * 不同数据库支持不同的索引类型，该方法返回的类型名称应与数据库内部定义的索引类型关键字一致。
+         * <p>
+         * <b>常见索引类型示例：</b>
+         * <ul>
+         *   <li>MySQL: {@code BTREE}, {@code HASH}, {@code FULLTEXT}, {@code SPATIAL}</li>
+         *   <li>PostgreSQL: {@code BTREE}, {@code HASH}, {@code GIST}, {@code GIN}, {@code BRIN}, {@code SPGIST}</li>
+         *   <li>Oracle: {@code NORMAL} (B-Tree), {@code BITMAP}, {@code FUNCTION-BASED}, {@code DOMAIN}</li>
+         *   <li>SQL Server: {@code CLUSTERED}, {@code NONCLUSTERED}, {@code COLUMNSTORE}, {@code XML}</li>
+         * </ul>
+         * <p>
+         * <b>实现要求：</b>
+         * <ul>
+         *   <li>返回的集合应为不可变集合（如 {@link java.util.Collections#unmodifiableSet}）或副本，避免调用方修改</li>
+         *   <li>集合中不应包含重复元素</li>
+         *   <li>若数据库支持动态扩展索引类型（如通过插件），实现类应能动态获取或至少返回内置支持的类型</li>
+         *   <li>类型名称应使用大写形式，与数据库系统表或 {@code CREATE INDEX} 语法中的关键字保持一致</li>
+         * </ul>
+         * <p>
+         * <b>使用示例：</b>
+         * <pre>{@code
+         * Set<String> types = dialect.getIndexTypes();
+         * if (types.contains("BTREE")) {
+         *     // 可以创建 B-Tree 索引
+         * }
+         * }</pre>
+         *
+         * @return 包含所有支持的索引类型名称的不可变集合（永不为 {@code null}，可能为空集合表示不支持显式指定索引类型）
+         */
+        public abstract Set<String> getIndexTypes();
 
         /**
          * 删除指定的数据库表。
@@ -487,6 +578,8 @@ public abstract class Driver
          * @throws SystemRuntimeException           如果执行 DDL 失败
          */
         public abstract void alterChange(Session session, Table table, Collection<Column> columns);
+
+        public abstract void alterVisible(Session session, Table table, Collection<Index> indexes);
 
         /**
          * 执行返回布尔值的数据库操作（如 DDL、部分存储过程调用）。

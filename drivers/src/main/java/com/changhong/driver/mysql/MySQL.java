@@ -1,4 +1,4 @@
-package com.changhong.opendb.app.driver;
+package com.changhong.driver.mysql;
 
 /**
  * MYSQL 相关常量定义

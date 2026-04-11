@@ -1,13 +1,13 @@
 package com.changhong.driver.mysql;
 
 import com.changhong.collection.Lists;
+import com.changhong.collection.Sets;
 import com.changhong.driver.api.*;
 import com.changhong.driver.api.Driver;
 import com.changhong.driver.api.sql.SQLCommandType;
 import com.changhong.driver.api.sql.SQLParsedStatement;
 import com.changhong.driver.api.exception.DriverException;
 import com.changhong.driver.api.sql.SQL;
-import com.changhong.driver.api.sql.SQLExecutor;
 import com.changhong.driver.utils.ResultSets;
 import com.changhong.driver.utils.SQLUtils;
 import com.changhong.utils.Captor;
@@ -18,14 +18,13 @@ import net.sf.jsqlparser.statement.create.table.ColDataType;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.changhong.collection.Lists.beg;
+import static com.changhong.collection.Lists.end;
 import static com.changhong.string.StringStaticize.*;
+import static com.changhong.utils.TypeConverter.atobool;
 import static com.changhong.utils.TypeConverter.atos;
 
 /**
@@ -35,7 +34,7 @@ import static com.changhong.utils.TypeConverter.atos;
  * @since 2026/4/11
  */
 @SuppressWarnings("SqlSourceToSinkFlow")
-public class MySQLDriver extends Driver implements SQLExecutor
+public class MySQLDriver extends Driver
 {
         private final MySQLDialect dialect = new MySQLDialect();
 
@@ -81,8 +80,8 @@ public class MySQLDriver extends Driver implements SQLExecutor
                                 while (rs.next()) {
                                         tables.add(new Table(
                                                 rs.getString("name"),
-                                                rs.getString("createTime"),
-                                                rs.getString("updateTime"),
+                                                rs.getDate("createTime"),
+                                                rs.getDate("updateTime"),
                                                 rs.getString("engine"),
                                                 rs.getFloat("size"),
                                                 rs.getInt("rows"),
@@ -101,17 +100,18 @@ public class MySQLDriver extends Driver implements SQLExecutor
         public List<Column> getColumns(Session session, String table)
         {
                 try {
-                        String sql = strwfmt("SELECT * FROM %s", dialect.quote(table));
-                        List<Column> columns = selectByPage(session, sql, 0, 0).getColumns();
+                        List<Column> columns = selectByPage(session, table, 0, 0).getColumns();
 
-                        Map<String, Column> columnMetaDataMap = new HashMap<>();
+                        Map<String, Column> columnMap = new HashMap<>();
 
-                        for (Column column : columns)
-                                columnMetaDataMap.put(column.getName(), column);
+                        for (Column column : columns) {
+                                column.setOriginalName(column.getName());
+                                columnMap.put(column.getName(), column);
+                        }
 
                         String createTableDDL = showCreateTable(session, table);
 
-                        SQLUtils.parseColumnDefSpec(createTableDDL, columnMetaDataMap);
+                        SQLUtils.parseColumnDefSpec(createTableDDL, columnMap);
 
                         /* 防篡改码生成 */
                         columns.forEach(Column::finalIntegrityCode);
@@ -120,6 +120,79 @@ public class MySQLDriver extends Driver implements SQLExecutor
                 } catch (Exception e) {
                         throw new DriverException(e);
                 }
+        }
+
+        @Override
+        public List<Index> getIndexes(Session session, Table table)
+        {
+                SQL sql = new SQL("SHOW INDEX FROM " + dialect.quote(table.getName()) + ";");
+
+                DataGrid dataGrid = execute(session, sql);
+
+                List<String> indexColumns = new ArrayList<>();
+                Map<String, Index> indexes = new LinkedHashMap<>();
+
+                for (int i = 0; i < dataGrid.size(); i++) {
+                        String keyName = dataGrid.getRowValue("Key_name", i);
+
+                        /* 主键忽略 */
+                        if (streq(keyName, "PRIMARY"))
+                                continue;
+
+                        indexColumns.add(dataGrid.getRowValue("Column_name", i));
+
+                        Index index = new Index();
+
+                        index.setName(keyName);
+                        index.setOriginalName(keyName);
+
+                        String Non_unique = dataGrid.getRowValue("Non_unique", i);
+                        String Index_type = dataGrid.getRowValue("Index_type", i);
+
+                        if (streq(Non_unique, "1") && streq(Index_type, "BTREE")) {
+                                index.setType("NORMAL");
+                        } else if (streq(Non_unique, "0") && streq(Index_type, "BTREE")) {
+                                index.setType("UNIQUE");
+                        } else if (streq(Index_type, "FULLTEXT")) {
+                                index.setType("FULLTEXT");
+                        } else if (streq(Index_type, "SPATIAL")) {
+                                index.setType("SPATIAL");
+                        } else if (streq(Index_type, "HASH")) {
+                                index.setType("HASH");
+                        } else {
+                                index.setType(Index_type);
+                        }
+
+                        if (productMetaData.getMajorVersion() >= MySQL.VERSION_8x) {
+                                index.setVisible(atobool(dataGrid.getRowValue("Visible", i)));
+                                index.setOriginalVisible(index.isVisible());
+                        }
+
+                        indexes.put(index.getName(), index);
+                }
+
+                List<Index> ret = Lists.newArrayList(indexes.values());
+
+                ret.forEach(idx -> {
+                        /* 生成索引列 */
+                        idx.generateColumnText(indexColumns);
+                        /* 生成完整性校验码 */
+                        idx.finalIntegrityCode();
+                });
+
+                return ret;
+        }
+
+        @Override
+        public Set<String> getIndexTypes()
+        {
+                return Sets.newLinkedHashSet(
+                        "NORMAL",
+                        "UNIQUE",
+                        "FULLTEXT",
+                        "SPATIAL",
+                        "HASH"
+                );
         }
 
         @Override
@@ -134,7 +207,7 @@ public class MySQLDriver extends Driver implements SQLExecutor
         {
                 StringBuilder script = new StringBuilder();
 
-                script.append(strwfmt("ALTER TABLE `%s` ", table.name()));
+                script.append(strwfmt("ALTER TABLE `%s` ", table.getName()));
 
                 for (Column col : columns)
                         script.append(strwfmt("DROP COLUMN `%s`, ", col.getName()));
@@ -157,7 +230,7 @@ public class MySQLDriver extends Driver implements SQLExecutor
                                 : index.getOriginalName();
 
                         scripts.append(
-                                strwfmt("ALTER TABLE `%s` DROP INDEX `%s`;\n", table.name(), name)
+                                strwfmt("ALTER TABLE `%s` DROP INDEX `%s`;\n", table.getName(), name)
                         );
                 }
 
@@ -170,13 +243,13 @@ public class MySQLDriver extends Driver implements SQLExecutor
                 if (primaryKeys.isEmpty())
                         return;
 
-                String sql = strwfmt("ALTER TABLE %s DROP PRIMARY KEY;", dialect.quote(table.name()));
+                String sql = strwfmt("ALTER TABLE %s DROP PRIMARY KEY;", dialect.quote(table.getName()));
                 execute(session, new SQL(sql));
 
                 StringBuilder script = new StringBuilder();
 
                 script.append("ALTER TABLE `")
-                        .append(table.name())
+                        .append(table.getName())
                         .append("` ADD PRIMARY KEY (");
 
                 for (Column primaryKey : primaryKeys) {
@@ -208,7 +281,7 @@ public class MySQLDriver extends Driver implements SQLExecutor
                                         strwfmt(
                                                 "CREATE INDEX `%s` ON `%s`(%s);\n",
                                                 name,
-                                                table.name(),
+                                                table.getName(),
                                                 columns
                                         )
                                 );
@@ -307,7 +380,7 @@ public class MySQLDriver extends Driver implements SQLExecutor
                         alterExpr.addColDataType(alterColDataType);
 
                         Alter alter = new Alter();
-                        alter.setTable(new net.sf.jsqlparser.schema.Table(dialect.quote(table.name())));
+                        alter.setTable(new net.sf.jsqlparser.schema.Table(dialect.quote(table.getName())));
                         alter.setAlterExpressions(List.of(alterExpr));
 
                         builder.append(alter).append(";");
@@ -317,8 +390,27 @@ public class MySQLDriver extends Driver implements SQLExecutor
         }
 
         @Override
-        public DataGrid selectByPage(Session session, String sql, int off, int size)
+        public void alterVisible(Session session, Table table, Collection<Index> indexes)
         {
+                StringBuilder scripts = new StringBuilder();
+
+                for (Index index : indexes) {
+                        String isVisible = index.isVisible() ? "VISIBLE" : "INVISIBLE";
+                        scripts.append(
+                                strwfmt("ALTER TABLE `%s` ALTER INDEX `%s` %s;",
+                                        table.getName(),
+                                        index.getName(),
+                                        isVisible)
+                        );
+                }
+
+                execute(session, new SQL(atos(scripts)));
+        }
+
+        @Override
+        public DataGrid selectByPage(Session session, String table, int off, int size)
+        {
+                String sql = strwfmt("SELECT * FROM %s", dialect.quote(table));
                 return execute(session, new SQL(dialect.limit(sql, off, size)));
         }
 
@@ -326,6 +418,7 @@ public class MySQLDriver extends Driver implements SQLExecutor
         public DataGrid execute(long jobId, Session session, SQL sql)
         {
                 return executeQuery(session, (connection, statement) -> {
+                        DataGrid dataGrid = new DataGrid(session, this, sql);
 
                         taskQueue.put(jobId, statement);
 
@@ -339,9 +432,12 @@ public class MySQLDriver extends Driver implements SQLExecutor
                                 }
                         }
 
+                        sql.pushback(endStatement);
+
                         if (endStatement.getCommand() == SQLCommandType.EXECUTE_QUERY) {
                                 ResultSet rs = statement.executeQuery(endStatement.toString());
-                                return ResultSets.toDataGrid(connection, endStatement, rs);
+                                ResultSets.toDataGrid(connection, endStatement, rs, dataGrid);
+                                return dataGrid;
                         }
 
                         return null;

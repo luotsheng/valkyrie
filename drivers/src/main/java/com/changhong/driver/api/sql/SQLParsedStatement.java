@@ -51,7 +51,12 @@ public class SQLParsedStatement
                 this.statement = statement;
                 this.command = toType(statement);
                 TablesNamesFinder<Void> finder = new TablesNamesFinder<>();
-                this.tables.addAll(finder.getTables(statement));
+
+                try {
+                        this.tables.addAll(finder.getTables(statement));
+                } catch (Exception ignored) {
+                        /* IGNORED */
+                }
         }
 
         public boolean isSingleTable()

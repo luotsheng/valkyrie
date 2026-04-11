@@ -41,6 +41,11 @@ public class Index extends Sealable
          */
         private String originalName;
 
+        /**
+         * 原始显示值
+         */
+        private boolean originalVisible;
+
         @Override
         public String computeIntegrityCode()
         {

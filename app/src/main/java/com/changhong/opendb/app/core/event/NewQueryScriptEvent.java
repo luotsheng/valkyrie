@@ -1,6 +1,6 @@
 package com.changhong.opendb.app.core.event;
 
-import com.changhong.opendb.app.model.ConnectionInfo;
+import com.changhong.opendb.app.model.ConnectionProperty;
 import com.changhong.opendb.app.model.QueryInfo;
 
 /**
@@ -9,10 +9,10 @@ import com.changhong.opendb.app.model.QueryInfo;
  */
 public class NewQueryScriptEvent extends Event
 {
-        public ConnectionInfo connectionInfo;
+        public ConnectionProperty connectionInfo;
         public QueryInfo queryInfo;
 
-        public NewQueryScriptEvent(ConnectionInfo info)
+        public NewQueryScriptEvent(ConnectionProperty info)
         {
                 this.connectionInfo = info;
         }

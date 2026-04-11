@@ -1,7 +1,7 @@
 package com.changhong.opendb.app.repository;
 
 import com.changhong.opendb.app.Users;
-import com.changhong.opendb.app.model.ConnectionInfo;
+import com.changhong.opendb.app.model.ConnectionProperty;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.utils.FileUtils;
 import com.changhong.opendb.app.utils.JSONUtils;
@@ -64,10 +64,10 @@ public class ConnectionRepository
                 saveConnection(newName, content);
         }
 
-        public static List<ConnectionInfo> loadConnections()
+        public static List<ConnectionProperty> loadConnections()
         {
                 File[] files = Users.connectionDir.listFiles();
-                List<ConnectionInfo> ret = new ArrayList<>();
+                List<ConnectionProperty> ret = new ArrayList<>();
 
                 if (files == null)
                         return ret;
@@ -83,14 +83,14 @@ public class ConnectionRepository
                         try (FileInputStream fis = new FileInputStream(odbc)) {
                                 byte[] bytes = fis.readAllBytes();
                                 String content = new String(bytes, StandardCharsets.UTF_8);
-                                ret.add(JSONUtils.toJavaObject(content, ConnectionInfo.class));
+                                ret.add(JSONUtils.toJavaObject(content, ConnectionProperty.class));
                         } catch (Exception e) {
                                 VFXDialogHelper.alert(e);
                         }
                 }
 
                 Collator collator = Collator.getInstance(Locale.CHINA);
-                ret.sort(Comparator.comparing(ConnectionInfo::getName, collator));
+                ret.sort(Comparator.comparing(ConnectionProperty::getName, collator));
 
                 return ret;
         }

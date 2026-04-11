@@ -1,6 +1,6 @@
 package com.changhong.opendb.app.ui.dialog.connection;
 
-import com.changhong.opendb.app.model.ConnectionInfo;
+import com.changhong.opendb.app.model.ConnectionProperty;
 import com.changhong.opendb.app.ui.pane.PropertyGridPane;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
  */
 class ConnectionGeneralPane extends PropertyGridPane
 {
-        private final ConnectionInfo info;
+        private final ConnectionProperty info;
 
         private final TextField name = new TextField();
         private final TextField host = new TextField();
@@ -22,7 +22,7 @@ class ConnectionGeneralPane extends PropertyGridPane
         private final PasswordField password = new PasswordField();
         private final CheckBox savePassword = new CheckBox("保存密码");
 
-        public ConnectionGeneralPane(ConnectionInfo info)
+        public ConnectionGeneralPane(ConnectionProperty info)
         {
                 super();
                 this.info = info;

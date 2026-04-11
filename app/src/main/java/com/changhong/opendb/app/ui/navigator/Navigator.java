@@ -10,7 +10,7 @@ import com.changhong.opendb.app.core.event.EventListener;
 import com.changhong.opendb.app.core.event.RefreshConnectionEvent;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.navigator.node.ODBNConnection;
-import com.changhong.opendb.app.model.ConnectionInfo;
+import com.changhong.opendb.app.model.ConnectionProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -199,7 +199,7 @@ public class Navigator extends VBox implements EventListener
         private void refreshODBNConnection()
         {
                 List<ODBNConnection> removeList = new ArrayList<>();
-                List<ConnectionInfo> models = ConnectionRepository.loadConnections();
+                List<ConnectionProperty> models = ConnectionRepository.loadConnections();
 
                 connections.forEach((k, v) -> {
                         boolean isMatch = models.stream()
@@ -218,7 +218,7 @@ public class Navigator extends VBox implements EventListener
                         }
                 }
 
-                for (ConnectionInfo info : models) {
+                for (ConnectionProperty info : models) {
                         if (connections.containsKey(info.getName()))
                                 continue;
 

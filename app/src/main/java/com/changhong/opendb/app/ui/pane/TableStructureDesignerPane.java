@@ -1,7 +1,7 @@
 package com.changhong.opendb.app.ui.pane;
 
-import com.changhong.opendb.app.driver.*;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
+import com.changhong.driver.api.*;
+import com.changhong.driver.mysql.MySQL;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.widgets.VFXIconButton;
 import com.changhong.opendb.app.ui.widgets.VFXSeparator;
@@ -29,10 +29,11 @@ import java.util.*;
 public class TableStructureDesignerPane extends DetailPane
 {
         private final Tab ownerTab;
-        private final SQLExecutor executor;
-        private final TableMetaData tableMetaData;
-        private final VFXTableView<ColumnMetaData> structureView = new VFXTableView<>();
-        private final VFXTableView<TableIndexMetaData> indexView = new VFXTableView<>();
+        private final Session session;
+        private final Driver driver;
+        private final Table table;
+        private final VFXTableView<Column> structureView = new VFXTableView<>();
+        private final VFXTableView<Index> indexView = new VFXTableView<>();
         private final ToolBar toolBar = new ToolBar();
         private final TabPane tabPane = new TabPane();
         private final Tab structureTab = new Tab("表结构");
@@ -46,27 +47,29 @@ public class TableStructureDesignerPane extends DetailPane
         private Node oldGraphic;
         private final ProgressIndicator progressIndicator = Assets.newProgressIndicator();
 
-        private List<ColumnMetaData> columnMetaDatas;
-        private List<TableIndexMetaData> indexes;
+        private List<Column> columnMetaDatas;
+        private List<Index> indexes;
 
-        private final Designer<ColumnMetaData> tableStructureDesigner;
-        private final Designer<TableIndexMetaData> indexColumnDesigner;
+        private final Designer<Column> tableStructureDesigner;
+        private final Designer<Index> indexColumnDesigner;
 
         /* 当前选中标签对应的设计接口 */
         private Designer<?> designer;
 
         public TableStructureDesignerPane(Tab ownerTab,
-                                          SQLExecutor executor,
-                                          TableMetaData tableMetaData)
+                                          Session session,
+                                          Driver driver,
+                                          Table table)
         {
                 this.ownerTab = ownerTab;
-                this.executor = executor;
-                this.tableMetaData = tableMetaData;
-                this.columnMetaDatas = executor.getColumns(tableMetaData);
-                this.indexes = executor.getIndexes(tableMetaData);
+                this.session = session;
+                this.driver = driver;
+                this.table = table;
+                this.columnMetaDatas = driver.getColumns(session, table.getName());
+                this.indexes = driver.getIndexes(session, table);
 
-                this.tableStructureDesigner = new MySQLTableStructureDesigner(tableMetaData, executor, "表结构");
-                this.indexColumnDesigner = new MySQLIndexStructureDesigner(tableMetaData, executor, "索引");
+                this.tableStructureDesigner = new MySQLTableStructureDesigner(session, driver, table, "表结构");
+                this.indexColumnDesigner = new MySQLIndexStructureDesigner(session, driver, table, "索引");
 
                 setupToolBar();
 
@@ -141,14 +144,14 @@ public class TableStructureDesignerPane extends DetailPane
         {
                 switch (designer) {
                         case MySQLTableStructureDesigner inst -> {
-                                ColumnMetaData columnMetaData = new ColumnMetaData();
+                                Column columnMetaData = new Column();
                                 inst.applyPlus(columnMetaData);
                                 structureView.getItems().add(columnMetaData);
                                 structureView.refresh();
                         }
 
                         case MySQLIndexStructureDesigner inst -> {
-                                TableIndexMetaData indexMetaData = new TableIndexMetaData();
+                                Index indexMetaData = new Index();
                                 inst.applyPlus(indexMetaData);
                                 indexView.getItems().add(indexMetaData);
                                 indexView.refresh();
@@ -179,8 +182,8 @@ public class TableStructureDesignerPane extends DetailPane
                 new Thread(() -> {
                         try {
                                 switch (designer) {
-                                        case MySQLTableStructureDesigner inst -> inst.applyMinus((Collection<ColumnMetaData>) items);
-                                        case MySQLIndexStructureDesigner inst -> inst.applyMinus((Collection<TableIndexMetaData>) items);
+                                        case MySQLTableStructureDesigner inst -> inst.applyMinus((Collection<Column>) items);
+                                        case MySQLIndexStructureDesigner inst -> inst.applyMinus((Collection<Index>) items);
                                         default -> throw new UnsupportedOperationException("Unsupported designer object instance");
                                 }
                                 doReload();
@@ -226,10 +229,10 @@ public class TableStructureDesignerPane extends DetailPane
 
         private void doReload()
         {
-                this.columnMetaDatas = executor.getColumns(tableMetaData);
+                this.columnMetaDatas = driver.getColumns(session, table);
                 tableStructureDesigner.onReload(columnMetaDatas);
 
-                this.indexes = executor.getIndexes(tableMetaData);
+                this.indexes = driver.getIndexes(session, table);
                 indexColumnDesigner.onReload(indexes);
 
                 Platform.runLater(() -> {
@@ -250,18 +253,18 @@ public class TableStructureDesignerPane extends DetailPane
                 structureView.getSelectionModel().setCellSelectionEnabled(true);
                 structureView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-                VFXTableColumnFactory<ColumnMetaData> factory = new VFXTableColumnFactory<>();
+                VFXTableColumnFactory<Column> factory = new VFXTableColumnFactory<>();
 
                 factory.setOnEditCommitEventListener(tableStructureDesigner::onCommitEdit);
 
                 // 列
-                TableColumn<ColumnMetaData, String> name = factory.createEditableColumn("名称", "name");
-                TableColumn<ColumnMetaData, String> type = factory.createEditableColumn("类型", "type");
-                TableColumn<ColumnMetaData, String> defaultValue = factory.createEditableColumn("默认值", "defaultValue");
-                TableColumn<ColumnMetaData, Boolean> nullable = factory.createEditableColumn("是否允许NULL", "nullable");
-                TableColumn<ColumnMetaData, Boolean> primary = factory.createEditableColumn("主键", "primary");
-                TableColumn<ColumnMetaData, Boolean> autoIncrement = factory.createEditableColumn("是否自增", "autoIncrement");
-                TableColumn<ColumnMetaData, String> comment = factory.createEditableColumn("注释", "comment");
+                TableColumn<Column, String> name = factory.createEditableColumn("名称", "name");
+                TableColumn<Column, String> type = factory.createEditableColumn("类型", "type");
+                TableColumn<Column, String> defaultValue = factory.createEditableColumn("默认值", "defaultValue");
+                TableColumn<Column, Boolean> nullable = factory.createEditableColumn("是否允许NULL", "nullable");
+                TableColumn<Column, Boolean> primary = factory.createEditableColumn("主键", "primary");
+                TableColumn<Column, Boolean> autoIncrement = factory.createEditableColumn("是否自增", "autoIncrement");
+                TableColumn<Column, String> comment = factory.createEditableColumn("注释", "comment");
 
                 name.setCellFactory(c -> new VFXTextFieldTableCell<>());
                 type.setCellFactory(c -> new VFXTextFieldTableCell<>());
@@ -295,17 +298,17 @@ public class TableStructureDesignerPane extends DetailPane
         {
                 indexView.enableCellEdit();
 
-                VFXTableColumnFactory<TableIndexMetaData> factory = new VFXTableColumnFactory<>();
+                VFXTableColumnFactory<Index> factory = new VFXTableColumnFactory<>();
 
                 factory.setOnEditCommitEventListener(indexColumnDesigner::onCommitEdit);
 
-                TableColumn<TableIndexMetaData, String> name = factory.createEditableColumn("名称", "name");
-                TableColumn<TableIndexMetaData, String> columns = factory.createEditableColumn("索引列", "columnsText");
-                TableColumn<TableIndexMetaData, String> type = factory.createEditableColumn("类型", "type");
+                TableColumn<Index, String> name = factory.createEditableColumn("名称", "name");
+                TableColumn<Index, String> columns = factory.createEditableColumn("索引列", "columnsText");
+                TableColumn<Index, String> type = factory.createEditableColumn("类型", "type");
 
                 name.setCellFactory(c -> new VFXTextFieldTableCell<>());
                 columns.setCellFactory(c -> new VFXTextFieldTableCell<>());
-                type.setCellFactory(c -> new VFXComboBoxTableCell<>(executor.getIndexTypes()));
+                type.setCellFactory(c -> new VFXComboBoxTableCell<>(driver.getIndexTypes()));
 
                 name.setPrefWidth(150);
                 columns.setPrefWidth(350);
@@ -313,8 +316,8 @@ public class TableStructureDesignerPane extends DetailPane
 
                 indexView.getColumns().addAll(name, columns, type);
 
-                if (executor.getProductMetaData().getMajorVersion() >= MySQL.VERSION_8x) {
-                        TableColumn<TableIndexMetaData, Boolean> visible = factory.createEditableColumn("是否可见", "visible");
+                if (driver.getProductMetaData().getMajorVersion() >= MySQL.VERSION_8x) {
+                        TableColumn<Index, Boolean> visible = factory.createEditableColumn("是否可见", "visible");
                         visible.setCellValueFactory(new PropertyValueFactory<>("visible"));
                         visible.setCellFactory(c -> new VFXCheckBoxTableCell<>());
                         visible.setPrefWidth(120);

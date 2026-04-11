@@ -1,8 +1,9 @@
 package com.changhong.opendb.app.ui.pane;
 
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
-import com.changhong.opendb.app.driver.MutableDataGrid;
-import com.changhong.opendb.app.driver.TableMetaData;
+import com.changhong.driver.api.DataGrid;
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.Session;
+import com.changhong.driver.api.Table;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
@@ -22,23 +23,23 @@ public class PreviewTableDataPane extends BorderPane
         private Node oldGraphic;
 
         private final Tab ownerTab;
-        private final SQLExecutor sqlExecutor;
-        private final String database;
-        private final TableMetaData tableInfo;
-        private final MutableDataGridViewPane mutableDataGridViewPane;
+        private final Driver driver;
+        private final Session session;
+        private final Table table;
+        private final DataGridViewPane mutableDataGridViewPane;
 
         public PreviewTableDataPane(Tab ownerTab,
-                                    SQLExecutor sqlExecutor,
-                                    String database,
-                                    TableMetaData tableInfo)
+                                    Session session,
+                                    Driver driver,
+                                    Table table)
         {
                 this.ownerTab = ownerTab;
-                this.sqlExecutor = sqlExecutor;
-                this.database = database;
-                this.tableInfo = tableInfo;
-                this.mutableDataGridViewPane = new MutableDataGridViewPane(true);
+                this.session = session;
+                this.driver = driver;
+                this.table = table;
+                this.mutableDataGridViewPane = new DataGridViewPane(true);
 
-                mutableDataGridViewPane.setReloadProgressListener(new MutableDataGridViewPane.ReloadProgressListener()
+                mutableDataGridViewPane.setReloadProgressListener(new DataGridViewPane.ReloadProgressListener()
                 {
                         @Override
                         public void start()
@@ -73,10 +74,7 @@ public class PreviewTableDataPane extends BorderPane
 
                 new Thread(() -> {
                         try {
-                                MutableDataGrid rs = sqlExecutor.selectByPage(
-                                        tableInfo,
-                                        start,
-                                        size);
+                                DataGrid rs = driver.selectByPage(session, table.getName(), start, size);
                                 Platform.runLater(() -> mutableDataGridViewPane.render(rs));
                         } catch (Exception e) {
                                 VFXDialogHelper.alert(e);

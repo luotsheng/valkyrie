@@ -3,6 +3,7 @@ package com.changhong.driver.api.sql;
 import com.changhong.driver.api.DataGrid;
 import com.changhong.driver.api.Dialect;
 import com.changhong.driver.api.Session;
+import com.changhong.driver.api.Table;
 
 /**
  * SQL 执行器（统一入口）
@@ -50,7 +51,7 @@ public interface SQLExecutor
          * }</pre>
          *
          * @param session 会话上下文，用于设置连接的 catalog 和 schema（不能为 {@code null}）
-         * @param sql     原始 SQL 查询语句（不能为 {@code null} 或空白字符串）
+         * @param table   表名（不能为 {@code null} 或空白字符串）
          * @param off     起始偏移量（从 0 开始），表示跳过前 {@code off} 条记录
          * @param size    每页返回的最大记录数（必须大于 0）
          * @return 包含分页结果的数据网格，至少包含当前页的数据行；若结果集为空，返回的网格中行列表为空
@@ -59,7 +60,7 @@ public interface SQLExecutor
          * @see Dialect#limit(String, int, int)
          * @see DataGrid
          */
-        DataGrid selectByPage(Session session, String sql, int off, int size);
+        DataGrid selectByPage(Session session, String table, int off, int size);
 
         /**
          * 执行 SQL 任务

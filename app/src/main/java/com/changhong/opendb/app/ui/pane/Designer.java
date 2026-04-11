@@ -1,8 +1,9 @@
 package com.changhong.opendb.app.ui.pane;
 
-import com.changhong.opendb.app.driver.TableIndexMetaData;
-import com.changhong.opendb.app.driver.TableMetaData;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.Index;
+import com.changhong.driver.api.Session;
+import com.changhong.driver.api.Table;
 import javafx.scene.control.Tab;
 import lombok.Getter;
 
@@ -24,15 +25,17 @@ public abstract class Designer<T>
 {
         private final Tab tab;
 
-        protected final TableMetaData tableMetaData;
-        protected final SQLExecutor executor;
+        protected final Session session;
+        protected final Driver driver;
+        protected final Table table;
 
-        private final Map<Integer, TableIndexMetaData> tableIndexMetaDataUpdateBuffer = new HashMap<>();
+        private final Map<Integer, Index> tableIndexMetaDataUpdateBuffer = new HashMap<>();
 
-        public Designer(TableMetaData tableMetaData, SQLExecutor executor, String name)
+        public Designer(Session session, Driver driver, Table table, String name)
         {
-                this.tableMetaData = tableMetaData;
-                this.executor = executor;
+                this.session = session;
+                this.driver = driver;
+                this.table = table;
                 this.tab = new Tab(name);
         }
 

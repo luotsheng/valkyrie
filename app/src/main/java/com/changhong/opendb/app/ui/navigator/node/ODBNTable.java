@@ -1,11 +1,11 @@
 package com.changhong.opendb.app.ui.navigator.node;
 
+import com.changhong.driver.api.Driver;
+import com.changhong.driver.api.Table;
 import com.changhong.opendb.app.VFXApplication;
 import com.changhong.opendb.app.core.event.EventBus;
-import com.changhong.opendb.app.core.event.NewMutableDataGridPaneEvent;
+import com.changhong.opendb.app.core.event.OpenDataGridPaneEvent;
 import com.changhong.opendb.app.core.event.OpenDesignTablePaneEvent;
-import com.changhong.opendb.app.driver.executor.SQLExecutor;
-import com.changhong.opendb.app.driver.TableMetaData;
 import com.changhong.opendb.app.resource.Assets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -18,18 +18,19 @@ import javafx.scene.input.MouseEvent;
 @SuppressWarnings("FieldCanBeLocal")
 public class ODBNTable extends ODBNode
 {
-        private final SQLExecutor sqlExecutor;
+        private final Driver driver;
         private final ODBNDatabase database;
-        private final TableMetaData table;
+        private final Table table;
 
-        public ODBNTable(SQLExecutor sqlExecutor,
+        public ODBNTable(Driver driver,
                          ODBNDatabase database,
-                         TableMetaData table)
+                         Table table)
         {
                 super(table.getName());
-                this.database = database;
                 setGraphic(Assets.use("table"));
-                this.sqlExecutor = sqlExecutor;
+
+                this.database = database;
+                this.driver = driver;
                 this.table = table;
         }
 
@@ -52,8 +53,9 @@ public class ODBNTable extends ODBNode
                 MenuItem designTableItem = new MenuItem("设计表");
                 designTableItem.setOnAction(event -> {
                         EventBus.publish(new OpenDesignTablePaneEvent(
-                                sqlExecutor,
                                 database.getConnection().getName(),
+                                database.getSession(),
+                                driver,
                                 table));
                 });
 
@@ -68,6 +70,10 @@ public class ODBNTable extends ODBNode
         @Override
         public void onMouseDoubleClickEvent(MouseEvent event)
         {
-                EventBus.publish(new NewMutableDataGridPaneEvent(sqlExecutor, database.getName(), table));
+                EventBus.publish(new OpenDataGridPaneEvent(database.getSession(),
+                        driver,
+                        database.getName(),
+                        table,
+                        database.getConnection().getName()));
         }
 }

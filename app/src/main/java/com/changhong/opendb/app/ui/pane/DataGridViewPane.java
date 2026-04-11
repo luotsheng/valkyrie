@@ -1,11 +1,12 @@
 package com.changhong.opendb.app.ui.pane;
 
+import com.changhong.driver.api.Column;
+import com.changhong.driver.api.DataGrid;
+import com.changhong.driver.api.GridRow;
 import com.changhong.opendb.app.VFXApplication;
-import com.changhong.opendb.app.driver.ColumnMetaData;
-import com.changhong.opendb.app.driver.Row;
-import com.changhong.opendb.app.driver.MutableDataGrid;
 import com.changhong.opendb.app.resource.Assets;
-import com.changhong.opendb.app.ui.widgets.*;
+import com.changhong.opendb.app.ui.widgets.VFXIconButton;
+import com.changhong.opendb.app.ui.widgets.VFXSeparator;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableView;
 import com.changhong.opendb.app.ui.widgets.table.cell.VFXTextFieldTableCell;
@@ -20,7 +21,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -36,11 +36,11 @@ import static com.changhong.string.StringStaticize.strwfmt;
  * @since 2026/3/30
  */
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
-public class MutableDataGridViewPane extends BorderPane
+public class DataGridViewPane extends BorderPane
 {
         private final TabPane tabPane = new TabPane();
         private final Tab dataGridTab = new Tab();
-        private final VFXTableView<Row> tableView = new VFXTableView<>();
+        private final VFXTableView<GridRow> tableView = new VFXTableView<>();
         private final ToolBar toolBar = new ToolBar();
         private final VBox vContainer;
         private final boolean isPreview;
@@ -53,7 +53,7 @@ public class MutableDataGridViewPane extends BorderPane
 
         private final Node progressIndicator = Assets.newProgressIndicator();
 
-        private MutableDataGrid grid;
+        private DataGrid grid;
 
         public interface ReloadProgressListener {
                 void start();
@@ -70,7 +70,7 @@ public class MutableDataGridViewPane extends BorderPane
         @Setter
         private ReloadProgressListener reloadProgressListener;
 
-        public MutableDataGridViewPane(boolean isPreview)
+        public DataGridViewPane(boolean isPreview)
         {
                 this.isPreview = isPreview;
 
@@ -286,9 +286,9 @@ public class MutableDataGridViewPane extends BorderPane
                         filtered.setPredicate(cell -> cell.getRow() == ROW);
 
                         filtered.forEach(cell -> {
-                                List<String> tableRow = (List<String>) cell.getTableView()
+                                List<String> tableGridRow = (List<String>) cell.getTableView()
                                         .getItems().get(ROW);
-                                String text = tableRow.get(cell.getColumn());
+                                String text = tableGridRow.get(cell.getColumn());
 
                                 if (strnempty(text))
                                         builder.append(text);
@@ -333,7 +333,7 @@ public class MutableDataGridViewPane extends BorderPane
                 grid.addUpdateRow(cell.getColumnIndex(), cell.getRowIndex(), cell.getNewValue());
         }
 
-        public void render(MutableDataGrid grid)
+        public void render(DataGrid grid)
         {
                 if (this.grid != grid) {
                         this.grid = grid;
@@ -353,7 +353,7 @@ public class MutableDataGridViewPane extends BorderPane
                 for (int i = 0; i < grid.getColumns().size(); i++) {
                         int index = i;
 
-                        ColumnMetaData columnMetaData = grid.getColumns().get(i);
+                        Column columnMetaData = grid.getColumns().get(i);
                         StringBuilder labelBuilder = new StringBuilder(columnMetaData.getLabel());
 
                         if (grid.isEditable()) {
@@ -366,7 +366,7 @@ public class MutableDataGridViewPane extends BorderPane
 
                         String label = labelBuilder.toString();
 
-                        TableColumn<Row, String> col =
+                        TableColumn<GridRow, String> col =
                                 new TableColumn<>(label);
 
                         col.setEditable(true);
@@ -384,7 +384,7 @@ public class MutableDataGridViewPane extends BorderPane
                 );
         }
 
-        private static int calcColWidth(String colText, List<Row> values, int index)
+        private static int calcColWidth(String colText, List<GridRow> values, int index)
         {
                 int V = 12, MAX = 200;
                 int SCALE = 1;
