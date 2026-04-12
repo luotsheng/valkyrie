@@ -39,7 +39,7 @@ public class ODBNQuery extends ODBNode
         {
                 ContextMenu menu = new ContextMenu();
 
-                MenuItem openNewTabQueryItem = new MenuItem("在新标签打开");
+                MenuItem openNewTabQueryItem = new MenuItem("打开查询脚本");
                 openNewTabQueryItem.setOnAction(event -> openNewTabQuery());
 
                 MenuItem renameQueryItem = new MenuItem("重命名查询");
