@@ -4,7 +4,7 @@ import com.changhong.driver.api.Table;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.OpenDataGridPaneEvent;
 import com.changhong.opendb.app.resource.Assets;
-import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
+import com.changhong.opendb.app.ui.navigator.node.VDBDatabaseNode;
 import com.changhong.opendb.app.ui.widgets.*;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableColumn;
 import com.changhong.opendb.app.ui.widgets.table.VFXTableView;
@@ -35,7 +35,7 @@ public class CatalogBrowserPane extends BrowserPane
         private final TableView<Table> tableView;
         private final ToolBar toolBar;
 
-        private final ODBNDatabase database;
+        private final VDBDatabaseNode database;
 
         private TableColumn<Table, String> name;
         private TableColumn<Table, Date> createTime;
@@ -47,7 +47,7 @@ public class CatalogBrowserPane extends BrowserPane
 
         private ObservableList<Table> obs;
 
-        public CatalogBrowserPane(ODBNDatabase database)
+        public CatalogBrowserPane(VDBDatabaseNode database)
         {
                 this.database = database;
 

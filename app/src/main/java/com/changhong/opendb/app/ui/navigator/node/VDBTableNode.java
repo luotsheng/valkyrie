@@ -7,6 +7,7 @@ import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.OpenDataGridPaneEvent;
 import com.changhong.opendb.app.core.event.OpenDesignTablePaneEvent;
 import com.changhong.opendb.app.resource.Assets;
+import com.changhong.opendb.app.ui.navigator.VDBNode;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
@@ -16,15 +17,15 @@ import javafx.scene.input.MouseEvent;
  * @since 2026/3/25
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ODBNTable extends ODBNode
+public class VDBTableNode extends VDBNode
 {
         private final Driver driver;
-        private final ODBNDatabase database;
+        private final VDBDatabaseNode database;
         private final Table table;
 
-        public ODBNTable(Driver driver,
-                         ODBNDatabase database,
-                         Table table)
+        public VDBTableNode(Driver driver,
+                            VDBDatabaseNode database,
+                            Table table)
         {
                 super(table.getName());
                 setGraphic(Assets.use("table"));
@@ -35,7 +36,7 @@ public class ODBNTable extends ODBNode
         }
 
         @Override
-        public void onSelectedEvent(ODBNode node)
+        public void onSelectedEvent(VDBNode node)
         {
                 // database.onSelected();
         }

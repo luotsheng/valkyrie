@@ -8,6 +8,7 @@ import com.changhong.opendb.app.core.event.RemoveSqlEditorTabEvent;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.dialog.RenameQueryScriptDialog;
+import com.changhong.opendb.app.ui.navigator.VDBNode;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -21,12 +22,12 @@ import java.awt.*;
  * @since 2026/3/25
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ODBNQuery extends ODBNode
+public class VDBQueryNode extends VDBNode
 {
         private final QueryInfo queryInfo;
-        private final ODBNDatabase database;
+        private final VDBDatabaseNode database;
 
-        public ODBNQuery(ODBNDatabase database, QueryInfo queryInfo)
+        public VDBQueryNode(VDBDatabaseNode database, QueryInfo queryInfo)
         {
                 super(queryInfo.getName());
                 this.database = database;

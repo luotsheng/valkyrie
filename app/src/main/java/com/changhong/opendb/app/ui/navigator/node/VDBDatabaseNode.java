@@ -7,6 +7,7 @@ import com.changhong.opendb.app.core.event.*;
 import com.changhong.opendb.app.model.QueryInfo;
 import com.changhong.opendb.app.repository.QueryScriptRepository;
 import com.changhong.opendb.app.resource.Assets;
+import com.changhong.opendb.app.ui.navigator.VDBNode;
 import com.changhong.opendb.app.ui.pane.CatalogBrowserPane;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
@@ -29,10 +30,10 @@ import java.util.List;
 @SuppressWarnings({
         "FieldCanBeLocal"
 })
-public class ODBNDatabase extends ODBNode implements EventListener
+public class VDBDatabaseNode extends VDBNode implements EventListener
 {
         @Getter
-        private final ODBNConnection connection;
+        private final VDNConnectionNode connection;
         @Getter
         private final Driver driver;
         private boolean openFlag = false;
@@ -42,9 +43,9 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
         // Tree Items
         final TreeItem<String> tableItem
-                = new ODBInternalNode(this, "数据表", Assets.use("table"));;
+                = new VDBInternalNode(this, "数据表", Assets.use("table"));;
         final TreeItem<String> queryItem
-                = new ODBInternalNode(this, "查询脚本", Assets.use("sql"));;
+                = new VDBInternalNode(this, "查询脚本", Assets.use("sql"));;
 
         // Menu Items
         private MenuItem openOrCloseMenuItem;
@@ -57,11 +58,11 @@ public class ODBNDatabase extends ODBNode implements EventListener
         /**
          * 内部通用节点
          */
-        public static class ODBInternalNode extends ODBNode
+        public static class VDBInternalNode extends VDBNode
         {
-                private final ODBNDatabase parent;
+                private final VDBDatabaseNode parent;
 
-                public ODBInternalNode(ODBNDatabase parent, String name, ImageView icon)
+                public VDBInternalNode(VDBDatabaseNode parent, String name, ImageView icon)
                 {
                         super(name);
                         setGraphic(icon);
@@ -69,15 +70,15 @@ public class ODBNDatabase extends ODBNode implements EventListener
                 }
 
                 @Override
-                public void onSelectedEvent(ODBNode node)
+                public void onSelectedEvent(VDBNode node)
                 {
                         parent.onSelectedEvent(node);
                 }
         }
 
-        public ODBNDatabase(ODBNConnection connection,
-                            Driver driver,
-                            String name)
+        public VDBDatabaseNode(VDNConnectionNode connection,
+                               Driver driver,
+                               String name)
         {
                 super(name);
                 this.connection = connection;
@@ -94,7 +95,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
 
         private void setupTableNode()
         {
-                var node = (ODBNode) tableItem;
+                var node = (VDBNode) tableItem;
 
                 ContextMenu nodeContextMenu = new ContextMenu();
 
@@ -166,7 +167,7 @@ public class ODBNDatabase extends ODBNode implements EventListener
                 tableItem.getChildren().clear();
 
                 for (Table table : tables) {
-                        ODBNTable tableNode = new ODBNTable(driver, this, table);
+                        VDBTableNode tableNode = new VDBTableNode(driver, this, table);
                         tableNode.setSelectedEvent(this::onSelected);
                         tableItem.getChildren().add(tableNode);
                 }
@@ -178,10 +179,10 @@ public class ODBNDatabase extends ODBNode implements EventListener
         {
                 queryItem.getChildren().clear();
                 List<QueryInfo> queryInfos = QueryScriptRepository.loadQueryInfo(connection, this);
-                queryInfos.forEach(query -> queryItem.getChildren().add(new ODBNQuery(this, query)));
+                queryInfos.forEach(query -> queryItem.getChildren().add(new VDBQueryNode(this, query)));
         }
 
-        public void onSelected(ODBNode node)
+        public void onSelected(VDBNode node)
         {
                 if (openFlag && node == tableItem)
                         EventBus.publish(openWorkbenchPaneEvent);

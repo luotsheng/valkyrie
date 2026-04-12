@@ -11,6 +11,6 @@ import java.io.File;
 public class Users
 {
         public static final String userHome = System.getProperty("user.home");
-        public static final File baseDir = new File(userHome, ".odb");
+        public static final File baseDir = new File(userHome, ".vdb");
         public static final File connectionDir = new File(baseDir, "C");
 }

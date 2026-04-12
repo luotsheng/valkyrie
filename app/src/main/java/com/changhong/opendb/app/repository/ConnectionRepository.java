@@ -26,17 +26,17 @@ public class ConnectionRepository
         public static void saveConnection(String name, String content)
         {
                 File dir = new File(Users.connectionDir, name);
-                File odbc = new File(dir, ".odbc");
+                File vdbc = new File(dir, ".vdbc");
 
-                if (odbc.exists())
+                if (vdbc.exists())
                         VFXDialogHelper.alert(name + "已存在！");
 
                 dir.mkdirs();
 
-                if (!odbc.exists())
-                        VFXDialogHelper.runWith(odbc::createNewFile);
+                if (!vdbc.exists())
+                        VFXDialogHelper.runWith(vdbc::createNewFile);
 
-                try (FileOutputStream fos = new FileOutputStream(odbc)) {
+                try (FileOutputStream fos = new FileOutputStream(vdbc)) {
 
                         fos.write(content.getBytes(StandardCharsets.UTF_8));
 
@@ -57,9 +57,9 @@ public class ConnectionRepository
                         oldDir.renameTo(newDir);
                 }
 
-                File odbc = new File(newDir, ".odbc");
+                File vdbc = new File(newDir, ".vdbc");
 
-                FileUtils.forceDelete(odbc);
+                FileUtils.forceDelete(vdbc);
 
                 saveConnection(newName, content);
         }
@@ -73,14 +73,14 @@ public class ConnectionRepository
                         return ret;
 
                 for (File file : files) {
-                        File odbc = new File(file, ".odbc");
+                        File vdbc = new File(file, ".vdbc");
 
                         if (FileUtils.isDeepEmptyDirectory(file)) {
                                 FileUtils.forceDelete(file);
                                 continue;
                         }
 
-                        try (FileInputStream fis = new FileInputStream(odbc)) {
+                        try (FileInputStream fis = new FileInputStream(vdbc)) {
                                 byte[] bytes = fis.readAllBytes();
                                 String content = new String(bytes, StandardCharsets.UTF_8);
                                 ret.add(JSONUtils.toJavaObject(content, ConnectionProperty.class));

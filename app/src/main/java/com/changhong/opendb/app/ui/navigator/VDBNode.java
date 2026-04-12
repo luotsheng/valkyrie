@@ -1,4 +1,4 @@
-package com.changhong.opendb.app.ui.navigator.node;
+package com.changhong.opendb.app.ui.navigator;
 
 import com.changhong.opendb.app.resource.Assets;
 import javafx.scene.Node;
@@ -13,7 +13,7 @@ import lombok.Setter;
  * @since 2026/3/25
  */
 
-public abstract class ODBNode extends TreeItem<String>
+public abstract class VDBNode extends TreeItem<String>
 {
         /**
          *  节点名称
@@ -39,7 +39,7 @@ public abstract class ODBNode extends TreeItem<String>
 
         public interface SelectedEvent
         {
-                void call(ODBNode node);
+                void call(VDBNode node);
         }
 
         @Setter
@@ -47,7 +47,7 @@ public abstract class ODBNode extends TreeItem<String>
         @Setter
         private SelectedEvent selectedEvent;
 
-        public ODBNode(String name)
+        public VDBNode(String name)
         {
                 super(name);
                 this.name = name;
@@ -96,7 +96,7 @@ public abstract class ODBNode extends TreeItem<String>
         /**
          * 触发节点选中事件
          */
-        public void onSelectedEvent(ODBNode node)
+        public void onSelectedEvent(VDBNode node)
         {
                 if (selectedEvent != null)
                         selectedEvent.call(node);

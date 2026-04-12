@@ -1,15 +1,14 @@
 package com.changhong.opendb.app.ui.navigator;
 
-import com.changhong.opendb.app.model.ODBNStatus;
+import com.changhong.opendb.app.model.VDBNodeStatus;
 import com.changhong.opendb.app.ui.menu.ConnectionMenuBuilder;
-import com.changhong.opendb.app.ui.navigator.node.ODBNode;
 import com.changhong.opendb.app.repository.ConnectionRepository;
 import com.changhong.opendb.app.core.event.Event;
 import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.EventListener;
 import com.changhong.opendb.app.core.event.RefreshConnectionEvent;
 import com.changhong.opendb.app.resource.Assets;
-import com.changhong.opendb.app.ui.navigator.node.ODBNConnection;
+import com.changhong.opendb.app.ui.navigator.node.VDNConnectionNode;
 import com.changhong.opendb.app.model.ConnectionProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -36,7 +35,7 @@ public class Navigator extends VBox implements EventListener
         private final TreeView<String> treeView;
         private final ContextMenu rootContextMenu;
 
-        private final Map<String, ODBNConnection> connections
+        private final Map<String, VDNConnectionNode> connections
                 = new HashMap<>();
 
         public Navigator()
@@ -52,7 +51,7 @@ public class Navigator extends VBox implements EventListener
                 setupMouseClickListener();
                 setupTreeNodeSelectedEvent();
                 initializeLayout();
-                refreshODBNConnection();
+                refreshConnectionNode();
 
                 treeView.getRoot().setExpanded(true);
         }
@@ -61,7 +60,7 @@ public class Navigator extends VBox implements EventListener
         public void onEvent(Event event)
         {
                 if (event instanceof RefreshConnectionEvent)
-                        refreshODBNConnection();
+                        refreshConnectionNode();
         }
 
         private TabPane createTabPane()
@@ -111,7 +110,7 @@ public class Navigator extends VBox implements EventListener
                         refreshAllItem);
 
                 /* 设置事件 */
-                refreshAllItem.setOnAction(event -> refreshODBNConnection());
+                refreshAllItem.setOnAction(event -> refreshConnectionNode());
 
                 return rootContextMenu;
         }
@@ -138,8 +137,8 @@ public class Navigator extends VBox implements EventListener
                                         return;
                                 }
 
-                                if (item instanceof ODBNode odbNode) {
-                                        odbNode.showContextMenu(cell, x, y);
+                                if (item instanceof VDBNode vdbNode) {
+                                        vdbNode.showContextMenu(cell, x, y);
                                         return;
                                 }
                         }
@@ -154,8 +153,8 @@ public class Navigator extends VBox implements EventListener
                         .addListener((observable, oldVal, newVal) -> {
                                 TreeItem<String> treeItem = treeView.getTreeItem(newVal.intValue());
 
-                                if (treeItem instanceof ODBNode odbNode) {
-                                        odbNode.onSelectedEvent(odbNode);
+                                if (treeItem instanceof VDBNode vdbNode) {
+                                        vdbNode.onSelectedEvent(vdbNode);
                                 }
 
                         });
@@ -173,10 +172,10 @@ public class Navigator extends VBox implements EventListener
                                 if (node instanceof TreeCell<?> cell) {
                                         TreeItem<?> item = cell.getTreeItem();
 
-                                        if (!(item instanceof ODBNode odbNode))
+                                        if (!(item instanceof VDBNode vdbNode))
                                                 return;
 
-                                        odbNode.onMouseDoubleClickEvent(event);
+                                        vdbNode.onMouseDoubleClickEvent(event);
                                 }
 
                                 event.consume();
@@ -196,9 +195,9 @@ public class Navigator extends VBox implements EventListener
                 setVgrow(tabPane, Priority.ALWAYS);
         }
 
-        private void refreshODBNConnection()
+        private void refreshConnectionNode()
         {
-                List<ODBNConnection> removeList = new ArrayList<>();
+                List<VDNConnectionNode> removeList = new ArrayList<>();
                 List<ConnectionProperty> models = ConnectionRepository.loadConnections();
 
                 connections.forEach((k, v) -> {
@@ -212,7 +211,7 @@ public class Navigator extends VBox implements EventListener
                 ObservableList<TreeItem<String>> children = treeView.getRoot().getChildren();
 
                 if (!removeList.isEmpty()) {
-                        for (ODBNConnection connection : removeList) {
+                        for (VDNConnectionNode connection : removeList) {
                                 children.remove(connection);
                                 connections.remove(connection.getName());
                         }
@@ -222,8 +221,8 @@ public class Navigator extends VBox implements EventListener
                         if (connections.containsKey(info.getName()))
                                 continue;
 
-                        ODBNConnection connection = new ODBNConnection(info);
-                        ODBNStatus.getInstance().addConnection(connection);
+                        VDNConnectionNode connection = new VDNConnectionNode(info);
+                        VDBNodeStatus.getInstance().addConnection(connection);
                         connections.put(info.getName(), connection);
                         children.add(connection);
                 }

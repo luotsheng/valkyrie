@@ -2,8 +2,8 @@ package com.changhong.opendb.app.repository;
 
 import com.changhong.opendb.app.Users;
 import com.changhong.opendb.app.model.QueryInfo;
-import com.changhong.opendb.app.ui.navigator.node.ODBNConnection;
-import com.changhong.opendb.app.ui.navigator.node.ODBNDatabase;
+import com.changhong.opendb.app.ui.navigator.node.VDNConnectionNode;
+import com.changhong.opendb.app.ui.navigator.node.VDBDatabaseNode;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 
 import java.io.File;
@@ -53,7 +53,7 @@ public class QueryScriptRepository
                 return sqlFile;
         }
 
-        public static List<QueryInfo> loadQueryInfo(ODBNConnection connection, ODBNDatabase database)
+        public static List<QueryInfo> loadQueryInfo(VDNConnectionNode connection, VDBDatabaseNode database)
         {
                 List<QueryInfo> queryInfos = new ArrayList<>();
 

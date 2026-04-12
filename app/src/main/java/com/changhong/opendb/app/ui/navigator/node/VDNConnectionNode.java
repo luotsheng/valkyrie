@@ -4,9 +4,10 @@ import com.changhong.driver.api.Driver;
 import com.changhong.driver.api.PooledDataSource;
 import com.changhong.driver.mysql.MySQLDriver;
 import com.changhong.opendb.app.model.ConnectionProperty;
-import com.changhong.opendb.app.model.ODBNStatus;
+import com.changhong.opendb.app.model.VDBNodeStatus;
 import com.changhong.opendb.app.resource.Assets;
 import com.changhong.opendb.app.ui.dialog.connection.ConnectionDialog;
+import com.changhong.opendb.app.ui.navigator.VDBNode;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -24,7 +25,7 @@ import java.util.List;
  * @since 2026/3/25
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ODBNConnection extends ODBNode
+public class VDNConnectionNode extends VDBNode
 {
         @Getter
         private final ConnectionProperty info;
@@ -40,13 +41,13 @@ public class ODBNConnection extends ODBNode
         private MenuItem editMenuItem;
 
         @Getter
-        private final List<ODBNDatabase> databases = new ArrayList<>();
+        private final List<VDBDatabaseNode> databases = new ArrayList<>();
 
         @Setter
         @Getter
-        private ODBNDatabase selectedDatabase;
+        private VDBDatabaseNode selectedDatabase;
 
-        public ODBNConnection(ConnectionProperty info)
+        public VDNConnectionNode(ConnectionProperty info)
         {
                 super(info.getName());
                 setGraphic(Assets.use("database0"));
@@ -84,14 +85,14 @@ public class ODBNConnection extends ODBNode
                 setExpanded(false);
 
                 getChildren().forEach(db -> {
-                        if (db instanceof ODBNDatabase odb)
-                                odb.closeDatabase();
+                        if (db instanceof VDBDatabaseNode vdb)
+                                vdb.closeDatabase();
                 });
 
                 databases.clear();
                 getChildren().clear();
                 VFXDialogHelper.runWith(dataSource::close);
-                ODBNStatus.getInstance().removeConnection(this);
+                VDBNodeStatus.getInstance().removeConnection(this);
 
                 openFlag = false;
         }
@@ -142,9 +143,9 @@ public class ODBNConnection extends ODBNode
         }
 
         @Override
-        public void onSelectedEvent(ODBNode node)
+        public void onSelectedEvent(VDBNode node)
         {
-                ODBNStatus.getInstance().selectedConnection(this);
+                VDBNodeStatus.getInstance().selectedConnection(this);
         }
 
         private void setupListenerEvent()
@@ -155,7 +156,7 @@ public class ODBNConnection extends ODBNode
         private void setupDatabases(List<String> databaseNames)
         {
                 for (String name : databaseNames)
-                        databases.add(new ODBNDatabase(this, driver, name));
+                        databases.add(new VDBDatabaseNode(this, driver, name));
                 getChildren().addAll(databases);
         }
 
