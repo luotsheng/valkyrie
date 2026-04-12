@@ -5,7 +5,7 @@ import com.changhong.opendb.app.core.event.EventBus;
 import com.changhong.opendb.app.core.event.RefreshConnectionEvent;
 import com.changhong.opendb.app.model.ConnectionProperty;
 import com.changhong.opendb.app.repository.ConnectionRepository;
-import com.changhong.opendb.app.utils.Causes;
+import com.changhong.exception.Causes;
 import com.changhong.opendb.app.utils.JSONUtils;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.geometry.Insets;

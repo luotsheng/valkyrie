@@ -31,11 +31,12 @@ public class TableStructureDesigner extends Designer<Column>
         {
                 primaryBuffer.clear();
                 updateBuffer.clear();
+                primaryChange = false;
 
+                /* 重新加载页面时将原有主键保存起来 */
                 for (Column columnMetaData : values) {
                         if (columnMetaData.isPrimary())
                                 primaryBuffer.add(columnMetaData);
-                        primaryChange = false;
                 }
         }
 
@@ -70,7 +71,7 @@ public class TableStructureDesigner extends Designer<Column>
                 if (!updateBuffer.isEmpty())
                         driver.alterChange(session, table, updateBuffer);
 
-                if (!primaryBuffer.isEmpty() && primaryChange)
+                if (primaryChange)
                         driver.alterPrimaryKey(session, table, primaryBuffer);
         }
 

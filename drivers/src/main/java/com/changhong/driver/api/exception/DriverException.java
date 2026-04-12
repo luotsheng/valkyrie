@@ -1,34 +1,26 @@
 package com.changhong.driver.api.exception;
 
+import com.changhong.exception.Causes;
+import lombok.Getter;
+
+import java.sql.SQLException;
+
 /**
  * 驱动运行时异常
  *
  * @author Luo Tiansheng
  * @since 2026/4/11
  */
+@Getter
 public class DriverException extends RuntimeException
 {
-        public DriverException()
-        {
-        }
-
-        public DriverException(String message)
-        {
-                super(message);
-        }
-
-        public DriverException(String message, Throwable cause)
-        {
-                super(message, cause);
-        }
+        private int errorCode;
 
         public DriverException(Throwable cause)
         {
-                super(cause);
-        }
+                super(Causes.original(cause));
 
-        public DriverException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
-        {
-                super(message, cause, enableSuppression, writableStackTrace);
+                if (getCause() instanceof SQLException sql)
+                        errorCode = sql.getErrorCode();
         }
 }

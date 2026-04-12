@@ -17,7 +17,7 @@ import com.changhong.opendb.app.ui.widgets.VFXComboBox;
 import com.changhong.opendb.app.ui.widgets.VFXIconButton;
 import com.changhong.opendb.app.ui.widgets.VFXSeparator;
 import com.changhong.opendb.app.ui.widgets.dialog.VFXDialogHelper;
-import com.changhong.opendb.app.utils.Causes;
+import com.changhong.exception.Causes;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;

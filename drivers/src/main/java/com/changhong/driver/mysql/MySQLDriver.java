@@ -255,26 +255,33 @@ public class MySQLDriver extends Driver
         @Override
         public void alterPrimaryKey(Session session, String table, Collection<Column> primaryKeys)
         {
-                if (primaryKeys.isEmpty())
-                        return;
-
                 Column autoColumn = null;
 
-                for (Column primaryKey : primaryKeys) {
-                        if (primaryKey.isAutoIncrement()) {
-                                autoColumn = primaryKey;
-                                break;
+                if (!primaryKeys.isEmpty()) {
+                        for (Column primaryKey : primaryKeys) {
+                                if (primaryKey.isAutoIncrement()) {
+                                        autoColumn = primaryKey;
+                                        break;
+                                }
+                        }
+
+                        /* 先删除自增列 */
+                        if (autoColumn != null) {
+                                autoColumn.setAutoIncrement(false);
+                                alterChange(session, table, List.of(autoColumn));
                         }
                 }
 
-                /* 先删除自增列 */
-                if (autoColumn != null) {
-                        autoColumn.setAutoIncrement(false);
-                        alterChange(session, table, List.of(autoColumn));
+                /* 尝试删除主键 */
+                try {
+                        dropPrimaryKey(session, table);
+                } catch (DriverException e) {
+                        if (e.getErrorCode() != 1091)
+                                throw e;
                 }
 
-                /* 删除主键 */
-                dropPrimaryKey(session, table);
+                if (primaryKeys.isEmpty())
+                        return;
 
                 /* 重建主键 */
                 StringBuilder script = new StringBuilder();
