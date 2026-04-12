@@ -119,6 +119,9 @@ public class DataGrid
 
         public void addUpdateRow(int colIndex, int rowIndex, String newValue)
         {
+                if (rowIndex < 0)
+                        return;
+
                 GridRow row = new GridRow();
 
                 if (updateRowBuffer.containsKey(rowIndex)) {

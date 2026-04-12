@@ -137,6 +137,7 @@ public class TableStructureDesignerPane extends BrowserPane
                         applyReload();
                 } catch (Exception e) {
                         VFXDialogHelper.alert(e);
+                        applyReload();
                 }
         }
 

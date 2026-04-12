@@ -3,11 +3,10 @@ package com.changhong.driver.mysql;
 import com.changhong.collection.Lists;
 import com.changhong.collection.Sets;
 import com.changhong.driver.api.*;
-import com.changhong.driver.api.Driver;
-import com.changhong.driver.api.sql.SQLCommandType;
-import com.changhong.driver.api.sql.SQLParsedStatement;
 import com.changhong.driver.api.exception.DriverException;
 import com.changhong.driver.api.sql.SQL;
+import com.changhong.driver.api.sql.SQLCommandType;
+import com.changhong.driver.api.sql.SQLParsedStatement;
 import com.changhong.driver.utils.ResultSets;
 import com.changhong.driver.utils.SQLUtils;
 import com.changhong.utils.Captor;
@@ -19,12 +18,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.changhong.collection.Lists.beg;
-import static com.changhong.collection.Lists.end;
 import static com.changhong.string.StringStaticize.*;
 import static com.changhong.utils.TypeConverter.atobool;
 import static com.changhong.utils.TypeConverter.atos;
@@ -242,18 +242,41 @@ public class MySQLDriver extends Driver
         }
 
         @Override
+        public void dropPrimaryKey(Session session, String table)
+        {
+                try {
+                        String sql = strwfmt("ALTER TABLE %s DROP PRIMARY KEY;", dialect.quote(table));
+                        execute(session, new SQL(sql));
+                } catch (Exception e) {
+                        throw new DriverException(e);
+                }
+        }
+
+        @Override
         public void alterPrimaryKey(Session session, String table, Collection<Column> primaryKeys)
         {
                 if (primaryKeys.isEmpty())
                         return;
 
-                try {
-                        String sql = strwfmt("ALTER TABLE %s DROP PRIMARY KEY;", dialect.quote(table));
-                        execute(session, new SQL(sql));
-                } catch (Exception e) {
-                        LOG.error("drop primary key error", e);
+                Column autoColumn = null;
+
+                for (Column primaryKey : primaryKeys) {
+                        if (primaryKey.isAutoIncrement()) {
+                                autoColumn = primaryKey;
+                                break;
+                        }
                 }
 
+                /* 先删除自增列 */
+                if (autoColumn != null) {
+                        autoColumn.setAutoIncrement(false);
+                        alterChange(session, table, List.of(autoColumn));
+                }
+
+                /* 删除主键 */
+                dropPrimaryKey(session, table);
+
+                /* 重建主键 */
                 StringBuilder script = new StringBuilder();
 
                 script.append("ALTER TABLE ")
@@ -268,6 +291,12 @@ public class MySQLDriver extends Driver
                 script.append(");");
 
                 execute(session, new SQL(atos(script)));
+
+                /* 恢复自增 */
+                if (autoColumn != null) {
+                        autoColumn.setAutoIncrement(true);
+                        alterChange(session, table, List.of(autoColumn));
+                }
         }
 
         @Override
@@ -430,7 +459,6 @@ public class MySQLDriver extends Driver
                         SQLParsedStatement eps = sql.popupEnd();
 
                         for (SQLParsedStatement ps : sql) {
-                                LOG.info("Execute command type {} sql: {}", ps.getCommand(), ps);
                                 switch (ps.getCommand()) {
                                         case EXECUTE -> statement.execute(ps.toString());
                                         case EXECUTE_UPDATE -> statement.executeUpdate(ps.toString());
@@ -439,8 +467,6 @@ public class MySQLDriver extends Driver
                         }
 
                         sql.pushback(eps);
-
-                        LOG.info("Execute command type {} sql: {}", eps.getCommand(), eps);
 
                         switch (eps.getCommand()) {
                                 case EXECUTE -> statement.execute(eps.toString());
