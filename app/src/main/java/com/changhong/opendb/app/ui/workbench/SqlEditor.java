@@ -179,7 +179,7 @@ public class SqlEditor extends SplitPane
         public void setupCodeArea()
         {
                 codeArea.multiPlainChanges().successionEnds(Duration.ofMillis(500))
-                                .subscribe(ignored -> save());
+                                .subscribe(ignored -> autoSave());
 
                 codeArea.setOnKeyPressed(event -> {
                         if ((event.isControlDown() || event.isShortcutDown())
@@ -190,7 +190,7 @@ public class SqlEditor extends SplitPane
                 });
 
                 codeArea.textProperty().addListener((obs, oldVal, newVal) -> {
-                        if (saveFlag && queryInfo == null) {
+                        if (saveFlag && sqlFile == null) {
                                 ownerTab.setText("* " + ownerTab.getText());
                                 saveFlag = false;
                         }
@@ -487,6 +487,12 @@ public class SqlEditor extends SplitPane
                         : "@" + database.getName();
 
                 ownerTab.setText(name + tail);
+        }
+
+        private void autoSave()
+        {
+                if (sqlFile != null)
+                        SaveQueryScriptDialog.showDialog(this);
         }
 
         private void save()
