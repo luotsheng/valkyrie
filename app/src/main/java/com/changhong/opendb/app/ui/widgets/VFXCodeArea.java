@@ -68,8 +68,8 @@ public class VFXCodeArea extends CodeArea
                 setParagraphGraphicFactory(LineNumberFactory.get(this));
 
                 multiPlainChanges()
-                        .successionEnds(Duration.ofMillis(200))
-                        .subscribe(ignore -> applyHighlighting());
+                        .successionEnds(Duration.ofMillis(50))
+                        .subscribe(ignore -> applyHighlightingCurrentLine());
 
                 /* 配置菜单 */
                 contextMenu.setStyle("-fx-font-size: 13px");
@@ -113,6 +113,7 @@ public class VFXCodeArea extends CodeArea
                         return;
 
                 replaceSelection(text.replaceAll("\t", "  "));
+                applyHighlightAll();
         }
 
         public void addContextMenuGroup(MenuItem... items)
@@ -134,27 +135,60 @@ public class VFXCodeArea extends CodeArea
                 showingMenuListeners.add(showingMenuListener);
         }
 
-        public void applyHighlighting()
+        public void applyHighlightAll()
         {
-                String text = getText();
-                clearStyle(0, text.length());
+                String fullText = getText();
+                // 清除所有样式
+                clearStyle(0, fullText.length());
 
-                if (text.split("\n").length > 5000)
-                        return;
-
-                Matcher matcher = PATTERN.matcher(text);
+                Matcher matcher = PATTERN.matcher(fullText);
                 while (matcher.find()) {
-                        if (matcher.group("KEYWORD") != null) {
-                                setStyleClass(matcher.start(), matcher.end(), "keyword");
-                        } else if (matcher.group("STRING") != null) {
-                                setStyleClass(matcher.start(), matcher.end(), "string");
-                        } else if (matcher.group("COMMENT") != null) {
-                                setStyleClass(matcher.start(), matcher.end(), "comment");
-                        } else if (matcher.group("NUMBER") != null) {
-                                setStyleClass(matcher.start(), matcher.end(), "number");
+                        String styleClass = getHighlightStyleClass(matcher);
+                        if (styleClass != null) {
+                                setStyleClass(matcher.start(), matcher.end(), styleClass);
                         }
                 }
-
-                highlightingListeners.forEach(listener -> listener.apply(this));
         }
+
+        private void applyHighlightingCurrentLine() {
+                int lineIdx = getCurrentParagraph(); // RichTextFX 中段落即为行
+                int lineStart = getAbsolutePosition(lineIdx, 0);
+                int lineEnd = getAbsolutePosition(lineIdx, getParagraphLength(lineIdx));
+
+                // 清除当前行的样式
+                setStyleClass(lineStart, lineEnd, null); // 移除所有样式类
+
+                // 获取当前行的文本内容
+                String lineText = getText(lineIdx);
+                if (lineText.isEmpty()) return;
+
+                // 对当前行进行匹配
+                Matcher matcher = PATTERN.matcher(lineText);
+                while (matcher.find()) {
+                        String styleClass = getHighlightStyleClass(matcher);
+                        if (styleClass != null) {
+                                int start = lineStart + matcher.start();
+                                int end = lineStart + matcher.end();
+                                setStyleClass(start, end, styleClass);
+                        }
+                }
+        }
+
+        private static String getHighlightStyleClass(Matcher matcher)
+        {
+                String styleClass = null;
+
+                if (matcher.group("KEYWORD") != null) {
+                        styleClass = "keyword";
+                } else if (matcher.group("STRING") != null) {
+                        styleClass = "string";
+                } else if (matcher.group("COMMENT") != null) {
+                        styleClass = "comment";
+                } else if (matcher.group("NUMBER") != null) {
+                        styleClass = "number";
+                }
+
+                return styleClass;
+        }
+
 }

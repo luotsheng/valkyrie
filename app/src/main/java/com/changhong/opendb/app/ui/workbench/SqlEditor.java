@@ -431,7 +431,7 @@ public class SqlEditor extends SplitPane
         private void beautifySQL()
         {
                 codeArea.replaceText(SqlFormatter.format(codeArea.getText()));
-                codeArea.applyHighlighting(); /* 强制刷新高亮 */
+                codeArea.applyHighlightAll(); /* 强制刷新高亮 */
         }
 
         public String getCodeAreaContent()
@@ -471,7 +471,7 @@ public class SqlEditor extends SplitPane
 
                         codeArea.clear();
                         codeArea.appendText(builder.toString().trim());
-                        codeArea.applyHighlighting();
+                        codeArea.applyHighlightAll();
                 }
         }
 
