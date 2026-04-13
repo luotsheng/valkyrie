@@ -1,5 +1,6 @@
 package com.changhong.openvdb.app.dialog.connection;
 
+import com.changhong.openvdb.driver.api.DriverType;
 import com.changhong.openvdb.driver.api.PooledDataSource;
 import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.RefreshConnectionEvent;
@@ -38,12 +39,17 @@ public class CreateOrEditConnectionDialog extends Stage
         private static final int WW = 700;
         private static final int WH = 500;
 
-        public CreateOrEditConnectionDialog()
+        public CreateOrEditConnectionDialog(DriverType driverType)
         {
-                this(null);
+                this(driverType, null);
         }
 
-        public CreateOrEditConnectionDialog(ConnectionPropertyModel newProperty)
+        public CreateOrEditConnectionDialog(ConnectionPropertyModel propertyModel)
+        {
+                this(null, propertyModel);
+        }
+
+        public CreateOrEditConnectionDialog(DriverType driverType, ConnectionPropertyModel newProperty)
         {
                 this.isUpdate = newProperty != null;
 
@@ -54,6 +60,9 @@ public class CreateOrEditConnectionDialog extends Stage
                 this.oldProperty = isUpdate
                         ? JSONUtils.deepCopy(newProperty)
                         : null;
+
+                if (!isUpdate)
+                        this.newProperty.setType(driverType.name());
 
                 setupTabPane();
                 setupButtonBar();

@@ -1,7 +1,10 @@
 package com.changhong.openvdb.app.navigator.node;
 
+import com.changhong.openvdb.app.exception.ApplicationException;
+import com.changhong.openvdb.driver.api.ConnectionConfig;
 import com.changhong.openvdb.driver.api.Driver;
 import com.changhong.openvdb.driver.api.PooledDataSource;
+import com.changhong.openvdb.driver.dm.DMDriver;
 import com.changhong.openvdb.driver.mysql.MySQLDriver;
 import com.changhong.openvdb.app.model.ConnectionPropertyModel;
 import com.changhong.openvdb.app.model.VDBNodeStatus;
@@ -55,6 +58,17 @@ public class VDBConnectionNode extends VDBNode
                 setupListenerEvent();
         }
 
+        private void createDriver()
+        {
+                ConnectionConfig config = propertyModel.toConnectionConfig();
+                dataSource = new PooledDataSource(config);
+
+                driver = switch (config.getType()) {
+                        case MYSQL -> new MySQLDriver(dataSource);
+                        case DM -> new DMDriver(dataSource);
+                };
+        }
+
         public void openConnection()
         {
                 if (openFlag)
@@ -64,8 +78,7 @@ public class VDBConnectionNode extends VDBNode
 
                 new Thread(() -> {
                         try {
-                                dataSource = new PooledDataSource(propertyModel.toConnectionConfig());
-                                driver = new MySQLDriver(dataSource);
+                                createDriver();
                                 setupDatabases(driver.getCatalogs());
                                 setExpanded(true);
                                 openFlag = true;

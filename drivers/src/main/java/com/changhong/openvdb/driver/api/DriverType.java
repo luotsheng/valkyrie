@@ -12,7 +12,6 @@ public enum DriverType
 {
         MYSQL("MySQL"),
         DM("达梦数据库"),
-        UNKNOWN("未知数据库"),
         ;
 
         @Getter

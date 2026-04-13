@@ -1,5 +1,6 @@
 package com.changhong.openvdb.driver.api;
 
+import com.changhong.utils.Optional;
 import com.changhong.utils.collection.Lists;
 import com.changhong.openvdb.driver.api.exception.DriverException;
 import com.changhong.openvdb.driver.api.sql.SQLExecutor;
@@ -129,10 +130,10 @@ public abstract class Driver implements SQLExecutor
                 try (var conn = dataSource.getConnection()) {
                         DatabaseMetaData db = conn.getMetaData();
                         productMetaData = new ProductMetaData();
-                        productMetaData.setProductName(db.getDatabaseProductName());
-                        productMetaData.setVersion(db.getDatabaseProductVersion());
-                        productMetaData.setMajorVersion(db.getDatabaseMajorVersion());
-                        productMetaData.setMinorVersion(db.getDatabaseMinorVersion());
+                        productMetaData.setProductName(Optional.ifError(db::getDatabaseProductName, "ERROR"));
+                        productMetaData.setVersion(Optional.ifError(db::getDatabaseProductVersion, "ERROR"));
+                        productMetaData.setMajorVersion(Optional.ifError(db::getDatabaseMajorVersion, -1));
+                        productMetaData.setMinorVersion(Optional.ifError(db::getDatabaseMinorVersion, -1));
                 } catch (Exception e) {
                         throw new DriverException(e);
                 }
