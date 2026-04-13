@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.changhong.opensource</groupId>
         <artifactId>openvdb</artifactId>
-        <version>v1.0.0-arch.1</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>app</artifactId>
@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>com.changhong.opensource</groupId>
                 <artifactId>utils</artifactId>
-                <version>v1.0.0-arch.1</version>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

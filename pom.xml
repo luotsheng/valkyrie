@@ -6,7 +6,7 @@
 
     <groupId>com.changhong.opensource</groupId>
     <artifactId>openvdb</artifactId>
-    <version>v1.0.0-arch.1</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -14,9 +14,11 @@
         <module>app</module>
         <module>launcher</module>
         <module>drivers</module>
+        <module>core</module>
     </modules>
 
     <properties>
+        <revision>v1.0.0-arch.1</revision>
         <lombok.version>1.18.36</lombok.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -29,22 +31,27 @@
             <dependency>
                 <groupId>com.changhong.opensource</groupId>
                 <artifactId>utils</artifactId>
-                <version>v1.0.0-arch.1</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.changhong.opensource</groupId>
                 <artifactId>app</artifactId>
-                <version>v1.0.0-arch.1</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.changhong.opensource</groupId>
                 <artifactId>launcher</artifactId>
-                <version>v1.0.0-arch.1</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.changhong.admin</groupId>
                 <artifactId>drivers</artifactId>
-                <version>v1.0.0-arch.1</version>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.changhong.openvdb</groupId>
+                <artifactId>core</artifactId>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
