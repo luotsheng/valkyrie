@@ -60,3 +60,4 @@
 - 新增 `org.slf4j:slf4j-api:2.0.16` 依赖
 - 新增 `ch.qos.logback:logback-classic:1.5.32` 依赖
 - 新增 `com.github.vertical-blank:sql-formatter:2.0.5` 依赖
+- 新增 `com.dameng:DmJdbcDriver18:8.1.2.79` 依赖

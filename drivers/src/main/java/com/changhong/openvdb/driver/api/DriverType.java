@@ -1,5 +1,7 @@
 package com.changhong.openvdb.driver.api;
 
+import lombok.Getter;
+
 import static com.changhong.utils.string.StaticLibrary.uppercase;
 
 /**
@@ -8,8 +10,18 @@ import static com.changhong.utils.string.StaticLibrary.uppercase;
  */
 public enum DriverType
 {
-        MYSQL,
+        MYSQL("MySQL"),
+        DM("达梦数据库"),
+        UNKNOWN("未知数据库"),
         ;
+
+        @Getter
+        private final String alias;
+
+        DriverType(String alias)
+        {
+                this.alias = alias;
+        }
 
         public static DriverType toDriverType(String type)
         {
