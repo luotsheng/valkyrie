@@ -2,6 +2,7 @@ package com.changhong.openvdb.driver.dm;
 
 import com.changhong.openvdb.driver.api.*;
 import com.changhong.openvdb.driver.api.exception.DriverException;
+import com.changhong.openvdb.driver.api.sql.SQL;
 import com.changhong.utils.collection.Lists;
 
 import javax.sql.DataSource;
@@ -11,6 +12,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import static com.changhong.utils.collection.Lists.beg;
+import static com.changhong.utils.string.StaticLibrary.strfmt;
 
 /**
  * @author Luo Tiansheng
@@ -41,7 +45,13 @@ public class DMDriver extends Driver
         @Override
         public String showCreateTable(Session session, String table)
         {
-                return "";
+                DataGrid dataGrid = execute(session, new SQL(
+                        strfmt("""
+                                SELECT DBMS_METADATA.GET_DDL('TABLE', '%s', '%s') AS "DDL" FROM DUAL
+                                """, table, session.schema())
+                ));
+
+                return beg(dataGrid.getRows()).get(0);
         }
 
         @Override
