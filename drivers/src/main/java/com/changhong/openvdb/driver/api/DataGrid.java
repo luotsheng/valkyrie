@@ -47,7 +47,7 @@ public class DataGrid
         private boolean addable = false;
 
         private final Session session;
-        private final SQLExecutor executor;
+        private final Driver driver;
 
         private final Map<Integer, GridRow> updateRowBuffer = new HashMap<>();
 
@@ -64,10 +64,10 @@ public class DataGrid
         /**
          * 构造器
          */
-        public DataGrid(Session session, SQLExecutor executor, SQL sql)
+        public DataGrid(Session session, Driver driver, SQL sql)
         {
                 this.session = session;
-                this.executor = executor;
+                this.driver = driver;
                 this.sql = sql;
         }
 
@@ -91,9 +91,9 @@ public class DataGrid
 
         public void reload()
         {
-                if (executor != null && session != null && sql != null) {
+                if (driver != null && session != null && sql != null) {
 
-                        DataGrid dataGrid = executor.execute(session, sql);
+                        DataGrid dataGrid = driver.execute(session, sql);
 
                         columns = dataGrid.columns;
                         rows = dataGrid.rows;
@@ -114,7 +114,7 @@ public class DataGrid
                         return;
 
                 SQL sql = toDeleteSQL(indices);
-                executor.execute(session, sql);
+                driver.execute(session, sql);
         }
 
         public void addUpdateRow(int colIndex, int rowIndex, String newValue)
@@ -159,7 +159,7 @@ public class DataGrid
                         try {
 
                                 SQL sql = toUpdateSQL();
-                                executor.execute(session, sql);
+                                driver.execute(session, sql);
 
                         } finally {
 
@@ -178,7 +178,7 @@ public class DataGrid
 
                         var delete = new Delete();
 
-                        var table = new Table(sql.getSingleTableName());
+                        var table = new Table(driver.getDialect().removeQuote(sql.getSingleTableName()));
                         delete.setTable(table);
 
                         if (!pks.isEmpty()) {
@@ -247,7 +247,7 @@ public class DataGrid
                         var update = new Update();
                         var row = entry.getValue();
 
-                        var table = new Table(sql.getSingleTableName());
+                        var table = new Table(driver.getDialect().removeQuote(sql.getSingleTableName()));
                         update.setTable(table);
 
                         for (int i = 0; i < row.size(); i++) {

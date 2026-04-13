@@ -73,6 +73,7 @@ public abstract class Driver implements SQLExecutor
         /**
          * 数据库方言转换器
          */
+        @Getter
         protected final Dialect dialect;
 
         /**
@@ -844,7 +845,7 @@ public abstract class Driver implements SQLExecutor
                                 case EXECUTE_UPDATE -> statement.executeUpdate(eps.toString());
                                 case EXECUTE_QUERY -> {
                                         ResultSet rs = statement.executeQuery(eps.toString());
-                                        ResultSets.toDataGrid(connection, eps, rs, dataGrid);
+                                        ResultSets.toDataGrid(connection, eps, rs, dialect, dataGrid);
                                         return dataGrid;
                                 }
                         }

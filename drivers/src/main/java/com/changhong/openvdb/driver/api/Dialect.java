@@ -1,5 +1,7 @@
 package com.changhong.openvdb.driver.api;
 
+import static com.changhong.utils.string.StaticLibrary.strcut;
+
 /**
  * 数据库方言接口。
  * <p>
@@ -67,4 +69,24 @@ public interface Dialect
          * @throws IllegalArgumentException 如果 {@code identifier} 为 {@code null} 或仅含空白字符
          */
         String quote(String identifier);
+
+        /**
+         * 移除数据库标识符两端的引号。
+         * <p>
+         * 该方法用于去除由 {@link Dialect#quote(String)} 添加的数据库特定引号（如反引号、双引号或方括号），
+         * 还原为原始标识符名称。若标识符未包含匹配的引号，则原样返回。
+         * <p>
+         * <b>处理规则：</b>
+         * <ul>
+         *   <li>MySQL：移除两端反引号（`）</li>
+         *   <li>PostgreSQL / ANSI SQL：移除两端双引号（"）</li>
+         *   <li>SQL Server：移除两端方括号（[ ]）</li>
+         *   <li>仅当首尾字符均为相同类型的引号时执行移除，否则返回原字符串</li>
+         * </ul>
+         *
+         * @param identifier 可能带有引号的标识符（可以为 {@code null} 或空白）
+         * @return 移除引号后的标识符；若输入为 {@code null}，返回 {@code null}；若输入为空白字符串，返回原字符串
+         * @see #quote(String)
+         */
+        String removeQuote(String identifier);
 }

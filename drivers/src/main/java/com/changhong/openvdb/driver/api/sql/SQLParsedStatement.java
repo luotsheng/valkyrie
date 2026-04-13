@@ -63,7 +63,7 @@ public class SQLParsedStatement
 
                 try {
                         for (String table : finder.getTables(statement))
-                                this.tables.add(removeQuote(table));
+                                this.tables.add(table);
                 } catch (Exception ignored) {
                         /* IGNORED */
                 }
@@ -77,17 +77,6 @@ public class SQLParsedStatement
         public String getSingleTableName()
         {
                 return tables.iterator().next();
-        }
-
-        private static String removeQuote(String tableName)
-        {
-                if (tableName.startsWith("`")) {
-                        tableName = strcut(tableName, 1, 0);
-                        tableName = strcut(tableName, 0, -1);
-                        return tableName;
-                }
-
-                return tableName;
         }
 
         private static SQLCommandType toType(Statement statement)

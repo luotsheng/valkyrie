@@ -2,6 +2,8 @@ package com.changhong.openvdb.driver.dm;
 
 import com.changhong.openvdb.driver.api.Dialect;
 
+import static com.changhong.utils.string.StaticLibrary.strcut;
+
 /**
  * @author Luo Tiansheng
  * @since 2026/4/11
@@ -21,5 +23,17 @@ public class DMDialect implements Dialect
                         return identifier;
 
                 return "\"" + identifier + "\"";
+        }
+
+        @Override
+        public String removeQuote(String identifier)
+        {
+                if (identifier.startsWith("\"")) {
+                        identifier = strcut(identifier, 1, 0);
+                        identifier = strcut(identifier, 0, -1);
+                        return identifier;
+                }
+
+                return identifier;
         }
 }

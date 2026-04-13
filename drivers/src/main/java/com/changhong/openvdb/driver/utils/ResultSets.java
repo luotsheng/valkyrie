@@ -1,10 +1,11 @@
 package com.changhong.openvdb.driver.utils;
 
-import com.changhong.utils.collection.Lists;
 import com.changhong.openvdb.driver.api.Column;
 import com.changhong.openvdb.driver.api.DataGrid;
+import com.changhong.openvdb.driver.api.Dialect;
 import com.changhong.openvdb.driver.api.GridRow;
 import com.changhong.openvdb.driver.api.sql.SQLParsedStatement;
+import com.changhong.utils.collection.Lists;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -31,13 +32,14 @@ public class ResultSets
         public static DataGrid toDataGrid(Connection connection,
                                           SQLParsedStatement ps,
                                           ResultSet rs,
+                                          Dialect dialect,
                                           DataGrid dataGrid)
                 throws SQLException
         {
                 SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT_PATTERN);
 
                 /* COL */
-                setColumns(connection, ps, rs, dataGrid);
+                setColumns(connection, ps, rs, dialect, dataGrid);
 
                 /* ROW */
                 List<GridRow> rows = new ArrayList<>();
@@ -58,9 +60,10 @@ public class ResultSets
         }
 
         private static void setColumns(Connection connection,
-                                         SQLParsedStatement ps,
-                                         ResultSet rs,
-                                         DataGrid dataGrid)
+                                       SQLParsedStatement ps,
+                                       ResultSet rs,
+                                       Dialect dialect,
+                                       DataGrid dataGrid)
                 throws SQLException
         {
                 Map<String, Column> colMetas = new LinkedHashMap<>();
@@ -92,7 +95,7 @@ public class ResultSets
                         DatabaseMetaData dbMeta = connection.getMetaData();
 
                         Set<String> pks = new HashSet<>();
-                        String singleTable = ps.getSingleTableName();
+                        String singleTable = dialect.removeQuote(ps.getSingleTableName());
 
                         try (ResultSet pk = dbMeta.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), singleTable)) {
                                 while (pk.next())
