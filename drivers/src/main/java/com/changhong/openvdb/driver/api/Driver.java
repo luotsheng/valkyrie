@@ -1,5 +1,9 @@
 package com.changhong.openvdb.driver.api;
 
+import com.changhong.openvdb.driver.api.sql.SQL;
+import com.changhong.openvdb.driver.api.sql.SQLParsedStatement;
+import com.changhong.openvdb.driver.utils.ResultSets;
+import com.changhong.utils.Captor;
 import com.changhong.utils.Optional;
 import com.changhong.utils.collection.Lists;
 import com.changhong.openvdb.driver.api.exception.DriverException;
@@ -8,10 +12,10 @@ import lombok.Getter;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.changhong.utils.string.StaticLibrary.strfmt;
 
 /**
  * JDBC 驱动抽象层。
@@ -45,7 +49,7 @@ import java.util.Set;
  * @since 2026/4/11
  *
  */
-@SuppressWarnings("SpellCheckingInspection")
+@SuppressWarnings({"SpellCheckingInspection", "SqlSourceToSinkFlow"})
 public abstract class Driver implements SQLExecutor
 {
         /**
@@ -56,10 +60,20 @@ public abstract class Driver implements SQLExecutor
         protected final DataSource dataSource;
 
         /**
+         * 执行任务列表
+         */
+        protected final Map<Long, Statement> taskQueue = new ConcurrentHashMap<>();
+
+        /**
          * 数据库产品元数据
          */
         @Getter
         protected final ProductMetaData productMetaData;
+
+        /**
+         * 数据库方言转换器
+         */
+        protected final Dialect dialect;
 
         /**
          * 执行 {@link Statement#execute(String)} 或 {@link Statement#execute(String, int)}
@@ -137,7 +151,31 @@ public abstract class Driver implements SQLExecutor
                 } catch (Exception e) {
                         throw new DriverException(e);
                 }
+
+                this.dialect = createDialect();
         }
+
+        /**
+         * 创建并返回当前环境适用的数据库方言实例。
+         * <p>
+         * 该方法是一个模板方法（Template Method），由子类实现以提供具体的方言对象。
+         * 方言实例封装了特定数据库的 SQL 语法差异，用于生成分页语句、DDL 适配、
+         * 标识符转义等数据库特定操作。
+         * <p>
+         * <b>实现要求：</b>
+         * <ul>
+         *   <li>子类必须实现该方法，返回与目标数据库匹配的 {@link Dialect} 实例</li>
+         *   <li>返回的方言实例应为无状态（stateless）且线程安全的，可被多个并发线程共享</li>
+         *   <li>通常采用单例模式返回同一个方言实例，避免重复创建开销</li>
+         *   <li>实现可根据数据源 URL、数据库产品名称或配置参数动态选择具体方言子类</li>
+         * </ul>
+         *
+         * @return 适用于当前数据库的方言实例（永不返回 {@code null}）
+         * @throws IllegalStateException    如果无法根据当前环境确定合适的方言（如数据库类型未知）
+         * @throws UnsupportedOperationException 如果当前数据库不被支持
+         * @see Dialect
+         */
+        protected abstract Dialect createDialect();
 
         /**
          * 获取数据库连接。
@@ -769,4 +807,57 @@ public abstract class Driver implements SQLExecutor
                         throw new DriverException(e);
                 }
         }
+
+        /* *********************************************************************************** */
+        /*                                SQL EXECUTOR IMPLEMENTS                              */
+        /* *********************************************************************************** */
+
+        @Override
+        public DataGrid selectByPage(Session session, String table, int off, int size)
+        {
+                String sql = strfmt("SELECT * FROM %s", dialect.quote(table));
+                return execute(session, new SQL(dialect.limit(sql, off, size)));
+        }
+
+        @Override
+        public DataGrid execute(long jobId, Session session, SQL sql)
+        {
+                return executeQuery(session, (connection, statement) -> {
+                        DataGrid dataGrid = new DataGrid(session, this, sql);
+
+                        taskQueue.put(jobId, statement);
+
+                        SQLParsedStatement eps = sql.popupEnd();
+
+                        for (SQLParsedStatement ps : sql) {
+                                switch (ps.getCommand()) {
+                                        case EXECUTE -> statement.execute(ps.toString());
+                                        case EXECUTE_UPDATE -> statement.executeUpdate(ps.toString());
+                                        case EXECUTE_QUERY -> {}
+                                }
+                        }
+
+                        sql.pushback(eps);
+
+                        switch (eps.getCommand()) {
+                                case EXECUTE -> statement.execute(eps.toString());
+                                case EXECUTE_UPDATE -> statement.executeUpdate(eps.toString());
+                                case EXECUTE_QUERY -> {
+                                        ResultSet rs = statement.executeQuery(eps.toString());
+                                        ResultSets.toDataGrid(connection, eps, rs, dataGrid);
+                                        return dataGrid;
+                                }
+                        }
+
+                        return null;
+                });
+        }
+
+        @Override
+        public void cancel(long jobId)
+        {
+                if (taskQueue.containsKey(jobId))
+                        Captor.call(() -> taskQueue.remove(jobId).cancel());
+        }
+
 }

@@ -2,7 +2,6 @@ package com.changhong.openvdb.driver.dm;
 
 import com.changhong.openvdb.driver.api.*;
 import com.changhong.openvdb.driver.api.exception.DriverException;
-import com.changhong.openvdb.driver.api.sql.SQL;
 import com.changhong.utils.collection.Lists;
 
 import javax.sql.DataSource;
@@ -23,6 +22,12 @@ public class DMDriver extends Driver
         public DMDriver(DataSource dataSource)
         {
                 super(dataSource);
+        }
+
+        @Override
+        protected Dialect createDialect()
+        {
+                return new DMDialect();
         }
 
         @Override
@@ -164,24 +169,6 @@ public class DMDriver extends Driver
 
         @Override
         public void alterVisible(Session session, String table, Collection<Index> indexes)
-        {
-
-        }
-
-        @Override
-        public DataGrid selectByPage(Session session, String table, int off, int size)
-        {
-                return null;
-        }
-
-        @Override
-        public DataGrid execute(long jobId, Session session, SQL sql)
-        {
-                return null;
-        }
-
-        @Override
-        public void cancel(long jobId)
         {
 
         }

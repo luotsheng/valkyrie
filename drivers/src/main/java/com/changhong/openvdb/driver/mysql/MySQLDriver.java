@@ -1,15 +1,12 @@
 package com.changhong.openvdb.driver.mysql;
 
-import com.changhong.utils.collection.Lists;
-import com.changhong.utils.collection.Sets;
 import com.changhong.openvdb.driver.api.*;
 import com.changhong.openvdb.driver.api.exception.DriverException;
 import com.changhong.openvdb.driver.api.sql.SQL;
 import com.changhong.openvdb.driver.api.sql.SQLCommandType;
-import com.changhong.openvdb.driver.api.sql.SQLParsedStatement;
-import com.changhong.openvdb.driver.utils.ResultSets;
 import com.changhong.openvdb.driver.utils.SQLUtils;
-import com.changhong.utils.Captor;
+import com.changhong.utils.collection.Lists;
+import com.changhong.utils.collection.Sets;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
 import net.sf.jsqlparser.statement.alter.AlterOperation;
@@ -18,15 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static com.changhong.utils.collection.Lists.beg;
-import static com.changhong.utils.TypeConverter.*;
+import static com.changhong.utils.TypeConverter.atobool;
 import static com.changhong.utils.TypeConverter.atos;
+import static com.changhong.utils.collection.Lists.beg;
 import static com.changhong.utils.string.StaticLibrary.*;
 
 /**
@@ -40,13 +34,15 @@ public class MySQLDriver extends Driver
 {
         private static final Logger LOG = LoggerFactory.getLogger(MySQLDriver.class);
 
-        private final MySQLDialect dialect = new MySQLDialect();
-
-        private final Map<Long, Statement> taskQueue = new ConcurrentHashMap<>();
-
         public MySQLDriver(DataSource dataSource)
         {
                 super(dataSource);
+        }
+
+        @Override
+        protected Dialect createDialect()
+        {
+                return new MySQLDialect();
         }
 
         @Override
@@ -446,53 +442,5 @@ public class MySQLDriver extends Driver
                 }
 
                 execute(session, new SQL(atos(scripts)));
-        }
-
-        @Override
-        public DataGrid selectByPage(Session session, String table, int off, int size)
-        {
-                String sql = strfmt("SELECT * FROM %s", dialect.quote(table));
-                return execute(session, new SQL(dialect.limit(sql, off, size)));
-        }
-
-        @Override
-        public DataGrid execute(long jobId, Session session, SQL sql)
-        {
-                return executeQuery(session, (connection, statement) -> {
-                        DataGrid dataGrid = new DataGrid(session, this, sql);
-
-                        taskQueue.put(jobId, statement);
-
-                        SQLParsedStatement eps = sql.popupEnd();
-
-                        for (SQLParsedStatement ps : sql) {
-                                switch (ps.getCommand()) {
-                                        case EXECUTE -> statement.execute(ps.toString());
-                                        case EXECUTE_UPDATE -> statement.executeUpdate(ps.toString());
-                                        case EXECUTE_QUERY -> {}
-                                }
-                        }
-
-                        sql.pushback(eps);
-
-                        switch (eps.getCommand()) {
-                                case EXECUTE -> statement.execute(eps.toString());
-                                case EXECUTE_UPDATE -> statement.executeUpdate(eps.toString());
-                                case EXECUTE_QUERY -> {
-                                        ResultSet rs = statement.executeQuery(eps.toString());
-                                        ResultSets.toDataGrid(connection, eps, rs, dataGrid);
-                                        return dataGrid;
-                                }
-                        }
-
-                        return null;
-                });
-        }
-
-        @Override
-        public void cancel(long jobId)
-        {
-                if (taskQueue.containsKey(jobId))
-                        Captor.call(() -> taskQueue.remove(jobId).cancel());
         }
 }
