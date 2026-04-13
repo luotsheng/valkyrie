@@ -1,7 +1,7 @@
 package com.changhong.openvdb.app;
 
 import atlantafx.base.theme.CupertinoLight;
-import com.changhong.openvdb.app.ui.layout.MainLayout;
+import com.changhong.openvdb.app.layout.MainLayout;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.input.Clipboard;

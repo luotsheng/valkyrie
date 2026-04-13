@@ -1,7 +1,7 @@
 package com.changhong.openvdb.app.event;
 
 import com.changhong.openvdb.app.event.bus.Event;
-import com.changhong.openvdb.app.ui.pane.BrowserPane;
+import com.changhong.openvdb.app.pane.BrowserPane;
 import lombok.Getter;
 
 /**

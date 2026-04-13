@@ -1,8 +1,7 @@
 package com.changhong.openvdb.app.event;
 
 import com.changhong.openvdb.app.event.bus.Event;
-import com.changhong.openvdb.app.ui.navigator.node.VDBConnectionNode;
-import com.changhong.openvdb.app.ui.navigator.node.VDBDatabaseNode;
+import com.changhong.openvdb.app.navigator.node.VDBConnectionNode;
 import com.changhong.openvdb.core.model.ScriptFile;
 
 /**
