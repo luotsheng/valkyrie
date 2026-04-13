@@ -1,0 +1,13 @@
+package com.changhong.openvdb.app.ui.pane;
+
+import javafx.scene.layout.BorderPane;
+
+/**
+ * 详情面板
+ *
+ * @author Luo Tiansheng
+ * @since 2026/3/26
+ */
+public class BrowserPane extends BorderPane
+{
+}
