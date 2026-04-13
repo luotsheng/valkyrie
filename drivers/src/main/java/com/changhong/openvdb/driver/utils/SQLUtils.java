@@ -1,7 +1,6 @@
 package com.changhong.openvdb.driver.utils;
 
 import com.changhong.openvdb.driver.api.Column;
-import com.changhong.openvdb.driver.mysql.ColumnDefaultSpec;
 import com.changhong.utils.exception.SystemRuntimeException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.create.table.ColumnDefinition;
