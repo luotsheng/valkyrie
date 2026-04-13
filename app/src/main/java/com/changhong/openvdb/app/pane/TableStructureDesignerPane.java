@@ -2,7 +2,7 @@ package com.changhong.openvdb.app.pane;
 
 import com.changhong.openvdb.driver.api.*;
 import com.changhong.openvdb.driver.mysql.MySQL;
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.widgets.VFXIconButton;
 import com.changhong.openvdb.app.widgets.VFXSeparator;
 import com.changhong.openvdb.app.widgets.table.VFXTableColumnFactory;

@@ -1,4 +1,4 @@
-package com.changhong.openvdb.app.resource;
+package com.changhong.openvdb.app.assets;
 
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
@@ -79,6 +79,8 @@ public class Assets
                 IMAGES.put("index0", load("/assets/icons/index0.png"));
                 IMAGES.put("storage", load("/assets/icons/storage.png"));
                 IMAGES.put("warning", load("/assets/icons/warning.png"));
+                IMAGES.put("mysql", load("/assets/icons/mysql.png"));
+                IMAGES.put("dm2", load("/assets/icons/dm2.png"));
         }
 
         private static Image load(String path)

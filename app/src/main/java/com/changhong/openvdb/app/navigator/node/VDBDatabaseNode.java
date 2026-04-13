@@ -7,7 +7,7 @@ import com.changhong.openvdb.app.event.bus.EventListener;
 import com.changhong.openvdb.driver.api.Driver;
 import com.changhong.openvdb.driver.api.Session;
 import com.changhong.openvdb.driver.api.Table;
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.navigator.VDBNode;
 import com.changhong.openvdb.app.pane.CatalogBrowserPane;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;

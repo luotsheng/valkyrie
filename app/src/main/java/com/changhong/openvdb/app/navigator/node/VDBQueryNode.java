@@ -5,7 +5,7 @@ import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.OpenScriptEditorEvent;
 import com.changhong.openvdb.app.event.RefreshQueryNodeEvent;
 import com.changhong.openvdb.app.event.RemoveScriptEditorTabEvent;
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.dialog.RenameScriptDialog;
 import com.changhong.openvdb.app.navigator.VDBNode;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;

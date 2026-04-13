@@ -1,22 +1,23 @@
 package com.changhong.openvdb.app.navigator.node;
 
-import com.changhong.openvdb.app.exception.ApplicationException;
+import com.changhong.openvdb.app.dialog.connection.CreateOrEditConnectionDialog;
+import com.changhong.openvdb.app.model.ConnectionPropertyModel;
+import com.changhong.openvdb.app.model.VDBNodeStatus;
+import com.changhong.openvdb.app.navigator.VDBNode;
+import com.changhong.openvdb.app.assets.Assets;
+import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.driver.api.ConnectionConfig;
 import com.changhong.openvdb.driver.api.Driver;
+import com.changhong.openvdb.driver.api.DriverType;
 import com.changhong.openvdb.driver.api.PooledDataSource;
 import com.changhong.openvdb.driver.dm.DMDriver;
 import com.changhong.openvdb.driver.mysql.MySQLDriver;
-import com.changhong.openvdb.app.model.ConnectionPropertyModel;
-import com.changhong.openvdb.app.model.VDBNodeStatus;
-import com.changhong.openvdb.app.resource.Assets;
-import com.changhong.openvdb.app.dialog.connection.CreateOrEditConnectionDialog;
-import com.changhong.openvdb.app.navigator.VDBNode;
-import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.ImageView;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,7 +54,13 @@ public class VDBConnectionNode extends VDBNode
         public VDBConnectionNode(ConnectionPropertyModel propertyModel)
         {
                 super(propertyModel.getName());
-                setGraphic(Assets.use("database0"));
+
+                ImageView graphic = switch (DriverType.toDriverType(propertyModel.getType())) {
+                        case MYSQL -> Assets.use("mysql");
+                        case DM -> Assets.use("dm2");
+                };
+
+                setGraphic(graphic);
                 this.propertyModel = propertyModel;
                 setupListenerEvent();
         }

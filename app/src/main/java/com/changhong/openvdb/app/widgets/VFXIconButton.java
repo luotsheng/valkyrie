@@ -1,6 +1,6 @@
 package com.changhong.openvdb.app.widgets;
 
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 

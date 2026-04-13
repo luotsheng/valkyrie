@@ -4,7 +4,7 @@ import com.changhong.openvdb.driver.api.Column;
 import com.changhong.openvdb.driver.api.DataGrid;
 import com.changhong.openvdb.driver.api.GridRow;
 import com.changhong.openvdb.app.Application;
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.widgets.VFXIconButton;
 import com.changhong.openvdb.app.widgets.VFXSeparator;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;

@@ -8,7 +8,7 @@ import com.changhong.openvdb.app.event.bus.Event;
 import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.bus.EventListener;
 import com.changhong.openvdb.app.event.RefreshConnectionEvent;
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.navigator.node.VDBConnectionNode;
 import com.changhong.openvdb.app.model.ConnectionPropertyModel;
 import javafx.collections.ObservableList;

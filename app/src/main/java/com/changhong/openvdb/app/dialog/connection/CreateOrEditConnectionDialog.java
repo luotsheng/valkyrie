@@ -1,5 +1,6 @@
 package com.changhong.openvdb.app.dialog.connection;
 
+import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.driver.api.DriverType;
 import com.changhong.openvdb.driver.api.PooledDataSource;
 import com.changhong.openvdb.app.event.bus.EventBus;

@@ -6,7 +6,7 @@ import com.changhong.openvdb.app.Application;
 import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.OpenDataGridPaneEvent;
 import com.changhong.openvdb.app.event.OpenDesignTablePaneEvent;
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.navigator.VDBNode;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;

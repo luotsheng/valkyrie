@@ -5,7 +5,7 @@ import com.changhong.openvdb.app.widgets.VFXSeparator;
 import com.changhong.openvdb.driver.api.Table;
 import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.OpenDataGridPaneEvent;
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.navigator.node.VDBDatabaseNode;
 import com.changhong.openvdb.app.widgets.table.VFXTableColumn;
 import com.changhong.openvdb.app.widgets.table.VFXTableView;

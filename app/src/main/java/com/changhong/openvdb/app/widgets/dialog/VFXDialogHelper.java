@@ -2,7 +2,7 @@ package com.changhong.openvdb.app.widgets.dialog;
 
 import com.changhong.utils.exception.SystemRuntimeException;
 import com.changhong.openvdb.app.Application;
-import com.changhong.openvdb.app.resource.Assets;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.utils.exception.Causes;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
