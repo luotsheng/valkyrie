@@ -4,9 +4,11 @@ import com.changhong.openvdb.driver.api.Column;
 import com.changhong.openvdb.driver.api.DataGrid;
 import com.changhong.openvdb.driver.api.Dialect;
 import com.changhong.openvdb.driver.api.GridRow;
+import com.changhong.openvdb.driver.api.exception.DriverException;
 import com.changhong.openvdb.driver.api.sql.SQLParsedStatement;
 import com.changhong.utils.collection.Lists;
 
+import java.io.BufferedReader;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -162,12 +164,29 @@ public class ResultSets
                         return null;
 
                 return switch (val) {
+                        case java.sql.Clob clob -> toString(clob);
                         case java.sql.Timestamp ts -> ts.toLocalDateTime().format(formatter);
                         case java.util.Date date -> sdf.format(date);
                         case LocalDateTime date -> date.format(formatter);
                         case byte[] bits -> toBInary(bits);
                         default -> val.toString();
                 };
+        }
+
+        private static String toString(Clob clob)
+        {
+                StringBuilder builder = new StringBuilder();
+
+                try (BufferedReader reader = new BufferedReader(clob.getCharacterStream())) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                                builder.append(line);
+                        }
+                } catch (Exception e) {
+                        throw new DriverException(e);
+                }
+
+                return builder.toString();
         }
 
         private static String toBInary(byte[] bytes)
