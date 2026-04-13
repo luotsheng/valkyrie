@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.changhong.utils.string.StaticLibrary.strwfmt;
+import static com.changhong.utils.string.StaticLibrary.strfmt;
 
 /**
  * @author Luo Tiansheng
@@ -199,7 +199,7 @@ public class Workbench extends VBox implements EventListener
 
         private void handleOpenDataGridPaneEvent(OpenDataGridPaneEvent event)
         {
-                String id = strwfmt("%s@%s (%s)",
+                String id = strfmt("%s@%s (%s)",
                         event.table.getName(),
                         event.session.catalog(),
                         event.connectionName);

@@ -79,7 +79,7 @@ public class SystemRuntimeException extends RuntimeException {
      * @param args 格式化参数。
      */
     public SystemRuntimeException(String fmt, Object... args) {
-        super(StaticLibrary.strwfmt(fmt, args));
+        super(StaticLibrary.strfmt(fmt, args));
     }
 
     /**
@@ -90,7 +90,7 @@ public class SystemRuntimeException extends RuntimeException {
      * @param args 格式化参数。
      */
     public SystemRuntimeException(String fmt, Throwable e, Object... args) {
-        super(StaticLibrary.strwfmt(fmt, args), e);
+        super(StaticLibrary.strfmt(fmt, args), e);
     }
 
 }

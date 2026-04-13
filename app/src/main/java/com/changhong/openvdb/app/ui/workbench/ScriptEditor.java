@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.time.Duration;
 
-import static com.changhong.utils.string.StaticLibrary.strwfmt;
+import static com.changhong.utils.string.StaticLibrary.strfmt;
 
 /**
  * SQL 脚本编辑器
@@ -88,7 +88,7 @@ public class ScriptEditor extends SplitPane
 
                 this.name = scriptFile != null
                         ? scriptFile.getName()
-                        : strwfmt("查询脚本_%s.sql@[ N/A ]", (numberCount++));
+                        : strfmt("查询脚本_%s.sql@[ N/A ]", (numberCount++));
 
                 this.ownerTab = ownerTab;
 

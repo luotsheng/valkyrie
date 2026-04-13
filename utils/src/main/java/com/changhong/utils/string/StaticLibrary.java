@@ -236,7 +236,7 @@ public class StaticLibrary
      * @param args 格式化所需的参数列表
      * @return 格式化后的字符串
      */
-    public static String strwfmt(Object wstr, Object... args) {
+    public static String strfmt(Object wstr, Object... args) {
         return String.format(TypeConverter.atos(wstr), args);
     }
 

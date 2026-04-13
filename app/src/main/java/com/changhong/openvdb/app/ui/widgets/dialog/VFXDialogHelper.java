@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.changhong.utils.string.StaticLibrary.strwfmt;
+import static com.changhong.utils.string.StaticLibrary.strfmt;
 
 /**
  * Dialog
@@ -158,7 +158,7 @@ public class VFXDialogHelper
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
 
-                createAndOpenDialog(stage, strwfmt(fmt, args), checkBox, spacer, cancel, ok);
+                createAndOpenDialog(stage, strfmt(fmt, args), checkBox, spacer, cancel, ok);
 
                 return flag.get();
         }
@@ -183,7 +183,7 @@ public class VFXDialogHelper
                         stage.close();
                 });
 
-                createAndOpenDialog(stage, strwfmt(fmt, args), cancel, ok);
+                createAndOpenDialog(stage, strfmt(fmt, args), cancel, ok);
 
                 return flag.get();
         }
@@ -192,7 +192,7 @@ public class VFXDialogHelper
         {
                 Stage stage = Application.createByPrimaryStage();
 
-                String text = strwfmt(fmt, args);
+                String text = strfmt(fmt, args);
 
                 Button copyText = new Button("复制并关闭");
                 copyText.setDefaultButton(true);

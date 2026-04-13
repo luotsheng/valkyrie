@@ -5,7 +5,7 @@ import com.changhong.openvdb.driver.api.Driver;
 import com.changhong.openvdb.driver.api.Session;
 import com.changhong.openvdb.driver.api.Table;
 
-import static com.changhong.utils.string.StaticLibrary.strwfmt;
+import static com.changhong.utils.string.StaticLibrary.strfmt;
 
 /**
  * 打开设计表面板事件
@@ -33,7 +33,7 @@ public class OpenDesignTablePaneEvent extends Event
 
         public String id()
         {
-                return strwfmt("%s@%s(%s)",
+                return strfmt("%s@%s(%s)",
                         table.getName(),
                         session.catalog(),
                         connectionName);

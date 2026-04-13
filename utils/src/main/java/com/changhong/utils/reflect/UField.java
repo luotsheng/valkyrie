@@ -89,7 +89,7 @@ public class UField {
         this.modifiers = field.getModifiers();
         this.inClass = field.getDeclaringClass();
         this.name = field.getName();
-        this.path = StaticLibrary.strwfmt("%s#%s", inClass.getName(), name);
+        this.path = StaticLibrary.strfmt("%s#%s", inClass.getName(), name);
         this.originType = field.getType();
     }
 
