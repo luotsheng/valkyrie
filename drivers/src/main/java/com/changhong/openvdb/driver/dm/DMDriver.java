@@ -201,6 +201,9 @@ public class DMDriver extends Driver
 
                         builder.append(column.getType());
 
+                        if (column.isAutoIncrement())
+                                builder.append(" IDENTITY(1, 1) ");
+
                         if (!column.isNullable())
                                 builder.append(" NOT NULL");
 
