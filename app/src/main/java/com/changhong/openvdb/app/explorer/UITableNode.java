@@ -1,14 +1,15 @@
 package com.changhong.openvdb.app.explorer;
 
+import com.changhong.openvdb.app.Application;
+import com.changhong.openvdb.app.assets.Assets;
+import com.changhong.openvdb.app.event.OpenDataGridPaneEvent;
+import com.changhong.openvdb.app.event.OpenTableDesignerPaneEvent;
+import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.driver.api.Driver;
 import com.changhong.openvdb.driver.api.Table;
-import com.changhong.openvdb.app.Application;
-import com.changhong.openvdb.app.event.bus.EventBus;
-import com.changhong.openvdb.app.event.OpenDataGridPaneEvent;
-import com.changhong.openvdb.app.event.OpenDesignTablePaneEvent;
-import com.changhong.openvdb.app.assets.Assets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -45,23 +46,22 @@ public class UITableNode extends UIExplorerNode
         {
                 ContextMenu contextMenu = new ContextMenu();
 
+                MenuItem openTableItem = new MenuItem("打开表");
+                openTableItem.setOnAction(event -> openDataGridBrowserPane());
+
+                MenuItem designTableItem = new MenuItem("设计表");
+                designTableItem.setOnAction(event -> openTableDesignerPane());
+
                 MenuItem copyTableNameItem = new MenuItem("复制表名");
                 copyTableNameItem.setOnAction(event -> {
                         Application.copyToClipboard(getName());
                 });
 
-                MenuItem designTableItem = new MenuItem("设计表");
-                designTableItem.setOnAction(event -> {
-                        EventBus.publish(new OpenDesignTablePaneEvent(
-                                catalog.getConnection().getName(),
-                                catalog.getSession(),
-                                driver,
-                                table));
-                });
-
                 contextMenu.getItems().addAll(
-                        copyTableNameItem,
-                        designTableItem
+                        openTableItem,
+                        designTableItem,
+                        new SeparatorMenuItem(),
+                        copyTableNameItem
                 );
 
                 return contextMenu;
@@ -70,10 +70,24 @@ public class UITableNode extends UIExplorerNode
         @Override
         public void onMouseDoubleClickEvent(MouseEvent event)
         {
+                openDataGridBrowserPane();
+        }
+
+        public void openDataGridBrowserPane()
+        {
                 EventBus.publish(new OpenDataGridPaneEvent(catalog.getSession(),
                         driver,
                         catalog.getName(),
                         table,
                         catalog.getConnection().getName()));
+        }
+
+        public void openTableDesignerPane()
+        {
+                EventBus.publish(new OpenTableDesignerPaneEvent(
+                        catalog.getConnection().getName(),
+                        catalog.getSession(),
+                        driver,
+                        table));
         }
 }

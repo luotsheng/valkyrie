@@ -13,17 +13,17 @@ import static com.changhong.utils.string.StaticLibrary.strfmt;
  * @author Luo Tiansheng
  * @since 2026/3/26
  */
-public class OpenDesignTablePaneEvent extends Event
+public class OpenTableDesignerPaneEvent extends Event
 {
         public final String connectionName;
         public final Session session;
         public final Driver driver;
         public final Table table;
 
-        public OpenDesignTablePaneEvent(String connectionName,
-                                        Session session,
-                                        Driver driver,
-                                        Table table)
+        public OpenTableDesignerPaneEvent(String connectionName,
+                                          Session session,
+                                          Driver driver,
+                                          Table table)
         {
                 this.connectionName = connectionName;
                 this.session = session;

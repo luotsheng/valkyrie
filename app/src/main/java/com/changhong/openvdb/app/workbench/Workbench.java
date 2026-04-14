@@ -62,7 +62,7 @@ public class Workbench extends VBox implements EventListener
                 EventBus.subscribe(OpenScriptEditorEvent.class, this);
                 EventBus.subscribe(OpenDataGridPaneEvent.class, this);
                 EventBus.subscribe(RemoveScriptEditorTabEvent.class, this);
-                EventBus.subscribe(OpenDesignTablePaneEvent.class, this);
+                EventBus.subscribe(OpenTableDesignerPaneEvent.class, this);
         }
 
         private void setupTabPane()
@@ -149,7 +149,7 @@ public class Workbench extends VBox implements EventListener
                         case RemoveScriptEditorTabEvent e  -> handleRemoveScriptEditorTabEvent(e);
                         case OpenScriptEditorEvent e       -> handleOpenScriptEditorEvent(e);
                         case OpenDataGridPaneEvent e       -> handleOpenDataGridPaneEvent(e);
-                        case OpenDesignTablePaneEvent e    -> handleOpenDesignTablePaneEvent(e);
+                        case OpenTableDesignerPaneEvent e  -> handleOpenDesignTablePaneEvent(e);
                         default -> {}
                 }
         }
@@ -235,7 +235,7 @@ public class Workbench extends VBox implements EventListener
                 pane.asyncUpdate();
         }
 
-        private void handleOpenDesignTablePaneEvent(OpenDesignTablePaneEvent e)
+        private void handleOpenDesignTablePaneEvent(OpenTableDesignerPaneEvent e)
         {
                 Tab tab = TableMgr.get(e.id());
 
