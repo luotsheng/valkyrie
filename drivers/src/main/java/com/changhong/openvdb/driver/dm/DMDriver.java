@@ -192,30 +192,34 @@ public class DMDriver extends Driver
 
                 // 配置列信息
                 for (Column column : columns) {
-                        StringBuilder builder = new StringBuilder();
+                        // MODIFY
+                        StringBuilder modifyBuilder = new StringBuilder();
 
-                        builder.append(strfmt("ALTER TABLE %s MODIFY %s ",
+                        modifyBuilder.append(strfmt("ALTER TABLE %s MODIFY %s ",
                                 dialect.quote(table),
                                 dialect.quote(column.getName())
                         ));
 
-                        builder.append(column.getType());
+                        modifyBuilder.append(column.getType());
 
                         if (column.isAutoIncrement())
-                                builder.append(" IDENTITY(1, 1) ");
+                                modifyBuilder.append(" IDENTITY(1, 1) ");
 
                         if (!column.isNullable())
-                                builder.append(" NOT NULL");
+                                modifyBuilder.append(" NOT NULL");
 
                         if (strnempty(column.getDefaultValue()))
-                                builder.append(" DEFAULT ").append(column.getDefaultValue());
+                                modifyBuilder.append(" DEFAULT ").append(column.getDefaultValue());
 
-                        if (strnempty(column.getComment()))
-                                builder.append(" COMMENT ").append(column.getComment());
+                        modifyBuilder.append(";");
 
-                        builder.append(";");
+                        sqls.add(atos(modifyBuilder));
 
-                        sqls.add(atos(builder));
+                        // COMMENT
+                        sqls.add(strfmt("COMMENT ON COLUMN %s.%s IS '%s';",
+                                dialect.quote(table),
+                                dialect.quote(column.getName()),
+                                column.getComment()));
                 }
 
                 /* 批量执行 */
