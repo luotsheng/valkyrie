@@ -1,6 +1,7 @@
 package com.changhong.openvdb.app.workbench;
 
 import com.changhong.openvdb.app.Application;
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.event.bus.Event;
 import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.bus.EventListener;
@@ -33,6 +34,8 @@ public class Workbench extends VBox implements EventListener
 
         public Workbench()
         {
+                navigationTab.setGraphic(Assets.use("nav0"));
+
                 setStyle("-fx-background-color: #ffffff;");
                 getChildren().add(tabPane);
                 VBox.setVgrow(tabPane, Priority.ALWAYS);

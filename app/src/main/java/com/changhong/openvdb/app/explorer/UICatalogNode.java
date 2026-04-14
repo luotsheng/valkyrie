@@ -57,8 +57,8 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
         private MenuItem openOrCloseMenuItem;
         private MenuItem newQueryMenuItem;
 
-        private final TableOverviewPane detailPane = new TableOverviewPane(this);
-        private final OpenNavigationPaneEvent openWorkbenchPaneEvent = new OpenNavigationPaneEvent(detailPane);
+        private final TableOverviewPane overviewPane = new TableOverviewPane(this);
+        private final OpenNavigationPaneEvent openWorkbenchPaneEvent = new OpenNavigationPaneEvent(overviewPane);
 
         /**
          * 内部通用节点
@@ -185,7 +185,7 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
                         tableItem.getChildren().add(tableNode);
                 }
 
-                detailPane.update(tables);
+                overviewPane.update(tables);
         }
 
         private void reloadQueryNode()
