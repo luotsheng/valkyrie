@@ -13,18 +13,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 2026/3/30
  */
 @Getter
-public class VDBNodeStatus
+public class UINodeGlobalStatus
 {
-        private static VDBNodeStatus status = null;
+        private static UINodeGlobalStatus status = null;
 
         private final List<UIConnectionNode> connections = new CopyOnWriteArrayList<>();
 
         private UIConnectionNode selectedConnection;
 
-        public static synchronized VDBNodeStatus getInstance()
+        public static synchronized UINodeGlobalStatus getInstance()
         {
                 if (status == null)
-                        status = new VDBNodeStatus();
+                        status = new UINodeGlobalStatus();
 
                 return status;
         }
@@ -37,6 +37,9 @@ public class VDBNodeStatus
         public void removeConnection(UIConnectionNode connection)
         {
                 connections.remove(connection);
+
+                if (connection == selectedConnection)
+                        selectedConnection = null;
         }
 
         public void selectedConnection(UIConnectionNode connection)

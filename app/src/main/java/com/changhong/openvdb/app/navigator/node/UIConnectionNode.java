@@ -2,7 +2,7 @@ package com.changhong.openvdb.app.navigator.node;
 
 import com.changhong.openvdb.app.dialog.connection.CreateOrEditConnectionDialog;
 import com.changhong.openvdb.app.model.ConnectionPropertyModel;
-import com.changhong.openvdb.app.model.VDBNodeStatus;
+import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.driver.api.*;
@@ -106,14 +106,15 @@ public class UIConnectionNode extends UIExplorerNode
                 setExpanded(false);
 
                 getChildren().forEach(db -> {
-                        if (db instanceof UIDatabaseNode vdb)
-                                vdb.closeDatabase();
+                        if (db instanceof UIDatabaseNode dbNode)
+                                dbNode.closeDatabase();
                 });
 
                 databases.clear();
                 getChildren().clear();
                 VFXDialogHelper.runWith(dataSource::close);
-                VDBNodeStatus.getInstance().removeConnection(this);
+                UINodeGlobalStatus.getInstance().removeConnection(this);
+                selectedDatabase = null;
 
                 openFlag = false;
         }
@@ -166,7 +167,7 @@ public class UIConnectionNode extends UIExplorerNode
         @Override
         public void onSelectedEvent(UIExplorerNode node)
         {
-                VDBNodeStatus.getInstance().selectedConnection(this);
+                UINodeGlobalStatus.getInstance().selectedConnection(this);
         }
 
         private void setupListenerEvent()

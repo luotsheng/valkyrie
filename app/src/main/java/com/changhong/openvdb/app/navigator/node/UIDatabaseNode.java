@@ -45,9 +45,9 @@ public class UIDatabaseNode extends UIExplorerNode implements EventListener
 
         // Tree Items
         final TreeItem<String> tableItem
-                = new VDBInternalNode(this, "数据表", Assets.use("table"));;
+                = new UIInternalNode(this, "数据表", Assets.use("table"));;
         final TreeItem<String> queryItem
-                = new VDBInternalNode(this, "查询脚本", Assets.use("sql"));;
+                = new UIInternalNode(this, "查询脚本", Assets.use("sql"));;
 
         // Menu Items
         private MenuItem openOrCloseMenuItem;
@@ -60,11 +60,11 @@ public class UIDatabaseNode extends UIExplorerNode implements EventListener
         /**
          * 内部通用节点
          */
-        public static class VDBInternalNode extends UIExplorerNode
+        public static class UIInternalNode extends UIExplorerNode
         {
                 private final UIDatabaseNode parent;
 
-                public VDBInternalNode(UIDatabaseNode parent, String name, ImageView icon)
+                public UIInternalNode(UIDatabaseNode parent, String name, ImageView icon)
                 {
                         super(name);
                         setGraphic(icon);
@@ -161,6 +161,7 @@ public class UIDatabaseNode extends UIExplorerNode implements EventListener
                         return;
 
                 setExpanded(false);
+
                 getChildren().clear();
                 EventBus.publish(closeWorkbenchPaneEvent);
 

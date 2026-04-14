@@ -7,7 +7,7 @@ import com.changhong.openvdb.driver.api.DataGrid;
 import com.changhong.openvdb.driver.api.Driver;
 import com.changhong.openvdb.driver.api.Session;
 import com.changhong.openvdb.driver.api.sql.SQL;
-import com.changhong.openvdb.app.model.VDBNodeStatus;
+import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.dialog.SaveScriptDialog;
 import com.changhong.openvdb.app.navigator.node.UIConnectionNode;
@@ -136,7 +136,7 @@ public class ScriptEditor extends SplitPane
 
         private void setupToolbar(UIConnectionNode initConnection)
         {
-                VDBNodeStatus instance = VDBNodeStatus.getInstance();
+                UINodeGlobalStatus instance = UINodeGlobalStatus.getInstance();
                 UIConnectionNode selectedConnection = initConnection != null
                         ? initConnection
                         : instance.getSelectedConnection();

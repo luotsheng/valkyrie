@@ -1,6 +1,6 @@
 package com.changhong.openvdb.app.navigator;
 
-import com.changhong.openvdb.app.model.VDBNodeStatus;
+import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.app.menu.ConnectionMenuBuilder;
 import com.changhong.openvdb.app.navigator.node.UIExplorerNode;
 import com.changhong.openvdb.core.model.ConnectionProfile;
@@ -226,7 +226,7 @@ public class Navigator extends VBox implements EventListener
                         ConnectionPropertyModel propertyModel = new ConnectionPropertyModel(profile);
 
                         UIConnectionNode connection = new UIConnectionNode(propertyModel);
-                        VDBNodeStatus.getInstance().addConnection(connection);
+                        UINodeGlobalStatus.getInstance().addConnection(connection);
                         connections.put(profile.getName(), connection);
                         children.add(connection);
                 }

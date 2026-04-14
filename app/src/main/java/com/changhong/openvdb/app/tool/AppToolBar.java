@@ -2,7 +2,7 @@ package com.changhong.openvdb.app.tool;
 
 import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.OpenScriptEditorEvent;
-import com.changhong.openvdb.app.model.VDBNodeStatus;
+import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.app.navigator.node.UIConnectionNode;
 import com.changhong.openvdb.app.widgets.VFXIconButton;
 import com.changhong.openvdb.app.widgets.VFXSeparator;
@@ -35,7 +35,7 @@ public class AppToolBar extends ToolBar
 
         private void newScriptEditor()
         {
-                VDBNodeStatus instance = VDBNodeStatus.getInstance();
+                UINodeGlobalStatus instance = UINodeGlobalStatus.getInstance();
                 UIConnectionNode selectedConnection = instance.getSelectedConnection();
                 EventBus.publish(new OpenScriptEditorEvent(selectedConnection));
         }
