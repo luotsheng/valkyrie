@@ -53,6 +53,16 @@ public class SQLParsedStatement
          */
         private final Set<String> tables = new HashSet<>();
 
+        /**
+         * 如果 SQL 自动解析失败，则将 SQL 降级为纯字符串，去执行。
+         */
+        public SQLParsedStatement(String text, SQLCommandType command)
+        {
+                this.statement = null;
+                this.command = command;
+                this.textValue = text;
+        }
+
         public SQLParsedStatement(Statement statement)
         {
                 this.statement = statement;
@@ -62,8 +72,7 @@ public class SQLParsedStatement
                 TablesNamesFinder<Void> finder = new TablesNamesFinder<>();
 
                 try {
-                        for (String table : finder.getTables(statement))
-                                this.tables.add(table);
+                        this.tables.addAll(finder.getTables(statement));
                 } catch (Exception ignored) {
                         /* IGNORED */
                 }

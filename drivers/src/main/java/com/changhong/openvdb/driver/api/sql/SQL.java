@@ -6,6 +6,8 @@ import lombok.Getter;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.Statements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,20 +16,20 @@ import static com.changhong.utils.collection.Lists.end;
 
 /**
  * SQL 执行单元
- *
+ * <p>
  * 表示一次用户提交的 SQL 内容，支持包含多条语句。
  * 每条语句可能属于不同类型（SELECT / DDL / DML / DCL / TCL / 扩展语句）。
- *
+ * <p>
  * 执行特性：
  * - SQL 内容可能包含多条语句（按分隔符拆分后执行）
  * - 执行顺序严格按照语句顺序
  * - 每条语句独立产生执行结果
- *
+ * <p>
  * 使用场景：
  * - 编辑器执行选中 SQL
  * - 脚本批量执行
  * - 控制台命令执行
- *
+ * <p>
  * 该接口由各自驱动独立实现，其中 SQL 方言解析等内容，由子类自由实现。
  *
  * @author Luo Tiansheng
@@ -35,6 +37,8 @@ import static com.changhong.utils.collection.Lists.end;
  */
 public class SQL implements Iterable<SQLParsedStatement>
 {
+        private static final Logger LOG = LoggerFactory.getLogger(SQL.class);
+
         @Getter
         private final String raw;
 
@@ -45,24 +49,31 @@ public class SQL implements Iterable<SQLParsedStatement>
                 this(null, raw);
 
         }
+
         public SQL(SQLCommandType type, String raw)
         {
                 this.raw = raw;
 
-                Statements statements =
-                        Captor.call(() -> CCJSqlParserUtil.parseStatements(raw));
+                try {
+                        Statements statements =
+                                Captor.call(() -> CCJSqlParserUtil.parseStatements(raw));
 
-                for (Statement statement : statements) {
-                        SQLParsedStatement sqlParsedStatement = new SQLParsedStatement(statement);
-                        if (type != null)
-                                sqlParsedStatement.setCommand(type);
-                        this.statements.add(sqlParsedStatement);
+                        for (Statement statement : statements) {
+                                SQLParsedStatement sqlParsedStatement = new SQLParsedStatement(statement);
+                                if (type != null)
+                                        sqlParsedStatement.setCommand(type);
+                                this.statements.add(sqlParsedStatement);
+                        }
+                } catch (Exception e) {
+                        LOG.error("create SQL object error", e);
+                        this.statements.clear();
+                        this.statements.add(new SQLParsedStatement(raw, type != null ? type : SQLCommandType.EXECUTE));
                 }
         }
 
         public SQLParsedStatement popupEnd()
         {
-                return statements.remove(statements.size() - 1);
+                return statements.removeLast();
         }
 
         public void pushback(SQLParsedStatement statement)
