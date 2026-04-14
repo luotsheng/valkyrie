@@ -229,6 +229,8 @@ public class ObjectExplorerPane extends VBox implements EventListener
                         UINodeGlobalStatus.getInstance().addConnection(connection);
                         connections.put(profile.getName(), connection);
                         children.add(connection);
+
+                        connection.setDeleteRequestListener(children::remove);
                 }
 
                 Collator collator = Collator.getInstance(Locale.CHINA);

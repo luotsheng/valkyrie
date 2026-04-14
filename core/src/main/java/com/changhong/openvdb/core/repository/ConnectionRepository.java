@@ -6,6 +6,7 @@ import com.changhong.openvdb.core.model.ConnectionProfile;
 import com.changhong.openvdb.core.utils.FileUtils;
 import com.changhong.openvdb.core.utils.JSONUtils;
 import com.changhong.utils.Captor;
+import com.changhong.utils.io.UFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,6 +64,11 @@ public class ConnectionRepository
                 FileUtils.forceDelete(vdbc);
 
                 saveConnection(newName, content);
+        }
+
+        public static void deleteConnection(String name)
+        {
+                new UFile(Users.connectionDir, name).forceDelete();
         }
 
         public static List<ConnectionProfile> loadConnections()

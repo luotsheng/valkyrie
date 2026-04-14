@@ -5,6 +5,7 @@ import com.changhong.openvdb.app.model.ConnectionPropertyModel;
 import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
+import com.changhong.openvdb.core.repository.ConnectionRepository;
 import com.changhong.openvdb.driver.api.*;
 import com.changhong.openvdb.driver.dm.DMDriver;
 import com.changhong.openvdb.driver.mysql.MySQLDriver;
@@ -42,6 +43,7 @@ public class UIConnectionNode extends UIExplorerNode
         // Menu Items
         private MenuItem openOrCloseMenuItem;
         private MenuItem editMenuItem;
+        private MenuItem deleteMenuItem;
 
         @Getter
         private final List<UICatalogNode> catalogs = new ArrayList<>();
@@ -49,6 +51,13 @@ public class UIConnectionNode extends UIExplorerNode
         @Setter
         @Getter
         private UICatalogNode selectedDatabase;
+
+        @Setter
+        private DeleteRequestListener deleteRequestListener;
+
+        public interface DeleteRequestListener {
+                void onDeleteRequest(UIConnectionNode node);
+        }
 
         public UIConnectionNode(ConnectionPropertyModel propertyModel)
         {
@@ -131,6 +140,14 @@ public class UIConnectionNode extends UIExplorerNode
                 }
         }
 
+        private void deleteConnection()
+        {
+                if (VFXDialogHelper.askDangerous("确定要删除“%s”吗？", getName())) {
+                        deleteRequestListener.onDeleteRequest(this);
+                        ConnectionRepository.deleteConnection(getName());
+                }
+        }
+
         @Override
         protected ContextMenu registerContextMenu()
         {
@@ -141,10 +158,15 @@ public class UIConnectionNode extends UIExplorerNode
                 editMenuItem = new MenuItem("编辑连接");
                 editMenuItem.setOnAction(event -> editConnection());
 
+                deleteMenuItem = new MenuItem("删除链接");
+                deleteMenuItem.setOnAction(event -> deleteConnection());
+
                 contextMenu.getItems().addAll(
                         openOrCloseMenuItem,
                         new SeparatorMenuItem(),
-                        editMenuItem
+                        editMenuItem,
+                        new SeparatorMenuItem(),
+                        deleteMenuItem
                 );
 
                 return contextMenu;
