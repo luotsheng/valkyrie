@@ -1,23 +1,23 @@
-.vfx-table-view-full .table-cell {
+.vfx-table-view-full .table-cell:filled {
     -fx-border-color: transparent #e0e0e0 transparent transparent;
     -fx-border-width: 0 1 0 0;
 }
 
-.vfx-table-view-full .column-header {
+.vfx-table-view-full .column-header:filled {
     -fx-border-color: transparent #e0e0e0 transparent transparent;
     -fx-border-width: 0 1 0 0;
 }
 
-.vfx-table-view-full .table-row-cell {
+.vfx-table-view-full .table-row-cell:filled {
     -fx-border-color: transparent transparent #e0e0e0 transparent;
     -fx-border-width: 0 0 1 0;
 }
 
-.vfx-table-view-full .table-row-cell:odd {
+.vfx-table-view-full .table-row-cell:filled:odd {
     -fx-background-color: white;
 }
 
-.vfx-table-view-full .table-row-cell:even {
+.vfx-table-view-full .table-row-cell:filled:even {
     -fx-background-color: #f5f5f5;
 }
 

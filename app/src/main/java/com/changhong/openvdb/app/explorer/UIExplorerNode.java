@@ -4,6 +4,7 @@ import com.changhong.openvdb.app.assets.Assets;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +55,8 @@ public abstract class UIExplorerNode extends TreeItem<String>
                 this.name = name;
                 this.contextMenu = registerContextMenu();
         }
+
+        public abstract ImageView getIcon();
 
         protected void setLoadingIndicator()
         {

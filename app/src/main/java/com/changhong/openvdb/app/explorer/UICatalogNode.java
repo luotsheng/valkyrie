@@ -76,23 +76,27 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
                 }
 
                 @Override
+                public ImageView getIcon()
+                {
+                        return null;
+                }
+
+                @Override
                 public void onSelectedEvent(UIExplorerNode node)
                 {
                         parent.onSelectedEvent(node);
                 }
         }
 
-        public UICatalogNode(UIConnectionNode connection,
-                             Driver driver,
-                             String databaseName)
+        public UICatalogNode(UIConnectionNode connection, Driver driver, String name)
         {
-                super(databaseName);
+                super(name);
                 this.connection = connection;
-                setGraphic(Assets.use("database1"));
+                setGraphic(getIcon());
 
                 this.session = switch (connection.getDriverType()) {
-                        case MYSQL -> Session.ofCatalog(databaseName);
-                        case DM -> Session.ofSchema(databaseName);
+                        case MYSQL -> Session.ofCatalog(name);
+                        case DM -> Session.ofSchema(name);
                 };
 
                 this.driver = driver;
@@ -102,6 +106,12 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
 
                 EventBus.subscribe(RefreshTableNodeEvent.class, this);
                 EventBus.subscribe(RefreshQueryNodeEvent.class, this);
+        }
+
+        @Override
+        public ImageView getIcon()
+        {
+                return Assets.use("database1");
         }
 
         private void setupTableNode()

@@ -75,7 +75,7 @@ public class ScriptEditor extends SplitPane
         private long currentTaskId = System.currentTimeMillis();
         private boolean saveFlag = true;
         private VFXComboBox<UIConnectionNode> connectionComboBox;
-        private VFXComboBox<UICatalogNode> databaseComboBox;
+        private VFXComboBox<UICatalogNode> catalogComboBox;
 
         private static int numberCount = 0;
 
@@ -153,20 +153,20 @@ public class ScriptEditor extends SplitPane
                 beautify.setOnAction(event -> beautifySQL());
 
                 connectionComboBox = newConnectionComboBox();
-                databaseComboBox = newDatabaseComboBox();
+                catalogComboBox = newCatalogComboBox();
 
                 // setup combo
                 connectionComboBox.getItems().addAll(instance.getConnections());
 
                 if (selectedConnection != null) {
                         connectionComboBox.getSelectionModel().select(selectedConnection);
-                        databaseComboBox.getItems().addAll(selectedConnection.getCatalogs());
-                        databaseComboBox.getSelectionModel().select(selectedConnection.getSelectedDatabase());
+                        catalogComboBox.getItems().addAll(selectedConnection.getCatalogs());
+                        catalogComboBox.getSelectionModel().select(selectedConnection.getSelectedDatabase());
                 }
 
                 toolBar.getItems().addAll(
                         connectionComboBox,
-                        databaseComboBox,
+                        catalogComboBox,
                         new VFXSeparator(),
                         run,
                         stop,
@@ -217,18 +217,18 @@ public class ScriptEditor extends SplitPane
                 return connection;
         }
 
-        private VFXComboBox<UICatalogNode> newDatabaseComboBox()
+        private VFXComboBox<UICatalogNode> newCatalogComboBox()
         {
-                VFXComboBox<UICatalogNode> database = new VFXComboBox<>();
-                configureDatabaseComboBox(database);
-                database.setPrefWidth(200);
+                VFXComboBox<UICatalogNode> catalog = new VFXComboBox<>();
+                configureDatabaseComboBox(catalog);
+                catalog.setPrefWidth(200);
 
-                database.valueProperty().addListener((obs, oldVal, newVal) -> {
+                catalog.valueProperty().addListener((obs, oldVal, newVal) -> {
                         if (!newVal.isOpen())
                                 newVal.openDatabase();
                 });
 
-                return database;
+                return catalog;
         }
 
         private void configureConnectionComboBox(VFXComboBox<UIConnectionNode> comboBox)
@@ -244,7 +244,7 @@ public class ScriptEditor extends SplitPane
                                         return;
 
                                 setText(item.getName());
-                                setGraphic(Assets.use("chain"));
+                                setGraphic(item.getIcon());
                         }
                 });
 
@@ -259,7 +259,7 @@ public class ScriptEditor extends SplitPane
                                         return;
 
                                 setText(item.getName());
-                                setGraphic(Assets.use("chain"));
+                                setGraphic(item.getIcon());
                         }
                 });
 
@@ -314,9 +314,9 @@ public class ScriptEditor extends SplitPane
                 comboBox.setConverter(new StringConverter<>()
                 {
                         @Override
-                        public String toString(UICatalogNode database)
+                        public String toString(UICatalogNode catalog)
                         {
-                                return database == null ? null : database.getName();
+                                return catalog == null ? null : catalog.getName();
                         }
 
                         @Override
@@ -381,13 +381,13 @@ public class ScriptEditor extends SplitPane
                                 UIConnectionNode connection = connectionComboBox.getSelectionModel()
                                         .getSelectedItem();
 
-                                UICatalogNode database = databaseComboBox.getSelectionModel()
+                                UICatalogNode catalog = catalogComboBox.getSelectionModel()
                                         .getSelectedItem();
 
                                 driver = connection.getDriver();
                                 currentTaskId = System.currentTimeMillis();
 
-                                Session session = database.getSession();
+                                Session session = catalog.getSession();
                                 SQL sql = new  SQL(scriptText);
 
                                 DataGrid grid = driver.execute(currentTaskId, session, sql);
@@ -447,7 +447,7 @@ public class ScriptEditor extends SplitPane
 
         public VFXComboBox<UICatalogNode> copyDatabaseComboBox()
         {
-                VFXComboBox<UICatalogNode> dst = databaseComboBox.copyComboBox();
+                VFXComboBox<UICatalogNode> dst = catalogComboBox.copyComboBox();
                 configureDatabaseComboBox(dst);
                 return dst;
         }
@@ -476,14 +476,14 @@ public class ScriptEditor extends SplitPane
 
         private void setOwnerTabName(String name)
         {
-                UICatalogNode database = null;
+                UICatalogNode catalog = null;
 
-                if (databaseComboBox != null)
-                        database = databaseComboBox.getSelectionModel().getSelectedItem();
+                if (catalogComboBox != null)
+                        catalog = catalogComboBox.getSelectionModel().getSelectedItem();
 
-                String tail = database == null
+                String tail = catalog == null
                         ? ""
-                        : "@" + database.getName();
+                        : "@" + catalog.getName();
 
                 owner.setText(name + tail);
         }
@@ -507,12 +507,12 @@ public class ScriptEditor extends SplitPane
                         UIConnectionNode connection = connectionComboBox.getSelectionModel()
                                 .getSelectedItem();
 
-                        UICatalogNode database = databaseComboBox.getSelectionModel()
+                        UICatalogNode catalog = catalogComboBox.getSelectionModel()
                                 .getSelectedItem();
 
                         ScriptFile newScriptFile = ScriptFileRepository.save(
                                 connection.getName(),
-                                database.getName(),
+                                catalog.getName(),
                                 null,
                                 saveScriptName,
                                 getCodeAreaContent());

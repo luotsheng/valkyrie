@@ -10,6 +10,7 @@ import com.changhong.openvdb.driver.api.Table;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -23,16 +24,20 @@ public class UITableNode extends UIExplorerNode
         private final UICatalogNode catalog;
         private final Table table;
 
-        public UITableNode(Driver driver,
-                           UICatalogNode catalog,
-                           Table table)
+        public UITableNode(Driver driver, UICatalogNode catalog, Table table)
         {
                 super(table.getName());
-                setGraphic(Assets.use("table"));
+                setGraphic(getIcon());
 
                 this.catalog = catalog;
                 this.driver = driver;
                 this.table = table;
+        }
+
+        @Override
+        public ImageView getIcon()
+        {
+                return Assets.use("table");
         }
 
         @Override

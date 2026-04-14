@@ -68,14 +68,19 @@ public class UIConnectionNode extends UIExplorerNode
 
                 this.driverType = DriverType.toDriverType(propertyModel.getType());
 
-                ImageView graphic = switch (this.driverType) {
+
+                setGraphic(getIcon());
+                this.propertyModel = propertyModel;
+                setupListenerEvent();
+        }
+
+        @Override
+        public ImageView getIcon()
+        {
+                return switch (this.driverType) {
                         case MYSQL -> Assets.use("mysql");
                         case DM -> Assets.use("dm2");
                 };
-
-                setGraphic(graphic);
-                this.propertyModel = propertyModel;
-                setupListenerEvent();
         }
 
         private void createDriver()

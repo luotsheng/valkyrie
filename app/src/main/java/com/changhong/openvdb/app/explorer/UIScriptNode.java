@@ -11,6 +11,7 @@ import com.changhong.openvdb.core.model.ScriptFile;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
@@ -29,8 +30,14 @@ public class UIScriptNode extends UIExplorerNode
         {
                 super(scriptFile.getName());
                 this.catalog = catalog;
-                setGraphic(Assets.use("sql"));
+                setGraphic(getIcon());
                 this.scriptFile = scriptFile;
+        }
+
+        @Override
+        public ImageView getIcon()
+        {
+                return Assets.use("sql");
         }
 
         @Override
