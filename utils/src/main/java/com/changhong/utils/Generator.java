@@ -1,8 +1,8 @@
 package com.changhong.utils;
 
 import com.changhong.utils.security.Codec;
-import com.changhong.utils.string.StringInterface;
 import com.changhong.utils.string.StaticLibrary;
+import com.changhong.utils.string.StringInterface;
 
 import java.util.Random;
 import java.util.UUID;

@@ -18,10 +18,10 @@ package com.changhong.utils.reflect;
 |*                                                                                  *|
 \* -------------------------------------------------------------------------------- */
 
+import com.changhong.utils.exception.SerializationException;
 import com.changhong.utils.io.FileByteReader;
 import com.changhong.utils.io.FileByteWriter;
 import com.changhong.utils.io.UFile;
-import com.changhong.utils.exception.SerializationException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

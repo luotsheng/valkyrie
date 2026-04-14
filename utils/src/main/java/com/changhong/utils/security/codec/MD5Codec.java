@@ -1,8 +1,8 @@
 package com.changhong.utils.security.codec;
 
-import com.changhong.utils.string.StaticLibrary;
-import com.changhong.utils.security.MD5;
 import com.changhong.utils.exception.SystemRuntimeException;
+import com.changhong.utils.security.MD5;
+import com.changhong.utils.string.StaticLibrary;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

@@ -1,8 +1,8 @@
 package com.changhong.openvdb.app.dialog;
 
 import com.changhong.openvdb.app.Application;
-import com.changhong.openvdb.app.explorer.UIConnectionNode;
 import com.changhong.openvdb.app.explorer.UICatalogNode;
+import com.changhong.openvdb.app.explorer.UIConnectionNode;
 import com.changhong.openvdb.app.widgets.VFXComboBox;
 import com.changhong.openvdb.app.workbench.ScriptEditor;
 import javafx.application.Platform;

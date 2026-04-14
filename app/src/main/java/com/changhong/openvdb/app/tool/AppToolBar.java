@@ -2,8 +2,8 @@ package com.changhong.openvdb.app.tool;
 
 import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.workbench.OpenScriptEditorPaneEvent;
-import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.app.explorer.UIConnectionNode;
+import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.app.widgets.VFXIconButton;
 import com.changhong.openvdb.app.widgets.VFXSeparator;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;

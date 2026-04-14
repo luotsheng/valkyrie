@@ -1,8 +1,8 @@
 package com.changhong.openvdb.app.dialog;
 
 import com.changhong.openvdb.app.Application;
-import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.app.event.RefreshQueryNodeEvent;
+import com.changhong.openvdb.app.event.bus.EventBus;
 import com.changhong.openvdb.core.model.ScriptFile;
 import com.changhong.openvdb.core.repository.ScriptFileRepository;
 import javafx.geometry.Insets;

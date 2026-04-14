@@ -1,8 +1,5 @@
 package com.changhong.openvdb.app.pane;
 
-import com.changhong.openvdb.driver.api.Column;
-import com.changhong.openvdb.driver.api.DataGrid;
-import com.changhong.openvdb.driver.api.GridRow;
 import com.changhong.openvdb.app.Application;
 import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.widgets.VFXIconButton;
@@ -11,6 +8,9 @@ import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.app.widgets.table.VFXTableView;
 import com.changhong.openvdb.app.widgets.table.cell.VFXTextFieldTableCell;
 import com.changhong.openvdb.app.workbench.ModifyCell;
+import com.changhong.openvdb.driver.api.Column;
+import com.changhong.openvdb.driver.api.DataGrid;
+import com.changhong.openvdb.driver.api.GridRow;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -28,8 +28,8 @@ import lombok.Setter;
 
 import java.util.List;
 
-import static com.changhong.utils.string.StaticLibrary.strnempty;
 import static com.changhong.utils.string.StaticLibrary.strfmt;
+import static com.changhong.utils.string.StaticLibrary.strnempty;
 
 /**
  * @author Luo Tiansheng

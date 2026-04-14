@@ -1,8 +1,7 @@
 package com.changhong.openvdb.driver.api;
 
-import com.changhong.utils.collection.Maps;
 import com.changhong.openvdb.driver.api.sql.SQL;
-import com.changhong.openvdb.driver.api.sql.SQLExecutor;
+import com.changhong.utils.collection.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import net.sf.jsqlparser.expression.Expression;
@@ -11,8 +10,8 @@ import net.sf.jsqlparser.expression.NullValue;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
-import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.select.Limit;
 import net.sf.jsqlparser.statement.update.Update;
 

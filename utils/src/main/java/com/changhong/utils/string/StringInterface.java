@@ -21,8 +21,6 @@ package com.changhong.utils.string;
 
 import com.changhong.utils.TypeConverter;
 
-import static com.changhong.utils.TypeConverter.atos;
-
 /**
  * 定义字符串操作类型的枚举类。
  *

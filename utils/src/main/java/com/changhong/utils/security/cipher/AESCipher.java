@@ -1,7 +1,7 @@
 package com.changhong.utils.security.cipher;
 
-import com.changhong.utils.security.AES;
 import com.changhong.utils.Captor;
+import com.changhong.utils.security.AES;
 import com.changhong.utils.security.Codec;
 
 import javax.crypto.Cipher;

@@ -18,13 +18,13 @@ package com.changhong.utils.io;
 |*                                                                                  *|
 \* -------------------------------------------------------------------------------- */
 
+import com.changhong.utils.Assert;
+import com.changhong.utils.Captor;
+import com.changhong.utils.Optional;
 import com.changhong.utils.collection.Lists;
 import com.changhong.utils.exception.IOReadException;
 import com.changhong.utils.string.StaticLibrary;
 import com.changhong.utils.system.OS;
-import com.changhong.utils.Assert;
-import com.changhong.utils.Captor;
-import com.changhong.utils.Optional;
 
 import java.io.RandomAccessFile;
 import java.net.URI;

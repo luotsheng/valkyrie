@@ -1,11 +1,11 @@
 package com.changhong.openvdb.app.pane;
 
+import com.changhong.openvdb.app.assets.Assets;
+import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.driver.api.DataGrid;
 import com.changhong.openvdb.driver.api.Driver;
 import com.changhong.openvdb.driver.api.Session;
 import com.changhong.openvdb.driver.api.Table;
-import com.changhong.openvdb.app.assets.Assets;
-import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;

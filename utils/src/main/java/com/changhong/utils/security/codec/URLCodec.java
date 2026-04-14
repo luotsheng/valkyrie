@@ -1,8 +1,8 @@
 package com.changhong.utils.security.codec;
 
-import com.changhong.utils.string.StaticLibrary;
 import com.changhong.utils.Captor;
 import com.changhong.utils.security.URL;
+import com.changhong.utils.string.StaticLibrary;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

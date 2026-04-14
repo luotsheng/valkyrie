@@ -4,7 +4,6 @@ import com.changhong.openvdb.driver.api.*;
 import com.changhong.openvdb.driver.api.exception.DriverException;
 import com.changhong.openvdb.driver.api.sql.SQL;
 import com.changhong.openvdb.driver.api.sql.SQLCommandType;
-import com.changhong.openvdb.driver.utils.SQLUtils;
 import com.changhong.utils.collection.Lists;
 import com.changhong.utils.collection.Sets;
 import net.sf.jsqlparser.statement.alter.Alter;

@@ -1,11 +1,11 @@
 package com.changhong.openvdb.app.explorer;
 
 import com.changhong.openvdb.app.Application;
-import com.changhong.openvdb.app.event.bus.EventBus;
-import com.changhong.openvdb.app.event.workbench.OpenScriptEditorPaneEvent;
-import com.changhong.openvdb.app.event.RefreshQueryNodeEvent;
 import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.dialog.RenameScriptDialog;
+import com.changhong.openvdb.app.event.RefreshQueryNodeEvent;
+import com.changhong.openvdb.app.event.bus.EventBus;
+import com.changhong.openvdb.app.event.workbench.OpenScriptEditorPaneEvent;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.core.model.ScriptFile;
 import javafx.scene.control.ContextMenu;

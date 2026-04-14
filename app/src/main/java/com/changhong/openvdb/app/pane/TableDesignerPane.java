@@ -1,18 +1,18 @@
 package com.changhong.openvdb.app.pane;
 
+import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.pane.designer.TableColumnDesignerPane;
 import com.changhong.openvdb.app.pane.designer.TableIndexDesignerPane;
-import com.changhong.openvdb.driver.api.*;
-import com.changhong.openvdb.driver.mysql.MySQL;
-import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.widgets.VFXIconButton;
 import com.changhong.openvdb.app.widgets.VFXSeparator;
+import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.app.widgets.table.VFXTableColumnFactory;
 import com.changhong.openvdb.app.widgets.table.VFXTableView;
 import com.changhong.openvdb.app.widgets.table.cell.VFXCheckBoxTableCell;
 import com.changhong.openvdb.app.widgets.table.cell.VFXComboBoxTableCell;
 import com.changhong.openvdb.app.widgets.table.cell.VFXTextFieldTableCell;
-import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
+import com.changhong.openvdb.driver.api.*;
+import com.changhong.openvdb.driver.mysql.MySQL;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,7 +21,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Luo Tiansheng

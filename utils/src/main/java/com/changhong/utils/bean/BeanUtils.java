@@ -20,15 +20,16 @@ package com.changhong.utils.bean;
 
 /* Creates on 2023/4/29. */
 
-import com.changhong.utils.reflect.UField;
-import com.changhong.utils.reflect.UClass;
 import com.changhong.utils.Captor;
+import com.changhong.utils.reflect.UClass;
+import com.changhong.utils.reflect.UField;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.changhong.utils.string.StaticLibrary.*;
+import static com.changhong.utils.string.StaticLibrary.strcap;
+import static com.changhong.utils.string.StaticLibrary.strcheckin;
 
 /**
  * Bean工具类，方便实现对两个对象之间的属性拷贝，这属于浅拷贝。如果需要

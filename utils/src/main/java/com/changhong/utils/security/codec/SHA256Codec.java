@@ -1,9 +1,9 @@
 package com.changhong.utils.security.codec;
 
-import com.changhong.utils.io.IOUtils;
-import com.changhong.utils.io.UFile;
 import com.changhong.utils.Captor;
 import com.changhong.utils.exception.SystemRuntimeException;
+import com.changhong.utils.io.IOUtils;
+import com.changhong.utils.io.UFile;
 import com.changhong.utils.security.Codec;
 import com.changhong.utils.security.SHA256;
 

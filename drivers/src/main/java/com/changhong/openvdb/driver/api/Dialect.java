@@ -1,7 +1,5 @@
 package com.changhong.openvdb.driver.api;
 
-import static com.changhong.utils.string.StaticLibrary.strcut;
-
 /**
  * 数据库方言接口。
  * <p>

@@ -1,9 +1,9 @@
 package com.changhong.openvdb.app.widgets.table;
 
+import com.changhong.utils.Assert;
 import com.changhong.utils.bean.BeanUtils;
 import com.changhong.utils.reflect.UClass;
 import com.changhong.utils.reflect.UField;
-import com.changhong.utils.Assert;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Setter;
 

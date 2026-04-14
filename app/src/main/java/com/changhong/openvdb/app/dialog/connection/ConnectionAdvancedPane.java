@@ -2,8 +2,8 @@ package com.changhong.openvdb.app.dialog.connection;
 
 import com.changhong.openvdb.app.model.ConnectionPropertyModel;
 import com.changhong.openvdb.app.pane.PropertyGridPane;
-import javafx.scene.control.CheckBox;
 import com.changhong.openvdb.app.widgets.VFXComboBox;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 /**

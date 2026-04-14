@@ -1,8 +1,8 @@
 package com.changhong.openvdb.app.model;
 
+import com.changhong.openvdb.core.model.ConnectionProfile;
 import com.changhong.openvdb.driver.api.ConnectionConfig;
 import com.changhong.openvdb.driver.api.DriverType;
-import com.changhong.openvdb.core.model.ConnectionProfile;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;

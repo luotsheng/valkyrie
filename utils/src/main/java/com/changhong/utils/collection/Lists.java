@@ -20,8 +20,8 @@ package com.changhong.utils.collection;
 
 /* Creates on 2023/5/6. */
 
-import com.changhong.utils.iface.TypeMapper;
 import com.changhong.utils.ArrayUtils;
+import com.changhong.utils.iface.TypeMapper;
 
 import java.util.*;
 

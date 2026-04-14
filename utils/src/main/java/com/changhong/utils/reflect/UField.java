@@ -20,10 +20,10 @@ package com.changhong.utils.reflect;
 
 /* Creates on 2019/5/16. */
 
-import com.changhong.utils.string.StaticLibrary;
 import com.changhong.utils.Assert;
 import com.changhong.utils.Captor;
 import com.changhong.utils.Optional;
+import com.changhong.utils.string.StaticLibrary;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

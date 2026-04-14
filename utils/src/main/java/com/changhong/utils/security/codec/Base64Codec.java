@@ -3,8 +3,6 @@ package com.changhong.utils.security.codec;
 import com.changhong.utils.TypeConverter;
 import com.changhong.utils.security.Base64;
 
-import static com.changhong.utils.TypeConverter.atos;
-
 /**
  * @author Luo Tiansheng
  */

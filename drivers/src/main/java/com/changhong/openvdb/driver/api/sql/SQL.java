@@ -1,7 +1,6 @@
 package com.changhong.openvdb.driver.api.sql;
 
 import com.changhong.utils.collection.Lists;
-import com.changhong.utils.Captor;
 import lombok.Getter;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;

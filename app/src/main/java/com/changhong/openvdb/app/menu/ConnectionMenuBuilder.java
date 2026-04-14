@@ -1,7 +1,6 @@
 package com.changhong.openvdb.app.menu;
 
 import com.changhong.openvdb.app.dialog.connection.CreateOrEditConnectionDialog;
-import com.changhong.openvdb.driver.api.Driver;
 import com.changhong.openvdb.driver.api.DriverType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

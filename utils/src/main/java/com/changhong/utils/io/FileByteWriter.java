@@ -20,7 +20,9 @@ package com.changhong.utils.io;
 
 import com.changhong.utils.exception.IOWriteException;
 
-import java.io.*;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 /**
  * 文件输出流

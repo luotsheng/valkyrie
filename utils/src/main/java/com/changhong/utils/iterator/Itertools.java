@@ -1,7 +1,7 @@
 package com.changhong.utils.iterator;
 
-import com.changhong.utils.tuple.Pair;
 import com.changhong.utils.collection.Lists;
+import com.changhong.utils.tuple.Pair;
 
 import java.util.Collection;
 import java.util.List;

@@ -21,19 +21,17 @@ package com.changhong.utils.security;
 /* Creates on 2025/2/20. */
 
 
+import com.changhong.utils.Captor;
+import com.changhong.utils.TypeConverter;
 import com.changhong.utils.security.codec.Base64Codec;
 import com.changhong.utils.security.codec.MD5Codec;
 import com.changhong.utils.security.codec.SHA256Codec;
 import com.changhong.utils.security.codec.URLCodec;
-import com.changhong.utils.string.StringInterface;
 import com.changhong.utils.string.StaticLibrary;
-import com.changhong.utils.Captor;
-import com.changhong.utils.TypeConverter;
+import com.changhong.utils.string.StringInterface;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-
-import static com.changhong.utils.TypeConverter.atos;
 
 /**
  * `Codec` 类用于数据的编码和解码操作。它提供了将数据从一种格式转换为另一种格式的功能，
