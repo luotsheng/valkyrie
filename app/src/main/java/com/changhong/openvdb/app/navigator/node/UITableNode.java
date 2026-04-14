@@ -19,17 +19,17 @@ import javafx.scene.input.MouseEvent;
 public class UITableNode extends UIExplorerNode
 {
         private final Driver driver;
-        private final UIDatabaseNode database;
+        private final UICatalogNode catalog;
         private final Table table;
 
         public UITableNode(Driver driver,
-                           UIDatabaseNode database,
+                           UICatalogNode catalog,
                            Table table)
         {
                 super(table.getName());
                 setGraphic(Assets.use("table"));
 
-                this.database = database;
+                this.catalog = catalog;
                 this.driver = driver;
                 this.table = table;
         }
@@ -37,7 +37,7 @@ public class UITableNode extends UIExplorerNode
         @Override
         public void onSelectedEvent(UIExplorerNode node)
         {
-                // database.onSelected();
+                // catalog.onSelected();
         }
 
         @Override
@@ -53,8 +53,8 @@ public class UITableNode extends UIExplorerNode
                 MenuItem designTableItem = new MenuItem("设计表");
                 designTableItem.setOnAction(event -> {
                         EventBus.publish(new OpenDesignTablePaneEvent(
-                                database.getConnection().getName(),
-                                database.getSession(),
+                                catalog.getConnection().getName(),
+                                catalog.getSession(),
                                 driver,
                                 table));
                 });
@@ -70,10 +70,10 @@ public class UITableNode extends UIExplorerNode
         @Override
         public void onMouseDoubleClickEvent(MouseEvent event)
         {
-                EventBus.publish(new OpenDataGridPaneEvent(database.getSession(),
+                EventBus.publish(new OpenDataGridPaneEvent(catalog.getSession(),
                         driver,
-                        database.getName(),
+                        catalog.getName(),
                         table,
-                        database.getConnection().getName()));
+                        catalog.getConnection().getName()));
         }
 }

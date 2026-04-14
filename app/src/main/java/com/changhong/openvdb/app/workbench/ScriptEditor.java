@@ -11,7 +11,7 @@ import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.dialog.SaveScriptDialog;
 import com.changhong.openvdb.app.navigator.node.UIConnectionNode;
-import com.changhong.openvdb.app.navigator.node.UIDatabaseNode;
+import com.changhong.openvdb.app.navigator.node.UICatalogNode;
 import com.changhong.openvdb.app.pane.DataGridViewPane;
 import com.changhong.openvdb.app.pane.SqlMessagePane;
 import com.changhong.openvdb.app.widgets.VFXCodeArea;
@@ -75,7 +75,7 @@ public class ScriptEditor extends SplitPane
         private long currentTaskId = System.currentTimeMillis();
         private boolean saveFlag = true;
         private VFXComboBox<UIConnectionNode> connectionComboBox;
-        private VFXComboBox<UIDatabaseNode> databaseComboBox;
+        private VFXComboBox<UICatalogNode> databaseComboBox;
 
         private static int numberCount = 0;
 
@@ -162,7 +162,7 @@ public class ScriptEditor extends SplitPane
 
                 if (selectedConnection != null) {
                         connectionComboBox.getSelectionModel().select(selectedConnection);
-                        databaseComboBox.getItems().addAll(selectedConnection.getDatabases());
+                        databaseComboBox.getItems().addAll(selectedConnection.getCatalogs());
                         databaseComboBox.getSelectionModel().select(selectedConnection.getSelectedDatabase());
                 }
 
@@ -219,9 +219,9 @@ public class ScriptEditor extends SplitPane
                 return connection;
         }
 
-        private VFXComboBox<UIDatabaseNode> newDatabaseComboBox()
+        private VFXComboBox<UICatalogNode> newDatabaseComboBox()
         {
-                VFXComboBox<UIDatabaseNode> database = new VFXComboBox<>();
+                VFXComboBox<UICatalogNode> database = new VFXComboBox<>();
                 configureDatabaseComboBox(database);
                 database.setPrefWidth(200);
 
@@ -281,12 +281,12 @@ public class ScriptEditor extends SplitPane
                 });
         }
 
-        private void configureDatabaseComboBox(VFXComboBox<UIDatabaseNode> comboBox)
+        private void configureDatabaseComboBox(VFXComboBox<UICatalogNode> comboBox)
         {
                 comboBox.setButtonCell(new ListCell<>()
                 {
                         @Override
-                        protected void updateItem(UIDatabaseNode item, boolean empty)
+                        protected void updateItem(UICatalogNode item, boolean empty)
                         {
                                 super.updateItem(item, empty);
 
@@ -301,7 +301,7 @@ public class ScriptEditor extends SplitPane
                 comboBox.setCellFactory(list -> new ListCell<>()
                 {
                         @Override
-                        protected void updateItem(UIDatabaseNode item, boolean empty)
+                        protected void updateItem(UICatalogNode item, boolean empty)
                         {
                                 super.updateItem(item, empty);
 
@@ -316,13 +316,13 @@ public class ScriptEditor extends SplitPane
                 comboBox.setConverter(new StringConverter<>()
                 {
                         @Override
-                        public String toString(UIDatabaseNode database)
+                        public String toString(UICatalogNode database)
                         {
                                 return database == null ? null : database.getName();
                         }
 
                         @Override
-                        public UIDatabaseNode fromString(String s)
+                        public UICatalogNode fromString(String s)
                         {
                                 return null;
                         }
@@ -383,7 +383,7 @@ public class ScriptEditor extends SplitPane
                                 UIConnectionNode connection = connectionComboBox.getSelectionModel()
                                         .getSelectedItem();
 
-                                UIDatabaseNode database = databaseComboBox.getSelectionModel()
+                                UICatalogNode database = databaseComboBox.getSelectionModel()
                                         .getSelectedItem();
 
                                 driver = connection.getDriver();
@@ -447,9 +447,9 @@ public class ScriptEditor extends SplitPane
                 return dst;
         }
 
-        public VFXComboBox<UIDatabaseNode> copyDatabaseComboBox()
+        public VFXComboBox<UICatalogNode> copyDatabaseComboBox()
         {
-                VFXComboBox<UIDatabaseNode> dst = databaseComboBox.copyComboBox();
+                VFXComboBox<UICatalogNode> dst = databaseComboBox.copyComboBox();
                 configureDatabaseComboBox(dst);
                 return dst;
         }
@@ -478,7 +478,7 @@ public class ScriptEditor extends SplitPane
 
         private void setOwnerTabName(String name)
         {
-                UIDatabaseNode database = null;
+                UICatalogNode database = null;
 
                 if (databaseComboBox != null)
                         database = databaseComboBox.getSelectionModel().getSelectedItem();
@@ -509,7 +509,7 @@ public class ScriptEditor extends SplitPane
                         UIConnectionNode connection = connectionComboBox.getSelectionModel()
                                 .getSelectedItem();
 
-                        UIDatabaseNode database = databaseComboBox.getSelectionModel()
+                        UICatalogNode database = databaseComboBox.getSelectionModel()
                                 .getSelectedItem();
 
                         ScriptFile newScriptFile = ScriptFileRepository.save(

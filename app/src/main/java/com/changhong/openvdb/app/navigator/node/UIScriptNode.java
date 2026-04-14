@@ -24,12 +24,12 @@ import java.awt.*;
 public class UIScriptNode extends UIExplorerNode
 {
         private final ScriptFile scriptFile;
-        private final UIDatabaseNode database;
+        private final UICatalogNode catalog;
 
-        public UIScriptNode(UIDatabaseNode database, ScriptFile scriptFile)
+        public UIScriptNode(UICatalogNode catalog, ScriptFile scriptFile)
         {
                 super(scriptFile.getName());
-                this.database = database;
+                this.catalog = catalog;
                 setGraphic(Assets.use("sql"));
                 this.scriptFile = scriptFile;
         }
@@ -69,7 +69,7 @@ public class UIScriptNode extends UIExplorerNode
 
         private void openScriptEditor()
         {
-                EventBus.publish(new OpenScriptEditorEvent(database.getConnection(), scriptFile));
+                EventBus.publish(new OpenScriptEditorEvent(catalog.getConnection(), scriptFile));
         }
 
         private void renameQuery()
@@ -93,7 +93,7 @@ public class UIScriptNode extends UIExplorerNode
         private void deleteQuery()
         {
                 scriptFile.forceDelete();
-                database.queryItem.getChildren().remove(this);
+                catalog.queryItem.getChildren().remove(this);
                 EventBus.publish(new RemoveScriptEditorTabEvent(scriptFile));
                 EventBus.publish(new RefreshQueryNodeEvent());
         }
@@ -101,7 +101,7 @@ public class UIScriptNode extends UIExplorerNode
         @Override
         public void onSelectedEvent(UIExplorerNode node)
         {
-                database.getConnection().setSelectedDatabase(database);
+                catalog.getConnection().setSelectedDatabase(catalog);
         }
 
         @Override

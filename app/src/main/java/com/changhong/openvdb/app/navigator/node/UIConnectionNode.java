@@ -44,11 +44,11 @@ public class UIConnectionNode extends UIExplorerNode
         private MenuItem editMenuItem;
 
         @Getter
-        private final List<UIDatabaseNode> databases = new ArrayList<>();
+        private final List<UICatalogNode> catalogs = new ArrayList<>();
 
         @Setter
         @Getter
-        private UIDatabaseNode selectedDatabase;
+        private UICatalogNode selectedDatabase;
 
         public UIConnectionNode(ConnectionPropertyModel propertyModel)
         {
@@ -106,11 +106,11 @@ public class UIConnectionNode extends UIExplorerNode
                 setExpanded(false);
 
                 getChildren().forEach(db -> {
-                        if (db instanceof UIDatabaseNode dbNode)
+                        if (db instanceof UICatalogNode dbNode)
                                 dbNode.closeDatabase();
                 });
 
-                databases.clear();
+                catalogs.clear();
                 getChildren().clear();
                 VFXDialogHelper.runWith(dataSource::close);
                 UINodeGlobalStatus.getInstance().removeConnection(this);
@@ -178,8 +178,8 @@ public class UIConnectionNode extends UIExplorerNode
         private void setupDatabases(List<String> databaseNames)
         {
                 for (String name : databaseNames)
-                        databases.add(new UIDatabaseNode(this, driver, name));
-                getChildren().addAll(databases);
+                        catalogs.add(new UICatalogNode(this, driver, name));
+                getChildren().addAll(catalogs);
         }
 
         @SuppressWarnings("BooleanMethodIsAlwaysInverted")

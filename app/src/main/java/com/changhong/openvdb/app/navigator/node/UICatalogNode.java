@@ -33,7 +33,7 @@ import java.util.*;
 @SuppressWarnings({
         "FieldCanBeLocal"
 })
-public class UIDatabaseNode extends UIExplorerNode implements EventListener
+public class UICatalogNode extends UIExplorerNode implements EventListener
 {
         @Getter
         private final UIConnectionNode connection;
@@ -64,9 +64,9 @@ public class UIDatabaseNode extends UIExplorerNode implements EventListener
          */
         public static class UIInternalNode extends UIExplorerNode
         {
-                private final UIDatabaseNode parent;
+                private final UICatalogNode parent;
 
-                public UIInternalNode(UIDatabaseNode parent, String name, ImageView icon)
+                public UIInternalNode(UICatalogNode parent, String name, ImageView icon)
                 {
                         super(name);
                         setGraphic(icon);
@@ -80,9 +80,9 @@ public class UIDatabaseNode extends UIExplorerNode implements EventListener
                 }
         }
 
-        public UIDatabaseNode(UIConnectionNode connection,
-                              Driver driver,
-                              String databaseName)
+        public UICatalogNode(UIConnectionNode connection,
+                             Driver driver,
+                             String databaseName)
         {
                 super(databaseName);
                 this.connection = connection;

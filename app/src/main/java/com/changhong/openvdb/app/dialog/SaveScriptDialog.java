@@ -2,7 +2,7 @@ package com.changhong.openvdb.app.dialog;
 
 import com.changhong.openvdb.app.Application;
 import com.changhong.openvdb.app.navigator.node.UIConnectionNode;
-import com.changhong.openvdb.app.navigator.node.UIDatabaseNode;
+import com.changhong.openvdb.app.navigator.node.UICatalogNode;
 import com.changhong.openvdb.app.pane.BrowserPane;
 import com.changhong.openvdb.app.widgets.VFXComboBox;
 import com.changhong.openvdb.app.workbench.ScriptEditor;
@@ -29,7 +29,7 @@ public class SaveScriptDialog extends BrowserPane
         private final ScriptEditor scriptEditor;
         private final TextField textField;
         private final VFXComboBox<UIConnectionNode> connectionComboBox;
-        private final VFXComboBox<UIDatabaseNode> databaseComboBox;
+        private final VFXComboBox<UICatalogNode> catalogComboBox;
 
         private boolean isOk = false;
 
@@ -44,10 +44,10 @@ public class SaveScriptDialog extends BrowserPane
                 Label curName = new Label("当前名称：" + scriptEditor.getName());
                 Label savePath = new Label("保存位置：");
                 connectionComboBox = scriptEditor.copyConnectionComboBox();
-                databaseComboBox = scriptEditor.copyDatabaseComboBox();
+                catalogComboBox = scriptEditor.copyDatabaseComboBox();
                 connectionComboBox.setMaxWidth(Double.MAX_VALUE);
-                databaseComboBox.setMaxWidth(Double.MAX_VALUE);
-                VBox topBox = new VBox(title, textField, curName, savePath, connectionComboBox, databaseComboBox);
+                catalogComboBox.setMaxWidth(Double.MAX_VALUE);
+                VBox topBox = new VBox(title, textField, curName, savePath, connectionComboBox, catalogComboBox);
                 topBox.setSpacing(10);
                 topBox.setPadding(new Insets(20, 10, 5, 10));
 
@@ -73,8 +73,8 @@ public class SaveScriptDialog extends BrowserPane
                 connectionComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
                         if (!newVal.isOpen())
                                 return;
-                        databaseComboBox.getItems().clear();
-                        databaseComboBox.getItems().addAll(newVal.getDatabases());
+                        catalogComboBox.getItems().clear();
+                        catalogComboBox.getItems().addAll(newVal.getCatalogs());
                 });
         }
 
