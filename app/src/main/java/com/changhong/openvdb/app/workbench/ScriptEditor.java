@@ -180,7 +180,7 @@ public class ScriptEditor extends SplitPane
         public void setupCodeArea()
         {
                 codeArea.multiPlainChanges().successionEnds(Duration.ofMillis(500))
-                                .subscribe(ignored -> save());
+                                .subscribe(ignored -> autoSave());
 
                 codeArea.setOnKeyPressed(event -> {
                         if ((event.isControlDown() || event.isShortcutDown())
@@ -488,6 +488,14 @@ public class ScriptEditor extends SplitPane
                         : "@" + database.getName();
 
                 ownerTab.setText(name + tail);
+        }
+
+        private void autoSave()
+        {
+                if (scriptFile == null)
+                        return;
+
+                save();
         }
 
         private void save()

@@ -4,11 +4,12 @@ import com.changhong.openvdb.app.Application;
 import com.changhong.openvdb.app.navigator.node.UIConnectionNode;
 import com.changhong.openvdb.app.navigator.node.UIDatabaseNode;
 import com.changhong.openvdb.app.pane.BrowserPane;
+import com.changhong.openvdb.app.widgets.VFXComboBox;
 import com.changhong.openvdb.app.workbench.ScriptEditor;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import com.changhong.openvdb.app.widgets.VFXComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -51,7 +52,10 @@ public class SaveScriptDialog extends BrowserPane
                 topBox.setPadding(new Insets(20, 10, 5, 10));
 
                 Button ok = new Button("保存");
-                ok.setOnAction(e -> isOk = true);
+                ok.setOnAction(e -> {
+                        isOk = true;
+                        cancel();
+                });
                 Button cancel = new Button("取消");
                 cancel.setOnAction(e -> cancel());
                 Region spacer = new Region();
@@ -88,14 +92,15 @@ public class SaveScriptDialog extends BrowserPane
 
                 SaveScriptDialog dialog = new SaveScriptDialog(stage, scriptEditor);
 
+                Platform.runLater(() -> {});
                 Scene scene = new Scene(dialog, 600, 300);
                 stage.setScene(scene);
                 stage.showAndWait();
 
-                if (!dialog.isOk)
-                        return null;
+                if (dialog.isOk)
+                        return dialog.textField.getText();
 
-                return dialog.textField.getText();
+                return null;
         }
 
 }
