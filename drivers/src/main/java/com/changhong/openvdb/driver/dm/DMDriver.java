@@ -173,8 +173,9 @@ public class DMDriver extends Driver
                         WHERE 1=1
                           AND TABLE_NAME = '%s' 
                           AND CONSTRAINT_TYPE = 'P'
+                          AND INDEX_OWNER = '%s'
                         ;
-                        """, table);
+                        """, table, session.schema());
 
                 DataGrid dataGrid = execute(session, sql);
                 return dataGrid.getRowValue(0, 0);
@@ -240,13 +241,11 @@ public class DMDriver extends Driver
 
                 // 设置自增
                 execute(session, (connection, statement) -> {
-                        Captor.icall(() -> {
-                                for (Column column : columns) {
-                                        if (column.isAutoIncrement())
-                                                statement.execute(strfmt("ALTER TABLE %s ADD COLUMN %s IDENTITY(1, 1);",
-                                                        dialect.quote(table), dialect.quote(column.getName())));
-                                }
-                        });
+                        for (Column column : columns) {
+                                if (column.isAutoIncrement())
+                                        statement.execute(strfmt("ALTER TABLE %s ADD COLUMN %s IDENTITY(1, 1);",
+                                                dialect.quote(table), dialect.quote(column.getName())));
+                        }
                 });
 
                 // 配置列信息
