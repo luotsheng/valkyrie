@@ -10,6 +10,7 @@ import com.changhong.openvdb.app.explorer.UIExplorerNode;
 import com.changhong.openvdb.app.menu.ConnectionMenuBuilder;
 import com.changhong.openvdb.app.model.ConnectionPropertyModel;
 import com.changhong.openvdb.app.model.UINodeGlobalStatus;
+import com.changhong.openvdb.app.widgets.VFXTextField;
 import com.changhong.openvdb.core.model.ConnectionProfile;
 import com.changhong.openvdb.core.repository.ConnectionRepository;
 import com.changhong.utils.thread.ThreadPool;
@@ -17,7 +18,6 @@ import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -44,7 +44,7 @@ public class ObjectExplorerPane extends VBox implements EventListener
         private final ContextMenu rootContextMenu;
 
         private final TreeItem<String> root = new TreeItem<>("我的连接", Assets.use("chain"));
-        private final TextField search = new TextField();
+        private final VFXTextField search = new VFXTextField();
         private final PauseTransition searchDelay = new PauseTransition(Duration.millis(100));
         private final Map<String, UIConnectionNode> connections = new HashMap<>();
 

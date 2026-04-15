@@ -7,6 +7,7 @@ import com.changhong.openvdb.app.explorer.UICatalogNode;
 import com.changhong.openvdb.app.explorer.UITableNode;
 import com.changhong.openvdb.app.widgets.VFXIconButton;
 import com.changhong.openvdb.app.widgets.VFXSeparator;
+import com.changhong.openvdb.app.widgets.VFXTextField;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.app.widgets.table.VFXTableColumn;
 import com.changhong.openvdb.app.widgets.table.VFXTableView;
@@ -56,7 +57,7 @@ public class TableOverviewPane extends BorderPane
         private TableColumn<Table, String> rows;
         private TableColumn<Table, String> comment;
 
-        private final TextField search = new TextField();
+        private final VFXTextField search = new VFXTextField();
         private final ObservableList<Table> observable = FXCollections.observableArrayList();
         private final PauseTransition searchDelay = new PauseTransition(Duration.millis(100));
 

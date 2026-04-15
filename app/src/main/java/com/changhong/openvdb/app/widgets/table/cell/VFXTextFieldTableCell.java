@@ -1,5 +1,6 @@
 package com.changhong.openvdb.app.widgets.table.cell;
 
+import com.changhong.openvdb.app.widgets.VFXTextField;
 import com.changhong.openvdb.app.workbench.ModifyCell;
 import javafx.application.Platform;
 import javafx.scene.control.TextField;
@@ -15,7 +16,7 @@ public class VFXTextFieldTableCell<S> extends TextFieldTableCell<S, String>
         /**
          * 文本编辑器
          */
-        private TextField tf;
+        private VFXTextField tf;
 
         /**
          * 当 TextField 检测到 ESC 被按下时，才设置为 true，
@@ -136,7 +137,7 @@ public class VFXTextFieldTableCell<S> extends TextFieldTableCell<S, String>
 
         private void createTextField()
         {
-                tf = new TextField(getString());
+                tf = new VFXTextField(getString());
 
                 tf.focusedProperty().addListener((obs, oldVal, newVal) -> {
                         if (!newVal && isEditing()) {
