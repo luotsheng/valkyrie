@@ -157,13 +157,13 @@ public class DMDriver extends Driver
         @Override
         public void dropPrimaryKey(Session session, String table)
         {
-
+                System.out.println();
         }
 
         @Override
         public void alterPrimaryKey(Session session, String table, Collection<Column> primaryKeys)
         {
-
+                System.out.println();
         }
 
         @Override

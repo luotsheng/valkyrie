@@ -216,39 +216,15 @@ public class MySQLDriver extends Driver
                 try {
                         String sql = strfmt("ALTER TABLE %s DROP PRIMARY KEY;", dialect.quote(table));
                         execute(session, new SQL(sql));
-                } catch (Exception e) {
-                        throw new DriverException(e);
+                } catch (DriverException e) {
+                        if (e.getErrorCode() != MySQL.KEY_NOT_FOUND)
+                                throw e;
                 }
         }
 
         @Override
         public void alterPrimaryKey(Session session, String table, Collection<Column> primaryKeys)
         {
-                Column autoColumn = null;
-
-                if (!primaryKeys.isEmpty()) {
-                        for (Column primaryKey : primaryKeys) {
-                                if (primaryKey.isAutoIncrement()) {
-                                        autoColumn = primaryKey;
-                                        break;
-                                }
-                        }
-
-                        /* 先删除自增列 */
-                        if (autoColumn != null) {
-                                autoColumn.setAutoIncrement(false);
-                                alterChange(session, table, List.of(autoColumn));
-                        }
-                }
-
-                /* 尝试删除主键 */
-                try {
-                        dropPrimaryKey(session, table);
-                } catch (DriverException e) {
-                        if (e.getErrorCode() != 1091)
-                                throw e;
-                }
-
                 if (primaryKeys.isEmpty())
                         return;
 
@@ -267,12 +243,6 @@ public class MySQLDriver extends Driver
                 script.append(");");
 
                 execute(session, new SQL(atos(script)));
-
-                /* 恢复自增 */
-                if (autoColumn != null) {
-                        autoColumn.setAutoIncrement(true);
-                        alterChange(session, table, List.of(autoColumn));
-                }
         }
 
         @Override

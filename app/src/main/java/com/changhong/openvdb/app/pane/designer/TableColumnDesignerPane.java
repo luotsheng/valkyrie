@@ -70,11 +70,13 @@ public class TableColumnDesignerPane extends Designer<Column>
                 List<Column> autoIncrements = Lists.newArrayList();
 
                 /* [Step 1]: 如果存在自增列，先移除 */
-                for (Column column : alterBuffer) {
-                        if (column.isAutoIncrement()) {
-                                column.setAutoIncrement(false);
-                                autoIncrements.add(column);
-                        }
+                if (primaryChange) {
+                        alterBuffer.stream().filter(Column::isAutoIncrement).forEach(col -> {
+                                col.setAutoIncrement(false);
+                                autoIncrements.add(col);
+                        });
+                        if (!autoIncrements.isEmpty())
+                                driver.alterChange(session, table, autoIncrements);
                 }
 
                 /* [Step 2]: 执行字段新增或修改操作 */
@@ -82,13 +84,14 @@ public class TableColumnDesignerPane extends Designer<Column>
                         driver.alterChange(session, table, alterBuffer);
 
                 /* [Step 3]: 设置表主键字段 */
-                if (primaryChange)
+                if (primaryChange) {
+                        driver.dropPrimaryKey(session, table);
                         driver.alterPrimaryKey(session, table, primaryBuffer);
-
-                /* [Step 4]: 恢复自增列 */
-                if (!autoIncrements.isEmpty()) {
-                        autoIncrements.forEach(e -> e.setAutoIncrement(true));
-                        driver.alterChange(session, table, autoIncrements);
+                        /* [Step 3.1]: 恢复自增列 */
+                        if (!autoIncrements.isEmpty()) {
+                                autoIncrements.forEach(e -> e.setAutoIncrement(true));
+                                driver.alterChange(session, table, autoIncrements);
+                        }
                 }
         }
 
