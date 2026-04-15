@@ -82,6 +82,8 @@ public class Assets
                 IMAGES.put("mysql", load("/assets/icons/mysql.png"));
                 IMAGES.put("dm2", load("/assets/icons/dm2.png"));
                 IMAGES.put("nav0", load("/assets/icons/navigation.png"));
+                IMAGES.put("home", load("/assets/icons/home.png"));
+                IMAGES.put("table2", load("/assets/icons/table2.png"));
         }
 
         private static Image load(String path)

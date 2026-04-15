@@ -27,7 +27,7 @@ import javafx.scene.layout.VBox;
 public class Workbench extends VBox implements EventListener
 {
         private final VFXTabPane tabPane = new VFXTabPane();
-        private final Tab navigationTab = new Tab("导航");
+        private final Tab navigationTab = new Tab("首页");
 
         private final ContextMenu tabPaneContextMenu = new ContextMenu();
         private final MenuItem closeCurrent = new MenuItem("关闭当前");;
@@ -38,7 +38,7 @@ public class Workbench extends VBox implements EventListener
 
         public Workbench()
         {
-                navigationTab.setGraphic(Assets.use("nav0"));
+                navigationTab.setGraphic(Assets.use("home"));
 
                 setStyle("-fx-background-color: #ffffff;");
                 getChildren().add(tabPane);

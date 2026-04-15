@@ -45,10 +45,10 @@ public class DataGridViewPane extends BorderPane
         private final VBox vContainer;
         private final boolean isPreview;
 
-        private final Button plus = new VFXIconButton("新增数据", "plus");
-        private final Button minus = new VFXIconButton("删除选中行", "minus");
-        private final Button check = new VFXIconButton("应用更改", "check");
-        private final Button cross = new VFXIconButton("取消更改", "cross");
+        private final Button plus = new VFXIconButton("新增", "plus");
+        private final Button minus = new VFXIconButton("删除", "minus");
+        private final Button check = new VFXIconButton("应用", "check");
+        private final Button cross = new VFXIconButton("取消", "cross");
         private final Button reload = new VFXIconButton("刷新", "reload");
 
         private final Node progressIndicator = Assets.newProgressIndicator();
