@@ -1,6 +1,7 @@
 package com.changhong.openvdb.driver.api;
 
 import com.changhong.openvdb.driver.api.sql.SQL;
+import com.changhong.utils.Optional;
 import com.changhong.utils.collection.Maps;
 import lombok.Getter;
 import lombok.Setter;
@@ -299,12 +300,24 @@ public class DataGrid
         /**
          * 根据列名获取指定行数据
          *
-         * @param columnName 字段名
          * @param index 行索引
+         * @param columnName 字段名
          * @return 对应行列值
          */
-        public String  getRowValue(String columnName, int index)
+        public String getRowValue(int index, String columnName)
         {
-                return rows.get(index).get(columnIndices.get(columnName));
+                return getRowValue(index, columnIndices.get(columnName));
+        }
+
+        /**
+         * 根据列名获取指定行数据
+         *
+         * @param index 行索引
+         * @param col 列索引
+         * @return 对应行列值
+         */
+        public String getRowValue(int index, int col)
+        {
+                return Optional.ifError(() -> rows.get(index).get(col), null);
         }
 }

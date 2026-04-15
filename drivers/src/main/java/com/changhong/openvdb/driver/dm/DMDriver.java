@@ -3,6 +3,7 @@ package com.changhong.openvdb.driver.dm;
 import com.changhong.openvdb.driver.api.*;
 import com.changhong.openvdb.driver.api.exception.DriverException;
 import com.changhong.openvdb.driver.api.sql.SQL;
+import com.changhong.utils.Captor;
 import com.changhong.utils.collection.Lists;
 import com.changhong.utils.collection.Sets;
 
@@ -17,6 +18,7 @@ import java.util.Set;
 import static com.changhong.utils.TypeConverter.atos;
 import static com.changhong.utils.collection.Lists.beg;
 import static com.changhong.utils.string.StaticLibrary.*;
+import static com.changhong.utils.string.StaticLibrary.strfmt;
 
 /**
  * @author Luo Tiansheng
@@ -154,10 +156,51 @@ public class DMDriver extends Driver
 
         }
 
+        @SuppressWarnings("TrailingWhitespacesInTextBlock")
+        private String getConstraintId(Session session, String table)
+        {
+                var sql = strfmt("""
+                        SELECT
+                          CONSTRAINT_NAME
+                        FROM
+                          USER_CONSTRAINTS 
+                        WHERE 1=1
+                          AND TABLE_NAME = '%s' 
+                          AND CONSTRAINT_TYPE = 'P'
+                        ;
+                        """, table);
+
+                DataGrid dataGrid = execute(session, sql);
+                return dataGrid.getRowValue(0, 0);
+        }
+
         @Override
         public void updatePrimaryKey(Session session, String table, Collection<Column> primaryKeys)
         {
-                System.out.println();
+                String constraintId = getConstraintId(session, table);
+
+                execute(session, ((connection, statement) -> {
+                        var quotedTable = dialect.quote(table);
+
+                        if (strnempty(constraintId)) {
+                                var dropSql = strfmt("ALTER TABLE %s DROP CONSTRAINT %s;", quotedTable,
+                                        dialect.quote(constraintId));
+                                // 删除主键
+                                statement.execute(dropSql);
+                        }
+
+                        // 新增主键
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(strfmt("ALTER TABLE %s ADD CONSTRAINT PRIMARY KEY (", quotedTable));
+
+                        for (Column pk : primaryKeys)
+                                builder.append(dialect.quote(pk.getName())).append(",");
+
+                        builder.delete(builder.length() - 1, builder.length());
+                        builder.append(");");
+
+                        statement.execute(atos(builder));
+                }));
         }
 
         @Override
@@ -183,6 +226,10 @@ public class DMDriver extends Driver
                                 ));
                         }
                 }
+
+                execute(session, (connection, statement) -> Captor.icall(() ->
+                        statement.execute(strfmt("ALTER TABLE %s DROP IDENTITY;", dialect.quote(table)))
+                ));
 
                 // 配置列信息
                 for (Column column : columns) {

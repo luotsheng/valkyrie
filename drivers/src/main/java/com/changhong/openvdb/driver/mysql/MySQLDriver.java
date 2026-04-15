@@ -106,21 +106,21 @@ public class MySQLDriver extends Driver
                 Map<String, Index> indexes = new LinkedHashMap<>();
 
                 for (int i = 0; i < dataGrid.size(); i++) {
-                        String keyName = dataGrid.getRowValue("Key_name", i);
+                        String keyName = dataGrid.getRowValue(i, "Key_name");
 
                         /* 主键忽略 */
                         if (streq(keyName, "PRIMARY"))
                                 continue;
 
-                        indexColumns.add(dataGrid.getRowValue("Column_name", i));
+                        indexColumns.add(dataGrid.getRowValue(i, "Column_name"));
 
                         Index index = new Index();
 
                         index.setName(keyName);
                         index.setOriginalName(keyName);
 
-                        String Non_unique = dataGrid.getRowValue("Non_unique", i);
-                        String Index_type = dataGrid.getRowValue("Index_type", i);
+                        String Non_unique = dataGrid.getRowValue(i, "Non_unique");
+                        String Index_type = dataGrid.getRowValue(i, "Index_type");
 
                         if (streq(Non_unique, "1") && streq(Index_type, "BTREE")) {
                                 index.setType("NORMAL");
@@ -137,7 +137,7 @@ public class MySQLDriver extends Driver
                         }
 
                         if (productMetaData.getMajorVersion() >= MySQL.VERSION_8x) {
-                                index.setVisible(atobool(dataGrid.getRowValue("Visible", i)));
+                                index.setVisible(atobool(dataGrid.getRowValue(i, "Visible")));
                                 index.setOriginalVisible(index.isVisible());
                         }
 
