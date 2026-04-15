@@ -205,8 +205,7 @@ public class DMDriver extends Driver
                         if (column.isAutoIncrement())
                                 modifyBuilder.append(" IDENTITY(1, 1) ");
 
-                        if (!column.isNullable())
-                                modifyBuilder.append(" NOT NULL");
+                        modifyBuilder.append(!column.isNullable() ? " NOT NULL" : " NULL");
 
                         if (strnempty(column.getDefaultValue()))
                                 modifyBuilder.append(" DEFAULT ").append(column.getDefaultValue());
@@ -216,10 +215,11 @@ public class DMDriver extends Driver
                         sqls.add(atos(modifyBuilder));
 
                         // COMMENT
+                        var comment = column.getComment();
                         sqls.add(strfmt("COMMENT ON COLUMN %s.%s IS '%s';",
                                 dialect.quote(table),
                                 dialect.quote(column.getName()),
-                                column.getComment()));
+                                strempty(comment) ? "" : comment));
                 }
 
                 /* 批量执行 */
