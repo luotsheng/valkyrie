@@ -227,12 +227,28 @@ public class DMDriver extends Driver
                         }
                 }
 
+                // 删除自增
                 execute(session, (connection, statement) -> Captor.icall(() ->
                         statement.execute(strfmt("ALTER TABLE %s DROP IDENTITY;", dialect.quote(table)))
                 ));
 
+                // 设置自增
+                execute(session, (connection, statement) -> {
+                        Captor.icall(() -> {
+                                for (Column column : columns) {
+                                        if (column.isAutoIncrement())
+                                                statement.execute(strfmt("ALTER TABLE %s ADD COLUMN %s IDENTITY(1, 1);",
+                                                        dialect.quote(table), dialect.quote(column.getName())));
+                                }
+                        });
+                });
+
                 // 配置列信息
                 for (Column column : columns) {
+                        // 达梦不允许修改自增列
+                        if (column.isAutoIncrement())
+                                continue;
+
                         // MODIFY
                         StringBuilder modifyBuilder = new StringBuilder();
 
@@ -242,9 +258,6 @@ public class DMDriver extends Driver
                         ));
 
                         modifyBuilder.append(column.getType());
-
-                        if (column.isAutoIncrement())
-                                modifyBuilder.append(" IDENTITY(1, 1) ");
 
                         modifyBuilder.append(column.isNotNull() ? " NOT NULL" : " NULL");
 
