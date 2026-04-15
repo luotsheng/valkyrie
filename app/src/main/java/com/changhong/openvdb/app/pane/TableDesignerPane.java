@@ -189,7 +189,7 @@ public class TableDesignerPane extends BorderPane
                                 }
                                 doReload();
                         } catch (Exception e) {
-                                VFXDialogHelper.alert(e);
+                                Platform.runLater(() -> VFXDialogHelper.alert(e));
                         } finally {
                                 Platform.runLater(() -> {
                                         endReload();
