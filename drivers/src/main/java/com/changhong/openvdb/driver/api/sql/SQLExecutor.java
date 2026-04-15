@@ -101,12 +101,12 @@ public interface SQLExecutor
          * - 非查询语句的执行结果需通过执行状态或影响行数获取（实现层提供）
          * - 该方法可能为异步执行，结果返回不代表任务已完成（视实现而定）
          *
-         * @param fmt 可以格式化的字符串
+         * @param sqlfmt 字符串对象
          * @param args 格式化参数
          * @return 查询结果集（非查询语句返回 null）
          */
-        default DataGrid execute(Session session, String fmt, Object... args) {
-                return execute(session, new SQL(fmt(fmt, args)));
+        default DataGrid execute(Session session, Object sqlfmt, Object... args) {
+                return execute(session, new SQL(sqlfmt, args));
         }
 
         /**

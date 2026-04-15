@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.changhong.utils.collection.Lists.end;
+import static com.changhong.utils.string.StaticLibrary.fmt;
 
 /**
  * SQL 执行单元
@@ -43,9 +44,9 @@ public class SQL implements Iterable<SQLParsedStatement>
 
         private final List<SQLParsedStatement> statements = Lists.newArrayList();
 
-        public SQL(String raw)
+        public SQL(Object sqlfmt, Object... args)
         {
-                this(null, raw);
+                this(null, fmt(sqlfmt, args));
 
         }
 

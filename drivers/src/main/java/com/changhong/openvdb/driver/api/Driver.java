@@ -78,90 +78,6 @@ public abstract class Driver implements SQLExecutor
         protected final Dialect dialect;
 
         /**
-         * 执行普通 SQL 语句的回调接口。
-         * <p>
-         * 用于封装对 {@link Statement#execute(String)} 等返回布尔值方法的调用。
-         * 回调方法接收已打开的数据库连接和语句对象，调用方无需关心连接的获取与释放。
-         *
-         * @see Driver#execute(Session, StatementExecuteCallback)
-         * @see Statement#execute(String)
-         */
-        public interface StatementExecuteCallback {
-                /**
-                 * 使用给定的连接和语句执行数据库操作。
-                 *
-                 * @param connection 当前会话的数据库连接（已设置 catalog/schema）
-                 * @param statement  JDBC 语句对象，由调用方创建并管理生命周期
-                 * @throws SQLException 如果数据库访问错误发生
-                 */
-                void execute(Connection connection, Statement statement) throws SQLException;
-        }
-
-        /**
-         * 执行更新操作的回调接口。
-         * <p>
-         * 用于封装对 {@link Statement#executeUpdate(String)} 等返回更新行数方法的调用。
-         * 回调方法接收已打开的数据库连接和语句对象。
-         *
-         * @see Driver#executeUpdate(Session, StatementExecuteUpdateCallback)
-         * @see Statement#executeUpdate(String)
-         */
-        public interface StatementExecuteUpdateCallback {
-                /**
-                 * 使用给定的连接和语句执行更新操作。
-                 *
-                 * @param connection 当前会话的数据库连接（已设置 catalog/schema）
-                 * @param statement  JDBC 语句对象
-                 * @return 受影响的记录行数
-                 * @throws SQLException 如果数据库访问错误发生
-                 */
-                int executeUpdate(Connection connection, Statement statement) throws SQLException;
-        }
-
-        /**
-         * 批量执行 SQL 语句的回调接口。
-         * <p>
-         * 用于封装对 {@link Statement#executeBatch()} 的调用。回调方法接收已打开的数据库连接和语句对象，
-         * 调用方应在方法内使用 {@link Statement#addBatch(String)} 添加命令并执行批量操作。
-         *
-         * @see Driver#executeBatch(Session, StatementExecuteBatchCallback)
-         * @see Statement#executeBatch()
-         */
-        public interface StatementExecuteBatchCallback {
-                /**
-                 * 使用给定的连接和语句执行批量更新操作。
-                 *
-                 * @param connection 当前会话的数据库连接（已设置 catalog/schema）
-                 * @param statement  JDBC 语句对象
-                 * @return 每个命令执行后受影响的行数组成的数组
-                 * @throws SQLException 如果数据库访问错误发生
-                 */
-                int[] executeBatch(Connection connection, Statement statement) throws SQLException;
-        }
-
-        /**
-         * 执行查询操作并返回数据网格的回调接口。
-         * <p>
-         * 用于封装查询执行逻辑，将 {@link ResultSet} 转换为 {@link DataGrid} 对象。
-         * 回调方法接收已打开的数据库连接和语句对象，实现类负责执行查询并构建结果网格。
-         *
-         * @see Driver#executeQuery(Session, StatementExecuteQueryCallback)
-         * @see ResultSet
-         * @see DataGrid
-         */
-        public interface StatementExecuteQueryCallback {
-                /**
-                 * 使用给定的连接和语句执行查询操作，并返回数据网格。
-                 *
-                 * @param connection 当前会话的数据库连接（已设置 catalog/schema）
-                 * @param statement  JDBC 语句对象
-                 * @return 包含查询结果的数据网格
-                 * @throws SQLException 如果数据库访问错误发生
-                 */
-                DataGrid executeQuery(Connection connection, Statement statement) throws SQLException;
-        }
-
-        /**
          * 构造一个新的驱动实例。
          *
          * @param dataSource 数据源，用于获取数据库连接（不能为 {@code null}）
@@ -774,99 +690,6 @@ public abstract class Driver implements SQLExecutor
                 alterVisible(session, table.getName(), indexes);
         }
 
-        /**
-         * 执行返回布尔值的数据库操作（如 DDL、部分存储过程调用）。
-         * <p>
-         * 该方法会从 {@link DataSource} 获取连接，设置会话的 catalog 和 schema，
-         * 然后通过回调执行具体语句。
-         *
-         * @param session 当前会话上下文，包含 catalog 和 schema 信息
-         * @param executeCallback 回调接口，定义具体执行逻辑
-         * @throws DriverException 如果发生 {@link SQLException}（包装后抛出）
-         * @see Statement#execute(String)
-         */
-        public void execute(Session session, StatementExecuteCallback executeCallback)
-        {
-                try (Connection connection = getConnection(session)) {
-                        try (Statement statement = new StatementProxy(connection.createStatement())) {
-                                executeCallback.execute(connection, statement);
-                        }
-                } catch (SQLException e) {
-                        throw new DriverException(e);
-                }
-        }
-
-        /**
-         * 执行更新操作（INSERT / UPDATE / DELETE / DDL 等），返回受影响行数。
-         *
-         * @param session 当前会话上下文
-         * @param executeUpdateCallback 回调接口，返回更新计数
-         * @return 受影响的行数（对于 DDL 可能返回 0）
-         * @throws DriverException 如果发生 {@link SQLException}
-         * @see Statement#executeUpdate(String)
-         */
-        public int executeUpdate(Session session, StatementExecuteUpdateCallback executeUpdateCallback)
-        {
-                try (Connection connection = getConnection(session)) {
-                        try (Statement statement = new StatementProxy(connection.createStatement())) {
-                                return executeUpdateCallback.executeUpdate(connection, statement);
-                        }
-                } catch (SQLException e) {
-                        throw new DriverException(e);
-                }
-        }
-
-        /**
-         * 批量执行 SQL 更新操作。
-         * <p>
-         * 该方法从数据源获取连接，设置会话的 catalog 和 schema，然后通过回调接口执行批量更新。
-         * 回调内部应使用 {@link Statement#addBatch(String)} 添加 SQL 命令，并调用
-         * {@link Statement#executeBatch()} 执行。
-         * <p>
-         * 返回的整数数组包含每个命令影响的行数，语义与 JDBC 规范一致。
-         *
-         * @param session               当前会话上下文，包含 catalog 和 schema 信息（不能为 {@code null}）
-         * @param executeBatchCallback  批量执行回调接口（不能为 {@code null}）
-         * @return 每个命令执行后受影响的行数组成的数组
-         * @throws NullPointerException 如果 {@code session} 或 {@code executeBatchCallback} 为 {@code null}
-         * @throws DriverException 如果发生 {@link SQLException}（包装后抛出）
-         * @see StatementExecuteBatchCallback
-         * @see Statement#executeBatch()
-         */
-        public int[] executeBatch(Session session, StatementExecuteBatchCallback executeBatchCallback)
-        {
-                try (Connection connection = getConnection(session)) {
-                        try (Statement statement = new StatementProxy(connection.createStatement())) {
-                                return executeBatchCallback.executeBatch(connection, statement);
-                        }
-                } catch (SQLException e) {
-                        throw new DriverException(e);
-                }
-        }
-
-        /**
-         * 执行查询操作，返回结果集。
-         * <p>
-         * <b>注意：</b> 调用方必须负责关闭返回的 {@link ResultSet} 及其关联的 {@link Statement}
-         * 和 {@link Connection}。推荐使用 try-with-resources 模式。
-         *
-         * @param session 当前会话上下文
-         * @param executeQueryCallback 回调接口，返回查询结果集
-         * @return 查询结果集数据表对象
-         * @throws DriverException 如果发生 {@link SQLException}
-         * @see Statement#executeQuery(String)
-         */
-        public DataGrid executeQuery(Session session, StatementExecuteQueryCallback executeQueryCallback)
-        {
-                try (Connection connection = getConnection(session)) {
-                        try (Statement statement = new StatementProxy(connection.createStatement())) {
-                                return executeQueryCallback.executeQuery(connection, statement);
-                        }
-                } catch (SQLException e) {
-                        throw new DriverException(e);
-                }
-        }
-
         /* *********************************************************************************** */
         /*                                SQL EXECUTOR IMPLEMENTS                              */
         /* *********************************************************************************** */
@@ -881,39 +704,42 @@ public abstract class Driver implements SQLExecutor
         @Override
         public DataGrid execute(long jobId, Session session, SQL sql)
         {
-                return executeQuery(session, (connection, statement) -> {
-                        DataGrid dataGrid = new DataGrid(session, this, sql);
+                try (Connection connection = getConnection(session)) {
+                        try (Statement statement = new StatementProxy(connection.createStatement())) {
+                                DataGrid dataGrid = new DataGrid(session, this, sql);
 
-                        taskQueue.put(jobId, statement);
+                                taskQueue.put(jobId, statement);
 
-                        SQLParsedStatement eps = sql.popupEnd();
+                                SQLParsedStatement eps = sql.popupEnd();
 
-                        for (SQLParsedStatement ps : sql) {
-                                switch (ps.getCommand()) {
-                                        case EXECUTE -> statement.execute(ps.toString());
-                                        case EXECUTE_UPDATE -> statement.executeUpdate(ps.toString());
-                                        case EXECUTE_QUERY -> {}
+                                for (SQLParsedStatement ps : sql) {
+                                        switch (ps.getCommand()) {
+                                                case EXECUTE -> statement.execute(ps.toString());
+                                                case EXECUTE_UPDATE -> statement.executeUpdate(ps.toString());
+                                                case EXECUTE_QUERY -> {}
+                                        }
                                 }
-                        }
 
-                        sql.pushback(eps);
+                                sql.pushback(eps);
 
-                        switch (eps.getCommand()) {
-                                case EXECUTE -> statement.execute(eps.toString());
-                                case EXECUTE_UPDATE -> statement.executeUpdate(eps.toString());
-                                case EXECUTE_QUERY -> {
-                                        ResultSet rs = statement.executeQuery(eps.toString());
-                                        ResultSets.toDataGrid(connection, eps, rs, dialect, dataGrid);
-                                        return dataGrid;
+                                switch (eps.getCommand()) {
+                                        case EXECUTE -> statement.execute(eps.toString());
+                                        case EXECUTE_UPDATE -> statement.executeUpdate(eps.toString());
+                                        case EXECUTE_QUERY -> {
+                                                ResultSet rs = statement.executeQuery(eps.toString());
+                                                ResultSets.toDataGrid(connection, eps, rs, dialect, dataGrid);
+                                                return dataGrid;
+                                        }
                                 }
-                        }
 
-                        return null;
-                });
+                                return null;
+                        }
+                } catch (SQLException e) {
+                        throw new DriverException(e);
+                }
         }
 
         @Override
-        @SuppressWarnings("resource")
         public void cancel(long jobId)
         {
                 if (taskQueue.containsKey(jobId))

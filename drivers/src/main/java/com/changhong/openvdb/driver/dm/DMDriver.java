@@ -8,7 +8,9 @@ import com.changhong.utils.collection.Lists;
 import com.changhong.utils.collection.Sets;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
@@ -69,7 +71,8 @@ public class DMDriver extends Driver
         {
                 List<Table> tables = Lists.newArrayList();
 
-                execute(session, (connection, statement) -> {
+                try (Connection connection = getConnection(session);
+                     Statement statement = connection.createStatement()) {
                         String sql = """
                                     SELECT
                                         t.TABLE_NAME AS name,
@@ -119,10 +122,10 @@ public class DMDriver extends Driver
                                                 rs.getString("comment")
                                         ));
                                 }
-                        } catch (SQLException e) {
-                                throw new DriverException(e);
                         }
-                });
+                } catch (SQLException e) {
+                        throw new DriverException(e);
+                }
 
                 return tables;
         }
@@ -147,7 +150,7 @@ public class DMDriver extends Driver
         @Override
         public void dropTable(Session session, String table)
         {
-
+                execute(session, "DROP TABLE %s", dialect.quote(table));
         }
 
         @Override
@@ -192,24 +195,23 @@ public class DMDriver extends Driver
                 String temp = "ALTER TABLE %s DROP CONSTRAINT %s;";
                 var dropSql = fmt(temp, dialect.quote(table), dialect.quote(constraintId));
 
-                execute(session, ((connection, statement) -> statement.execute(dropSql)));
+                execute(session, dropSql);
         }
 
         @Override
         public void addPrimaryKey(Session session, String table, Collection<Column> primaryKeys)
         {
-                execute(session, ((connection, statement) -> {
-                        StringBuilder builder = new StringBuilder();
-                        builder.append(fmt("ALTER TABLE %s ADD CONSTRAINT PRIMARY KEY (", dialect.quote(table)));
+                StringBuilder builder = new StringBuilder();
 
-                        for (Column pk : primaryKeys)
-                                builder.append(dialect.quote(pk.getName())).append(",");
+                builder.append(fmt("ALTER TABLE %s ADD CONSTRAINT PRIMARY KEY (", dialect.quote(table)));
 
-                        builder.delete(builder.length() - 1, builder.length());
-                        builder.append(");");
+                for (Column pk : primaryKeys)
+                        builder.append(dialect.quote(pk.getName())).append(",");
 
-                        statement.execute(atos(builder));
-                }));
+                builder.delete(builder.length() - 1, builder.length());
+                builder.append(");");
+
+                execute(session, builder);
         }
 
         @Override
@@ -237,18 +239,17 @@ public class DMDriver extends Driver
                 }
 
                 // 删除自增
-                execute(session, (connection, statement) -> Captor.icall(() ->
-                        statement.execute(fmt("ALTER TABLE %s DROP IDENTITY;", dialect.quote(table)))
-                ));
+                Captor.icall(() ->
+                        execute(session, "ALTER TABLE %s DROP IDENTITY;", dialect.quote(table))
+                );
 
                 // 设置自增
-                execute(session, (connection, statement) -> {
-                        for (Column column : columns) {
-                                if (column.isAutoIncrement())
-                                        statement.execute(fmt("ALTER TABLE %s ADD COLUMN %s IDENTITY(1, 1);",
-                                                dialect.quote(table), dialect.quote(column.getName())));
+                for (Column column : columns) {
+                        if (column.isAutoIncrement()) {
+                                var sqlfmt = "ALTER TABLE %s ADD COLUMN %s IDENTITY(1, 1);";
+                                execute(session, sqlfmt, dialect.quote(table), dialect.quote(column.getName()));
                         }
-                });
+                }
 
                 // 配置列信息
                 for (Column column : columns) {
@@ -284,15 +285,18 @@ public class DMDriver extends Driver
                 }
 
                 /* 批量执行 */
-                executeBatch(session, ((connection, statement) -> {
+                try (Connection connection = getConnection(session);
+                     Statement statement = connection.createStatement()) {
                         if (sqls.isEmpty())
-                                return new int[] {0};
+                                return;
 
                         for (String sql : sqls)
                                 statement.addBatch(sql);
 
-                        return statement.executeBatch();
-                }));
+                        statement.executeBatch();
+                } catch (SQLException e) {
+                        throw new DriverException(e);
+                }
         }
 
         @Override

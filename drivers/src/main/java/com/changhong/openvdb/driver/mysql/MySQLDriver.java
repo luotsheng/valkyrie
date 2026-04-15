@@ -14,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 import static com.changhong.utils.TypeConverter.atobool;
@@ -65,7 +67,8 @@ public class MySQLDriver extends Driver
         {
                 List<Table> tables = Lists.newArrayList();
 
-                execute(session, (connection, statement) -> {
+                try (Connection connection = getConnection(session);
+                     Statement statement = connection.createStatement()) {
                         String sql = fmt("""
                             SELECT
                             	`TABLE_NAME` AS `name`,
@@ -93,10 +96,10 @@ public class MySQLDriver extends Driver
                                                 rs.getString("comment")
                                         ));
                                 }
-                        } catch (SQLException e) {
-                                throw new DriverException(e);
                         }
-                });
+                } catch (SQLException e) {
+                        throw new DriverException(e);
+                }
 
                 return tables;
         }
@@ -177,8 +180,7 @@ public class MySQLDriver extends Driver
         @Override
         public void dropTable(Session session, String table)
         {
-                execute(session, (connection, statement) -> statement.execute(
-                        fmt("DROP TABLE `%s`;", dialect.quote(table))));
+                execute(session, "DROP TABLE `%s`;", dialect.quote(table));
         }
 
         @Override
