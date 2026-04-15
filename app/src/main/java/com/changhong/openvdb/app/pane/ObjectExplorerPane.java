@@ -13,16 +13,22 @@ import com.changhong.openvdb.app.model.UINodeGlobalStatus;
 import com.changhong.openvdb.core.model.ConnectionProfile;
 import com.changhong.openvdb.core.repository.ConnectionRepository;
 import com.changhong.utils.thread.ThreadPool;
+import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.text.Collator;
 import java.util.*;
+
+import static com.changhong.utils.string.StaticLibrary.strimatch;
 
 /**
  * 导航面板
@@ -34,23 +40,24 @@ import java.util.*;
 public class ObjectExplorerPane extends VBox implements EventListener
 {
         private final TabPane tabPane;
-        private final TextField searchField;
         private final TreeView<String> treeView;
         private final ContextMenu rootContextMenu;
 
-        private final Map<String, UIConnectionNode> connections
-                = new HashMap<>();
+        private final TreeItem<String> root = new TreeItem<>("我的连接", Assets.use("chain"));
+        private final TextField search = new TextField();
+        private final PauseTransition searchDelay = new PauseTransition(Duration.millis(100));
+        private final Map<String, UIConnectionNode> connections = new HashMap<>();
 
         public ObjectExplorerPane()
         {
                 this.tabPane = createTabPane();
-                this.searchField = createSearchField();
                 this.treeView = createTreeView();
                 this.rootContextMenu = createRootContextMenu();
 
                 EventBus.subscribe(RefreshConnectionEvent.class, this);
 
                 setupContextMenu();
+                setupSearchField();
                 setupMouseClickListener();
                 setupTreeNodeSelectedEvent();
                 initializeLayout();
@@ -78,19 +85,52 @@ public class ObjectExplorerPane extends VBox implements EventListener
                 return tabPane;
         }
 
-        private TextField createSearchField()
+        private void setupSearchField()
         {
-                TextField searchField = new TextField();
-                searchField.setPromptText("搜索...");
-                return searchField;
+                search.setPromptText("搜索...");
+
+                search.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+                        if (e.isShiftDown() && e.getCode() == KeyCode.BACK_SPACE)
+                                search.clear();
+                });
+
+                search.textProperty().addListener((observable, oldVal, newVal) -> {
+                        searchDelay.setOnFinished(event -> {
+                                if (newVal == null || newVal.isBlank()) {
+                                        treeView.setRoot(root);
+                                        return;
+                                }
+
+                                TreeItem<String> filteredRoot = filterTree(treeView.getRoot(), newVal);
+
+                                filteredRoot.setExpanded(true);
+                                treeView.setRoot(filteredRoot);
+                        });
+                        searchDelay.playFromStart();
+                });
+        }
+
+        private TreeItem<String> filterTree(TreeItem<String> root, String keyword)
+        {
+                TreeItem<String> result = new TreeItem<>(root.getValue(), root.getGraphic());
+
+                for (TreeItem<String> child : root.getChildren()) {
+                        TreeItem<String> filteredChild = filterTree(child, keyword);
+
+                        boolean matched = strimatch(child.getValue(), keyword);
+
+                        if (matched || !filteredChild.getChildren().isEmpty()) {
+                                result.setExpanded(true);
+                                result.getChildren().add(filteredChild);
+                        }
+                }
+
+                return result;
         }
 
         private TreeView<String> createTreeView()
         {
-                ImageView chain = Assets.use("chain");
-                TreeItem<String> rootItem = new TreeItem<>("我的连接", chain);
-
-                TreeView<String> treeView = new TreeView<>(rootItem);
+                TreeView<String> treeView = new TreeView<>(root);
                 treeView.setShowRoot(true);
 
                 return treeView;
@@ -206,7 +246,7 @@ public class ObjectExplorerPane extends VBox implements EventListener
 
         private void initializeLayout()
         {
-                VBox vbox = new VBox(searchField, treeView);
+                VBox vbox = new VBox(search, treeView);
                 vbox.setSpacing(2);
 
                 tabPane.getTabs().getFirst().setContent(vbox);
