@@ -262,7 +262,7 @@ public class TableDesignerPane extends BorderPane
                 TableColumn<Column, String> name = factory.createEditableColumn("名称", "name");
                 TableColumn<Column, String> type = factory.createEditableColumn("类型", "type");
                 TableColumn<Column, String> defaultValue = factory.createEditableColumn("默认值", "defaultValue");
-                TableColumn<Column, Boolean> nullable = factory.createEditableColumn("是否允许NULL", "nullable");
+                TableColumn<Column, Boolean> notNull = factory.createEditableColumn("不允许NULL", "notNull");
                 TableColumn<Column, Boolean> primary = factory.createEditableColumn("主键", "primary");
                 TableColumn<Column, Boolean> autoIncrement = factory.createEditableColumn("是否自增", "autoIncrement");
                 TableColumn<Column, String> comment = factory.createEditableColumn("注释", "comment");
@@ -271,7 +271,7 @@ public class TableDesignerPane extends BorderPane
                 type.setCellFactory(c -> new VFXTextFieldTableCell<>());
                 defaultValue.setCellFactory(c -> new VFXTextFieldTableCell<>());
                 comment.setCellFactory(c -> new VFXTextFieldTableCell<>());
-                nullable.setCellFactory(c -> new VFXCheckBoxTableCell<>());
+                notNull.setCellFactory(c -> new VFXCheckBoxTableCell<>());
                 primary.setCellFactory(c -> new VFXCheckBoxTableCell<>());
                 autoIncrement.setCellFactory(c -> new VFXCheckBoxTableCell<>());
 
@@ -279,7 +279,7 @@ public class TableDesignerPane extends BorderPane
                 name.setPrefWidth(150);
                 type.setPrefWidth(150);
                 defaultValue.setPrefWidth(200);
-                nullable.setPrefWidth(120);
+                notNull.setPrefWidth(120);
                 primary.setPrefWidth(50);
                 autoIncrement.setPrefWidth(100);
                 comment.setPrefWidth(280);
@@ -287,7 +287,7 @@ public class TableDesignerPane extends BorderPane
                 structureView.getColumns().addAll(
                         name,
                         type,
-                        nullable,
+                        notNull,
                         primary,
                         autoIncrement,
                         defaultValue,

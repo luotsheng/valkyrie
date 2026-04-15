@@ -69,11 +69,11 @@ public class Column extends Sealable
         private String type;
 
         /**
-         * 列是否允许存储 {@code NULL} 值。
+         * 列是否不允许存储 {@code NULL} 值。
          * <p>
          * {@code true} 表示列可为空，{@code false} 表示列具有 {@code NOT NULL} 约束。
          */
-        private boolean nullable;
+        private boolean notNull;
 
         /**
          * 列是否为表的主键组成部分。
@@ -153,7 +153,7 @@ public class Column extends Sealable
                 return Codec.toByteHex((strip(name) +
                         strip(index) +
                         strip(type) +
-                        strip(nullable) +
+                        strip(notNull) +
                         strip(primary) +
                         strip(autoIncrement) +
                         strip(defaultValue) +

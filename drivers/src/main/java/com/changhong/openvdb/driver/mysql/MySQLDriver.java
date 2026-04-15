@@ -375,7 +375,7 @@ public class MySQLDriver extends Driver
                         alterColDataType.setColDataType(colDataType);
 
                         alterColDataType.addColumnSpecs(
-                                col.isNullable() ? "NULL" : "NOT NULL"
+                                col.isNotNull() ? "NOT NULL" : "NULL"
                         );
 
                         if (col.isAutoIncrement())

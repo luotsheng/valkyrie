@@ -205,7 +205,7 @@ public class DMDriver extends Driver
                         if (column.isAutoIncrement())
                                 modifyBuilder.append(" IDENTITY(1, 1) ");
 
-                        modifyBuilder.append(!column.isNullable() ? " NOT NULL" : " NULL");
+                        modifyBuilder.append(column.isNotNull() ? " NOT NULL" : " NULL");
 
                         if (strnempty(column.getDefaultValue()))
                                 modifyBuilder.append(" DEFAULT ").append(column.getDefaultValue());

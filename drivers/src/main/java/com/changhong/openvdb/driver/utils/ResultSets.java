@@ -83,8 +83,8 @@ public class ResultSets
 
                         c.setType(rsMeta.getColumnTypeName(i));
 
-                        c.setNullable(
-                                rsMeta.isNullable(i) == ResultSetMetaData.columnNullable
+                        c.setNotNull(
+                                rsMeta.isNullable(i) != ResultSetMetaData.columnNullable
                         );
 
                         colMetas.put(c.getName(), c);
