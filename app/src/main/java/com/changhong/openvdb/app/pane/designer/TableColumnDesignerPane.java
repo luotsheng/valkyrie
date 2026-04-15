@@ -71,7 +71,7 @@ public class TableColumnDesignerPane extends Designer<Column>
 
                 /* [Step 1]: 如果存在自增列，先移除 */
                 if (primaryChange) {
-                        alterBuffer.stream().filter(Column::isAutoIncrement).forEach(col -> {
+                        primaryBuffer.stream().filter(Column::isAutoIncrement).forEach(col -> {
                                 col.setAutoIncrement(false);
                                 autoIncrements.add(col);
                         });
