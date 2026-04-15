@@ -564,30 +564,34 @@ public abstract class Driver implements SQLExecutor
         }
 
         /**
-         * 修改表的主键约束。
+         * 更新指定表的主键约束。
          * <p>
-         * 重新定义指定表的主键，通常需要先删除旧的主键约束，再添加新的主键约束。
-         * 不同数据库的语法差异示例：
+         * 该方法用于替换表的现有主键为新定义的主键列集合。内部实现为先删除当前主键约束，
+         * 再添加新的主键约束。
+         * <p>
+         * <b>删除阶段异常处理：</b>
          * <ul>
-         *   <li>MySQL: {@code ALTER TABLE table_name DROP PRIMARY KEY, ADD PRIMARY KEY (col1, col2)}</li>
-         *   <li>PostgreSQL: {@code ALTER TABLE table_name DROP CONSTRAINT pk_name, ADD PRIMARY KEY (col1, col2)}</li>
-         *   <li>Oracle: 类似 PostgreSQL，需要知道主键约束名称</li>
+         *   <li>若删除主键时因主键不存在而失败（如当前表无主键约束），该异常将被静默忽略，
+         *       继续执行添加新主键的操作</li>
+         *   <li>若删除阶段发生其他类型的异常（如数据库连接问题、权限不足等），则直接抛出，
+         *       不会继续执行添加主键操作</li>
          * </ul>
          * <p>
-         * <b>实现注意事项：</b>
+         * <b>参数 {@code primaryKeys} 说明：</b>
          * <ul>
-         *   <li>若 {@code primaryKeys} 为空集合，表示删除所有主键（即表不再有主键）</li>
-         *   <li>实现应能自动获取当前主键约束名称（通过 {@link DatabaseMetaData#getPrimaryKeys}）</li>
-         *   <li>添加新主键前应验证所有列存在于表中且数据类型合适</li>
-         *   <li>建议将操作包装在事务中（如果数据库支持 DDL 事务）以保证原子性</li>
+         *   <li>若 {@code primaryKeys} 为 {@code null} 或空集合，则表示仅删除现有主键，
+         *       不添加新的主键约束</li>
+         *   <li>若非空，则按集合顺序创建复合主键（集合顺序决定复合主键中各列的顺序）</li>
          * </ul>
          *
-         * @param session 当前会话上下文，包含 catalog 和 schema 信息
-         * @param table 目标表元数据（不能为 {@code null}）
-         * @param primaryKeys 新主键列的集合（按顺序），为空表示删除现有主键；集合中列的顺序决定了复合主键中各列的顺序
-         * @throws NullPointerException     如果 {@code table} 或 {@code primaryKeys} 为 {@code null}
-         * @throws IllegalArgumentException 如果任一列不属于该表，或列数量为 0 但数据库不允许无主键表
-         * @throws DriverException   如果执行 DDL 失败
+         * @param session 会话上下文（不能为 {@code null}）
+         * @param table 目标表名称（不能为 {@code null} 或空白字符串）
+         * @param primaryKeys 新主键列集合（可为空，表示仅删除现有主键）
+         * @throws NullPointerException 如果 {@code session} 或 {@code table} 为 {@code null}
+         * @throws IllegalArgumentException 如果 {@code table} 为空白字符串，或任一列不存在于表中，
+         *                                  或列数量为 0 但数据库不允许无主键表
+         * @throws UnsupportedOperationException 如果数据库方言不支持添加主键约束
+         * @throws DriverException 如果删除阶段发生非“主键不存在”的异常，或添加主键阶段发生异常
          */
         public abstract void updatePrimaryKey(Session session, String table, Collection<Column> primaryKeys);
 
