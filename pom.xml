@@ -18,6 +18,7 @@
     </modules>
 
     <properties>
+        <groovy.version>5.0.5</groovy.version>
         <revision>v1.0.0-arch.1</revision>
         <openjfx.version>21.0.5</openjfx.version>
         <atlantafx.version>2.0.1</atlantafx.version>
@@ -38,6 +39,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.changhong.openvdb</groupId>
                 <artifactId>utils</artifactId>
@@ -70,5 +76,12 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

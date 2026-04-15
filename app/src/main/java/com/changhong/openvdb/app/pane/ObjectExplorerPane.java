@@ -91,10 +91,7 @@ public class ObjectExplorerPane extends VBox implements EventListener
         {
                 search.setPromptText("搜索...");
 
-                search.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-                        if (e.isShiftDown() && e.getCode() == KeyCode.BACK_SPACE)
-                                search.clear();
-                });
+                search.addEventFilter(KeyEvent.KEY_PRESSED, this::onKeyEvent);
 
                 search.textProperty().addListener((observable, oldVal, newVal) -> {
                         searchDelay.setOnFinished(event -> {
@@ -110,6 +107,12 @@ public class ObjectExplorerPane extends VBox implements EventListener
                         });
                         searchDelay.playFromStart();
                 });
+        }
+
+        private void onKeyEvent(KeyEvent e)
+        {
+                if (e.isAltDown() && e.getCode() == KeyCode.BACK_SPACE)
+                        search.clear();
         }
 
         private TreeItem<String> filterTree(TreeItem<String> root, String keyword)

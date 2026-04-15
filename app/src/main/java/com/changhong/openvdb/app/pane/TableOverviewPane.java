@@ -95,10 +95,7 @@ public class TableOverviewPane extends BorderPane
                 search.setPromptText("搜索...");
                 search.setPrefWidth(300);
 
-                search.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-                        if (e.isShiftDown() && e.getCode() == KeyCode.BACK_SPACE)
-                                search.clear();
-                });
+                search.addEventFilter(KeyEvent.KEY_PRESSED, this::onKeyEvent);
 
                 search.textProperty().addListener((obs, oldVal, newVal) -> {
                         searchDelay.setOnFinished(e -> {
@@ -133,10 +130,7 @@ public class TableOverviewPane extends BorderPane
 
         private void setupTableView()
         {
-                tableView.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-                        if (e.isShiftDown() && e.getCode() == KeyCode.BACK_SPACE)
-                                search.clear();
-                });
+                tableView.addEventFilter(KeyEvent.KEY_PRESSED, this::onKeyEvent);
 
                 tableView.addEventFilter(KeyEvent.KEY_TYPED, e -> {
                         if ((!tableView.isFocused() && !tableView.isHover()) || search.isFocused())
@@ -184,6 +178,12 @@ public class TableOverviewPane extends BorderPane
 
                         return r;
                 });
+        }
+
+        private void onKeyEvent(KeyEvent e)
+        {
+                if (e.isAltDown() && e.getCode() == KeyCode.BACK_SPACE)
+                        search.clear();
         }
 
         private void deleteTable()
