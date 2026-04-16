@@ -67,12 +67,17 @@ public class UITableNode extends UIExplorerNode
                         Application.copyToClipboard(driver.showCreateTable(catalog.getSession(), getName()));
                 });
 
+                MenuItem refreshTableItem = new MenuItem("刷新列表");
+                refreshTableItem.setOnAction(event -> catalog.reloadTableNode());
+
                 contextMenu.getItems().addAll(
                         openTableItem,
                         designTableItem,
                         new SeparatorMenuItem(),
                         copyTableNameItem,
-                        copyCreateTableDLLItem
+                        copyCreateTableDLLItem,
+                        new SeparatorMenuItem(),
+                        refreshTableItem
                 );
 
                 return contextMenu;
