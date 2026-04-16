@@ -240,13 +240,13 @@ public class DataGridViewPane extends BorderPane
                 tableView.enableRectangularSelection();
 
                 tableView.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                        if ((event.isControlDown() || event.isShortcutDown())
+                        if ((event.isShortcutDown())
                                 && event.getCode() == KeyCode.C)
                                 copyTableViewSelectedCell();
                 });
 
                 tableView.setOnKeyPressed(event -> {
-                        if ((event.isControlDown() || event.isShortcutDown())
+                        if ((event.isShortcutDown())
                                 && event.getCode() == KeyCode.S) {
                                 if (grid.isUpdatable())
                                         applySubmit();

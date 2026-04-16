@@ -117,7 +117,7 @@ public class VFXCodeArea extends CodeArea
                         showingMenuListeners.add(config.showingMenuListener);
 
                 addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                        if (!(event.isControlDown() || event.isShortcutDown()))
+                        if (!event.isShortcutDown())
                                 return;
 
                         switch (event.getCode()) {

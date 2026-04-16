@@ -156,7 +156,7 @@ public class ScriptEditor extends SplitPane
         private void setupPane()
         {
                 addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-                        if ((event.isControlDown() || event.isShortcutDown())
+                        if ((event.isShortcutDown())
                                 && event.getCode() == KeyCode.S) {
                                 save();
                         }
@@ -212,7 +212,7 @@ public class ScriptEditor extends SplitPane
                                 .subscribe(ignored -> autoSave());
 
                 codeArea.setOnKeyPressed(event -> {
-                        if ((event.isControlDown() || event.isShortcutDown())
+                        if ((event.isShortcutDown())
                                 && event.getCode() == KeyCode.R) {
                                 runTask();
                                 event.consume();
