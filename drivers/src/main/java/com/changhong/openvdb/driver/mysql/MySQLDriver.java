@@ -5,6 +5,7 @@ import com.changhong.openvdb.driver.api.exception.DriverException;
 import com.changhong.openvdb.driver.api.sql.SQL;
 import com.changhong.openvdb.driver.api.sql.SQLCommandType;
 import com.changhong.utils.collection.Lists;
+import com.changhong.utils.collection.Maps;
 import com.changhong.utils.collection.Sets;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
@@ -111,17 +112,18 @@ public class MySQLDriver extends Driver
 
                 DataGrid dataGrid = execute(session, sql);
 
-                List<String> indexColumns = new ArrayList<>();
+                Map<String, List<String>> indexColumns = Maps.newHashMap();
                 Map<String, Index> indexes = new LinkedHashMap<>();
 
                 for (int i = 0; i < dataGrid.size(); i++) {
                         String keyName = dataGrid.getRowValue(i, "Key_name");
+                        List<String> columns = indexColumns.computeIfAbsent(keyName, k -> new ArrayList<>());
 
                         /* 主键忽略 */
                         if (streq(keyName, "PRIMARY"))
                                 continue;
 
-                        indexColumns.add(dataGrid.getRowValue(i, "Column_name"));
+                        columns.add(dataGrid.getRowValue(i, "Column_name"));
 
                         Index index = new Index();
 
@@ -157,7 +159,7 @@ public class MySQLDriver extends Driver
 
                 ret.forEach(idx -> {
                         /* 生成索引列 */
-                        idx.generateColumnText(indexColumns);
+                        idx.generateColumnText(indexColumns.get(idx.getName()));
                         /* 生成完整性校验码 */
                         idx.finalIntegrityCode();
                 });
@@ -206,7 +208,7 @@ public class MySQLDriver extends Driver
 
                 for (Index index : selectionItems) {
 
-                        String name = streq(index.getName(), index.getName())
+                        String name = streq(index.getName(), index.getOriginalName())
                                 ? index.getName()
                                 : index.getOriginalName();
 
