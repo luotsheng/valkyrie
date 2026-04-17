@@ -205,7 +205,16 @@ public class DMDriver extends Driver
         @Override
         public void dropIndexKeys(Session session, String table, Collection<Index> selectionItems)
         {
+                StringBuilder batch = new StringBuilder();
 
+                for (Index selectionItem : selectionItems) {
+                        var sqlText = fmt("DROP INDEX IF EXISTS %s.%s;",
+                                dialect.quote(session.schema()),
+                                dialect.quote(selectionItem.getName()));
+                        batch.append(sqlText);
+                }
+
+                execute(session, batch);
         }
 
         @SuppressWarnings("TrailingWhitespacesInTextBlock")
