@@ -15,7 +15,6 @@ public class VFXIconButton extends Button
         public VFXIconButton(String tip, String icon)
         {
                 getStyleClass().add("vfx-icon-button");
-                setText(tip);
                 setTooltip(new Tooltip(tip));
                 setGraphic(Assets.use(icon));
         }
