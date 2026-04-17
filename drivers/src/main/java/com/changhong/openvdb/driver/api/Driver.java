@@ -368,7 +368,11 @@ public abstract class Driver implements SQLExecutor
          * @see java.sql.DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
          * @see Index
          */
-        public abstract List<Index> getIndexes(Session session, Table table);
+        public abstract List<Index> getIndexes(Session session, String table);
+
+        public List<Index> getIndexes(Session session, Table table) {
+                return getIndexes(session, table.getName());
+        }
 
         /**
          * 获取当前数据库方言支持的所有索引类型名称。

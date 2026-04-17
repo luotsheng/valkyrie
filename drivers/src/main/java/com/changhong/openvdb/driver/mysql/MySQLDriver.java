@@ -105,9 +105,9 @@ public class MySQLDriver extends Driver
         }
 
         @Override
-        public List<Index> getIndexes(Session session, Table table)
+        public List<Index> getIndexes(Session session, String table)
         {
-                SQL sql = new SQL("SHOW INDEX FROM " + dialect.quote(table.getName()) + ";");
+                SQL sql = new SQL("SHOW INDEX FROM " + dialect.quote(table) + ";");
 
                 DataGrid dataGrid = execute(session, sql);
 

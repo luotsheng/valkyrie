@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static com.changhong.utils.TypeConverter.atobool;
 import static com.changhong.utils.TypeConverter.atos;
 import static com.changhong.utils.collection.Lists.beg;
 import static com.changhong.utils.string.StaticLibrary.*;
@@ -131,9 +132,51 @@ public class DMDriver extends Driver
         }
 
         @Override
-        public List<Index> getIndexes(Session session, Table table)
+        public List<Index> getIndexes(Session session, String table)
         {
-                return List.of();
+                var sql = """
+                        SELECT
+                          I.INDEX_NAME,
+                          WM_CONCAT(IC.COLUMN_NAME) AS COLUMNS_TEXT,
+                          CASE
+                              WHEN I.UNIQUENESS = 'UNIQUE' AND I.INDEX_TYPE = 'NORMAL' THEN 'UNIQUE'
+                              ELSE UPPER(I.INDEX_TYPE)
+                          END AS INDEX_TYPE,
+                          CASE WHEN I.STATUS = 'VALID' THEN 'ON' ELSE 'OFF' END AS VISIBLE
+                        FROM
+                          USER_INDEXES I
+                          JOIN USER_IND_COLUMNS IC
+                              ON I.INDEX_NAME = IC.INDEX_NAME
+                              AND I.TABLE_NAME = IC.TABLE_NAME
+                        WHERE
+                          I.TABLE_NAME = '%s'
+                          AND I.INDEX_NAME NOT LIKE 'ROWID%%'
+                          AND I.INDEX_NAME NOT IN (
+                            SELECT INDEX_NAME FROM USER_CONSTRAINTS
+                              WHERE TABLE_NAME = '%s'
+                                AND CONSTRAINT_TYPE = 'P'
+                          )
+                        GROUP BY
+                          I.INDEX_NAME, I.UNIQUENESS, I.INDEX_TYPE, I.STATUS
+                        ;
+                        """;
+
+                DataGrid dataGrid = execute(session, sql, table, table);
+
+                List<Index> indexes = Lists.newArrayList();
+                for (int i = 0; i < dataGrid.size(); i++) {
+                        Index index = new Index();
+                        index.setName(dataGrid.getRowValue(i, 0));
+                        index.setColumnsText(dataGrid.getRowValue(i, 1));
+                        index.setType(dataGrid.getRowValue(i, 2));
+                        index.setVisible(atobool(dataGrid.getRowValue(0, 3)));
+                        index.setOriginalName(index.getName());
+                        index.setOriginalVisible(index.isVisible());
+                        index.finalIntegrityCode();
+                        indexes.add(index);
+                }
+
+                return indexes;
         }
 
         @Override
