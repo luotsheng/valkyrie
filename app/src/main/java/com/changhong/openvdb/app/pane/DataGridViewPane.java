@@ -70,8 +70,7 @@ public class DataGridViewPane extends BorderPane
 
         public DataGridViewPane(boolean isPreview)
         {
-                if (isPreview)
-                        dataGridTab.setClosable(false);
+                dataGridTab.setClosable(false);
 
                 setupTableView();
 

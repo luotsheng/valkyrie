@@ -107,6 +107,7 @@ public class ScriptEditor extends SplitPane
 
                 // 绑定日志标签
                 sqlMessageTab = new Tab("日志");
+                sqlMessageTab.setClosable(false);
                 sqlMessageTab.setContent(sqlMessagePane);
 
                 topBorderPane.setTop(toolBar);
