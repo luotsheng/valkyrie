@@ -198,7 +198,16 @@ public class DMDriver extends Driver
         @Override
         public void dropColumns(Session session, String table, Collection<Column> columns)
         {
+                StringBuilder deleteColumnBuilder = new StringBuilder();
 
+                for (Column column : columns) {
+                        deleteColumnBuilder.append(fmt("ALTER TABLE %s.%s DROP COLUMN %s;",
+                                dialect.quote(session.schema()),
+                                dialect.quote(table),
+                                dialect.quote(column.getOriginalName())));
+                }
+
+                execute(session, deleteColumnBuilder);
         }
 
         @Override
