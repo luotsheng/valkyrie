@@ -237,6 +237,8 @@ public class StaticLibrary
      * @return 格式化后的字符串
      */
     public static String fmt(Object wstr, Object... args) {
+        if (args == null || args.length == 0)
+            return atos(wstr);
         return String.format(TypeConverter.atos(wstr), args);
     }
 
