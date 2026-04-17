@@ -84,6 +84,7 @@ public class Assets
                 IMAGES.put("nav0", load("/assets/icons/navigation.png"));
                 IMAGES.put("home", load("/assets/icons/home.png"));
                 IMAGES.put("table2", load("/assets/icons/table2.png"));
+                IMAGES.put("export", load("/assets/icons/export.png"));
         }
 
         private static Image load(String path)

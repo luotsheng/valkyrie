@@ -21,9 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import lombok.Setter;
 
 import java.util.List;
@@ -41,7 +39,7 @@ public class DataGridViewPane extends BorderPane
         private final TabPane tabPane = new TabPane();
         private final Tab dataGridTab = new Tab();
         private final VFXTableView<GridRow> tableView = new VFXTableView<>();
-        private final ToolBar toolBar = new ToolBar();
+        private final HBox toolBar = new HBox();
         private final VBox vContainer;
 
         private final Button plus = new VFXIconButton("新增", "plus");
@@ -49,6 +47,7 @@ public class DataGridViewPane extends BorderPane
         private final Button submit = new VFXIconButton("提交", "check");
         private final Button cross = new VFXIconButton("取消", "cross");
         private final Button reload = new VFXIconButton("刷新", "reload");
+        private final Button export = new VFXIconButton("导出", "export");
 
         private final Node progressIndicator = Assets.newProgressIndicator();
 
@@ -76,13 +75,18 @@ public class DataGridViewPane extends BorderPane
 
                 setupTableView();
 
-                toolBar.setStyle("-fx-spacing: 2px;");
-                toolBar.getItems().addAll(
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                toolBar.getStyleClass().add("tool-bar");
+                toolBar.getChildren().addAll(
                         plus, minus,
                         new VFXSeparator(),
                         submit, cross,
                         new VFXSeparator(),
-                        reload);
+                        reload,
+                        spacer,
+                        export);
 
                 vContainer = new VBox(tableView);
                 VBox.setVgrow(tableView, Priority.ALWAYS);
