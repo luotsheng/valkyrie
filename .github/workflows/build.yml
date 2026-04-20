@@ -1,10 +1,6 @@
 name: build-openvdb
 
 on:
-  push:
-    branches:
-      - master
-      - arch
   workflow_dispatch:
 
 jobs:
