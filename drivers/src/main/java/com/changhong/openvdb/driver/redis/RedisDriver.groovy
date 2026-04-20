@@ -1,15 +1,19 @@
-package com.changhong.openvdb.driver.redis
+package com.changhong.openvdb.driver.redis;
 
-import com.changhong.openvdb.driver.api.Column
-import com.changhong.openvdb.driver.api.DbType
-import com.changhong.openvdb.driver.api.Dialect
-import com.changhong.openvdb.driver.api.Driver
-import com.changhong.openvdb.driver.api.Index
-import com.changhong.openvdb.driver.api.Session
-import com.changhong.openvdb.driver.api.Table
-import redis.clients.jedis.Jedis
+import com.changhong.openvdb.driver.api.Column;
+import com.changhong.openvdb.driver.api.DbType;
+import com.changhong.openvdb.driver.api.Dialect;
+import com.changhong.openvdb.driver.api.Driver;
+import com.changhong.openvdb.driver.api.Index;
+import com.changhong.openvdb.driver.api.Session;
+import com.changhong.openvdb.driver.api.Table;
+import com.changhong.utils.collection.Lists;
+import redis.clients.jedis.Jedis;
 
-import javax.sql.DataSource
+import javax.sql.DataSource;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Redis 驱动层实现
@@ -17,9 +21,9 @@ import javax.sql.DataSource
  * @author Luo Tiansheng
  * @since 2026/4/20
  */
-class RedisDriver extends Driver {
+public class RedisDriver extends Driver {
 
-        private Jedis jedis
+        private final Jedis jedis;
 
         /**
          * 构造一个新的驱动实例。
@@ -27,88 +31,103 @@ class RedisDriver extends Driver {
          * @param dataSource 数据源，用于获取数据库连接（不能为 {@code null}）
          * @throws NullPointerException 如果 {@code dataSource} 为 {@code null}
          */
-        RedisDriver(DataSource dataSource) {
-                super(dataSource)
-                this.jedis = ((RedisDataSource) dataSource).jedis
+        public RedisDriver(DataSource dataSource) {
+                super(dataSource);
+                this.jedis = ((RedisDataSource) dataSource).getJedis();
         }
 
         @Override
-        List<String> getCatalogs() {
-                List<String> catalogs = []
-                def count = jedis.configGet("databases").get("databases") as Integer
+        public List<String> getCatalogs() {
+                List<String> catalogs = Lists.newArrayList();
+                int count = Integer.parseInt(jedis.configGet("databases").get("databases"));
+
                 for (int i = 0; i < count; i++)
-                        catalogs << String.valueOf(i)
-                return catalogs
+                        catalogs.add(String.valueOf(i));
+
+                return catalogs;
         }
 
         @Override
-        DbType getType() {
-                DbType.redis
+        public DbType getType()
+        {
+                return null;
         }
 
         @Override
-        protected Dialect createDialect() {
-                return null
+        protected Dialect createDialect()
+        {
+                return null;
         }
 
         @Override
-        String showCreateTable(Session session, String table) {
-                return null
+        public String showCreateTable(Session session, String table)
+        {
+                return "";
         }
 
         @Override
-        List<Table> getTables(Session session) {
-                return null
+        public List<Table> getTables(Session session)
+        {
+                return List.of();
         }
 
         @Override
-        List<Index> getIndexes(Session session, String table) {
-                return null
+        public List<Index> getIndexes(Session session, String table)
+        {
+                return List.of();
         }
 
         @Override
-        Set<String> getIndexTypes() {
-                return null
+        public Set<String> getIndexTypes()
+        {
+                return Set.of();
         }
 
         @Override
-        void dropTable(Session session, String table) {
-
-        }
-
-        @Override
-        void dropColumns(Session session, String table, Collection<Column> columns) {
-
-        }
-
-        @Override
-        void dropIndexKeys(Session session, String table, Collection<Index> selectionItems) {
+        public void dropTable(Session session, String table)
+        {
 
         }
 
         @Override
-        void dropPrimaryKey(Session session, String table) {
+        public void dropColumns(Session session, String table, Collection<Column> columns)
+        {
 
         }
 
         @Override
-        void addPrimaryKey(Session session, String table, Collection<Column> primaryKeys) {
+        public void dropIndexKeys(Session session, String table, Collection<Index> selectionItems)
+        {
 
         }
 
         @Override
-        void alterIndexKeys(Session session, String table, Collection<Index> indexes) {
+        public void dropPrimaryKey(Session session, String table)
+        {
 
         }
 
         @Override
-        void alterChange(Session session, String table, Collection<Column> columns) {
+        public void addPrimaryKey(Session session, String table, Collection<Column> primaryKeys)
+        {
 
         }
 
         @Override
-        void alterVisible(Session session, String table, Collection<Index> indexes) {
+        public void alterIndexKeys(Session session, String table, Collection<Index> indexes)
+        {
 
         }
 
+        @Override
+        public void alterChange(Session session, String table, Collection<Column> columns)
+        {
+
+        }
+
+        @Override
+        public void alterVisible(Session session, String table, Collection<Index> indexes)
+        {
+
+        }
 }
