@@ -2,6 +2,8 @@ package com.changhong.openvdb.app.explorer;
 
 import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.dialog.connection.JdbcCreateConnectionDialog;
+import com.changhong.openvdb.app.event.bus.EventBus;
+import com.changhong.openvdb.app.event.workbench.ConnectionOpenedNotifyEvent;
 import com.changhong.openvdb.app.model.ConnectionPropertyModel;
 import com.changhong.openvdb.app.model.UIExplorerStatus;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
@@ -113,6 +115,7 @@ public class UIConnectionNode extends UIExplorerNode
                                 setExpanded(true);
                                 openFlag = true;
                                 UIExplorerStatus.getInstance().selectedConnection(this);
+                                EventBus.publish(new ConnectionOpenedNotifyEvent(this));
                         } catch (Throwable e) {
                                 if (!cancelFlag)
                                         Platform.runLater(() -> VFXDialogHelper.alert(e));

@@ -3,7 +3,10 @@ package com.changhong.openvdb.app.workbench;
 import com.changhong.openvdb.app.assets.Assets;
 import com.changhong.openvdb.app.dialog.SaveScriptDialog;
 import com.changhong.openvdb.app.event.RefreshQueryNodeEvent;
+import com.changhong.openvdb.app.event.bus.Event;
 import com.changhong.openvdb.app.event.bus.EventBus;
+import com.changhong.openvdb.app.event.bus.EventListener;
+import com.changhong.openvdb.app.event.workbench.ConnectionOpenedNotifyEvent;
 import com.changhong.openvdb.app.explorer.UICatalogNode;
 import com.changhong.openvdb.app.explorer.UIConnectionNode;
 import com.changhong.openvdb.app.model.UIExplorerStatus;
@@ -50,7 +53,7 @@ import static com.changhong.utils.string.StaticLibrary.strempty;
  * @since 2026/3/29
  */
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
-public class ScriptEditor extends SplitPane
+public class ScriptEditor extends SplitPane implements EventListener
 {
         private static final Logger LOG = LoggerFactory.getLogger(ScriptEditor.class);
 
@@ -125,6 +128,18 @@ public class ScriptEditor extends SplitPane
                 setOwnerTabName(name);
 
                 getItems().addAll(topBorderPane);
+
+                EventBus.subscribe(ConnectionOpenedNotifyEvent.class, this);
+        }
+
+        @Override
+        public void onEvent(Event event)
+        {
+                if (event instanceof ConnectionOpenedNotifyEvent e) {
+                        UIConnectionNode selectedItem = connectionComboBox.getSelectionModel().getSelectedItem();
+                        if (selectedItem == e.connection)
+                                catalogComboBox.getItems().setAll(selectedItem.getCatalogs());
+                }
         }
 
         private VFXCodeArea createCodeArea()
