@@ -200,7 +200,7 @@ class GenericStyledAreaBehavior {
                 .orElse(otherNavigation).ifConsumed((b, e) -> b.view.clearTargetCaretOffset())
                 .orElse(verticalNavigation)
                 .orElse(copyAction)
-                .ifConsumed((b, e) -> b.view.requestFollowCaret())
+                // .ifConsumed((b, e) -> b.view.requestFollowCaret())
                 // no need to add 'ifConsumed' after charPress since
                 // requestFollowCaret is called in keyTypedTemplate
                 .orElse(charPressConsumer);
