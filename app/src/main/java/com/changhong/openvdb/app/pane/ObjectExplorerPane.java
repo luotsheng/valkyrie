@@ -145,7 +145,7 @@ public class ObjectExplorerPane extends VBox implements EventListener
         {
                 ContextMenu rootContextMenu = new ContextMenu();
 
-                Menu newConnectionMenu = ConnectionMenuBuilder.buildNewConnectionMenu();
+                Menu newConnectionMenu = ConnectionMenuBuilder.buildMenu();
                 MenuItem openAllItem = new MenuItem("打开所有连接");
                 openAllItem.setOnAction(event -> batchOpenConnection());
                 MenuItem closeAllItem = new MenuItem("关闭所有连接");
