@@ -35,6 +35,8 @@ public class UIConnectionNode extends UIExplorerNode
         private final ConnectionPropertyModel propertyModel;
 
         private boolean openFlag = false;
+        private boolean cancelFlag = false;
+        private Thread connecetThread = null;
         private PooledDataSource dataSource;
 
         @Getter
@@ -98,24 +100,40 @@ public class UIConnectionNode extends UIExplorerNode
                 if (openFlag)
                         return;
 
+                cancelFlag = false;
+
                 setLoadingIndicator();
 
-                new Thread(() -> {
+                connecetThread = new Thread(() -> {
                         try {
                                 createDriver();
                                 setupDatabases(driver.getCatalogs());
                                 setExpanded(true);
                                 openFlag = true;
                         } catch (Throwable e) {
-                                Platform.runLater(() -> VFXDialogHelper.alert(e));
+                                if (!cancelFlag)
+                                        Platform.runLater(() -> VFXDialogHelper.alert(e));
                         } finally {
-                                Platform.runLater(this::removeLoadingIndicator);
+                                connecetThread = null;
+                                if (!cancelFlag)
+                                        Platform.runLater(this::removeLoadingIndicator);
                         }
-                }).start();
+                });
+
+                connecetThread.start();
         }
 
         public void closeConnection()
         {
+                /* cancel */
+                if (connecetThread != null) {
+                        cancelFlag = true;
+                        connecetThread.interrupt();
+                        connecetThread = null;
+                        removeLoadingIndicator();
+                        return;
+                }
+
                 if (!openFlag)
                         return;
 
@@ -182,7 +200,7 @@ public class UIConnectionNode extends UIExplorerNode
         @Override
         public void showContextMenu(Node node, double x, double y)
         {
-                if (openFlag) {
+                if (openFlag || connecetThread != null) {
                         openOrCloseMenuItem.setText("关闭连接");
                         openOrCloseMenuItem.setOnAction(event -> closeConnection());
                 } else {
