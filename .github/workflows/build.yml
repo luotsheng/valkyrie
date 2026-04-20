@@ -1,0 +1,52 @@
+name: build-openvdb
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup jdk
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: install modules
+        run: mvn -B -ntp install -DskipTests
+
+      - name: package launcher
+        run: mvn -B -ntp -pl launcher -am package -DskipTests
+
+      - name: download javafx jmods
+        run: |
+          curl -L -o javafx.zip https://download2.gluonhq.com/openjfx/21.0.10/openjfx-21.0.10_windows-x64_bin-jmods.zip
+          powershell -Command "Expand-Archive javafx.zip -DestinationPath javafx"
+
+      - name: jpackage
+        shell: cmd
+        run: |
+          jpackage ^
+            --type app-image ^
+            --name opendb ^
+            --input launcher\target ^
+            --main-jar launcher-v1.0.0-arch.1.jar ^
+            --main-class com.changhong.openvdb.launcher.Launcher ^
+            --module-path javafx\javafx-jmods-21.0.10 ^
+            --add-modules javafx.controls,javafx.fxml,java.sql,java.naming,jdk.crypto.ec ^
+            --win-console ^
+            --dest build
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: opendb-app-image
+          path: build
