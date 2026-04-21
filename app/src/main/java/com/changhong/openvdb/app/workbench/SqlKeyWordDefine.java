@@ -4,6 +4,7 @@ package com.changhong.openvdb.app.workbench;
  * @author Luo Tiansheng
  * @since 2026/3/31
  */
+@SuppressWarnings("ALL")
 public class SqlKeyWordDefine
 {
         public static final String[] KEYWORDS = {
@@ -56,6 +57,23 @@ public class SqlKeyWordDefine
                 "as", "into", "values", "set", "from", "to", "by", "using", "with", "without", "off",
                 "only", "type", "like", "escape", "dual", "dummy", "connect", "level", "prior", "sleep",
                 "start", "stop", "skip", "first", "last", "sample", "seed", "parallel", "nologging",
-                "flashback", "purge", "recyclebin", "edition", "visible", "invisible", "compress", "nocompress"
+                "flashback", "purge", "recyclebin", "edition", "visible", "invisible", "compress", "nocompress",
+                // Redis
+                "append", "asking", "auth", "bgrewriteaof", "bgsave", "bitcount", "bitfield", "bitfield_ro", "bitop", "bitpos",
+                "blmove", "blmpop", "blpop", "brpop", "brpoplpush", "bzmpop", "bzpopmax", "bzpopmin", "client", "cluster", "command",
+                "config", "copy", "dbsize", "debug", "decr", "decrby", "del", "discard", "dump", "echo", "eval", "eval_ro", "evalsha",
+                "evalsha_ro", "exec", "exists", "expire", "expireat", "expiretime", "failover", "flushall", "flushdb", "function",
+                "geoadd", "geodist", "geohash", "geopos", "georadius", "georadiusbymember", "geosearch", "geosearchstore", "get",
+                "getbit", "getdel", "getex", "getrange", "getset", "hdel", "hello", "hexists", "hget", "hgetall", "hincrby",
+                "hincrbyfloat", "hkeys", "hlen", "hmget", "hmset", "hrandfield", "hscan", "hset", "hsetnx", "hstrlen", "hvals",
+                "incr", "incrby", "incrbyfloat", "info", "keys", "lastsave", "latency", "lcs", "lindex", "linsert", "llen", "lmove",
+                "lmpop", "lolwut", "lpop", "lpos", "lpush", "lpushx", "lrange", "lrem", "lset", "ltrim", "memory", "mget", "migrate",
+                "module", "monitor", "move", "mset", "msetnx", "multi", "object", "persist", "pexpire", "pexpireat", "pexpiretime",
+                "pfadd", "pfcount", "pfmerge", "ping", "psetex", "psync", "pttl", "publish", "pubsub", "punsubscribe", "quit", "randomkey",
+                "readonly", "readwrite", "rename", "renamenx", "replconf", "replicaof", "restore", "role", "rpop", "rpoplpush",
+                "rpush", "rpushx", "sadd", "save", "scan", "scard", "script", "sdiff", "sdiffstore", "select", "set", "setbit",
+                "setex", "setnx", "setrange", "shutdown", "sinter", "sintercard", "sinterstore", "sismember", "slaveof", "slowlog",
+                "smembers", "smismember", "smove", "sort", "spop", "srandmember", "srem", "sscan", "strlen", "subscribe", "sunion",
+                "sunionstore", "swapdb", "sync", "time", "touch", "ttl", "type", "unlink", "unsubscribe", "unwatch", "wait", "watch"
         };
 }
