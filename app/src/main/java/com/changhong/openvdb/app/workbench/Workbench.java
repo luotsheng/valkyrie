@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.changhong.utils.collection.Lists.beg;
+import static com.changhong.utils.string.StaticLibrary.streq;
+
 /**
  * @author Luo Tiansheng
  * @since 2026/3/25
@@ -161,7 +164,20 @@ public class Workbench extends VBox implements EventListener
 
         private void handleOpenTabEvent(OpenTabEvent e)
         {
-                Tab tab = new Tab(e.tabId());
+                String tabId = e.tabId();
+
+                if (tabPaneManager.containsKey(e.owner())) {
+                        var tabs = tabPaneManager.get(e.owner()).stream()
+                                .filter(o -> streq(o.getText(), tabId))
+                                .toList();
+
+                        if (!tabs.isEmpty()) {
+                                tabPane.select(beg(tabs));
+                                return;
+                        }
+                }
+
+                Tab tab = new Tab(tabId);
                 tab.setContent(e.createPane(tab));
                 tabPaneManager.computeIfAbsent(e.owner(), tabPane -> Lists.newArrayList())
                         .add(tab);
