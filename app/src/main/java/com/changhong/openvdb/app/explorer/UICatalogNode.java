@@ -88,7 +88,7 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
 
         public UICatalogNode(UIConnectionNode connection, Driver driver, Catalog catalog)
         {
-                super(catalog.getLabel());
+                super(catalog.getLabel(), catalog.getName());
                 this.connection = connection;
                 setGraphic(getIcon());
 

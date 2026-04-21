@@ -51,7 +51,12 @@ public abstract class UIExplorerNode extends TreeItem<String>
 
         public UIExplorerNode(String name)
         {
-                super(name);
+                this(name, name);
+        }
+
+        public UIExplorerNode(String lab, String name)
+        {
+                super(lab);
                 this.name = name;
                 this.contextMenu = registerContextMenu();
         }
