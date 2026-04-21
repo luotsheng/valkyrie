@@ -94,7 +94,7 @@ public class DataGrid
                 Column col = new Column();
                 col.setLabel("Value");
                 col.setName("Value");
-                col.setType("Object");
+                col.setType("ANY");
 
                 dataGrid.setColumns(Lists.fromVarargs(col));
 
