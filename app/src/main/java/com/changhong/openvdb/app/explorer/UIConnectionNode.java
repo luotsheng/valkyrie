@@ -188,7 +188,7 @@ public class UIConnectionNode extends UIExplorerNode
                 editMenuItem = new MenuItem("编辑连接");
                 editMenuItem.setOnAction(event -> editConnection());
 
-                deleteMenuItem = new MenuItem("删除链接");
+                deleteMenuItem = new MenuItem("删除连接");
                 deleteMenuItem.setOnAction(event -> deleteConnection());
 
                 contextMenu.getItems().addAll(
