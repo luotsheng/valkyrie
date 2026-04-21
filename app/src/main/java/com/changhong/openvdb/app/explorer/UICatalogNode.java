@@ -12,6 +12,7 @@ import com.changhong.openvdb.app.pane.TableOverviewPane;
 import com.changhong.openvdb.app.widgets.dialog.VFXDialogHelper;
 import com.changhong.openvdb.core.model.ScriptFile;
 import com.changhong.openvdb.core.repository.ScriptFileRepository;
+import com.changhong.openvdb.driver.api.DbType;
 import com.changhong.openvdb.driver.api.Driver;
 import com.changhong.openvdb.driver.api.Session;
 import com.changhong.openvdb.driver.api.Table;
@@ -152,7 +153,11 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
                                 reloadTable();
 
                                 Platform.runLater(() -> {
-                                        getChildren().addAll(tableItem, queryItem);
+
+                                        if (driver.getType() != DbType.redis)
+                                                getChildren().add(tableItem);
+
+                                        getChildren().add(queryItem);
 
                                         reloadTableNode();
                                         reloadQueryNode();
