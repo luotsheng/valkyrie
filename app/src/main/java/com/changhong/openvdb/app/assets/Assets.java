@@ -16,6 +16,7 @@ import java.util.Objects;
  */
 public class Assets
 {
+        private static final int DEFAULT_SIZE = 19;
         private static final Map<String, Image> IMAGES = new HashMap<>();
 
         static {
@@ -25,7 +26,7 @@ public class Assets
         public static ProgressIndicator newProgressIndicator()
         {
                 ProgressIndicator progressIndicator = new ProgressIndicator();
-                progressIndicator.setMaxSize(16, 16);
+                progressIndicator.setMaxSize(DEFAULT_SIZE, DEFAULT_SIZE);
                 return progressIndicator;
         }
 
@@ -43,7 +44,7 @@ public class Assets
                         case "4x" -> 40;
                         case "5x" -> 50;
                         case "6x" -> 64;
-                        default   -> 16;
+                        default   -> DEFAULT_SIZE;
                 };
 
                 imageView.setFitWidth(size);
