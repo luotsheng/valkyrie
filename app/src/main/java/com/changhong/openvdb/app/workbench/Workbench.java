@@ -44,15 +44,10 @@ public class Workbench extends VBox implements EventListener
 
         private final ContextMenu tabPaneContextMenu = new ContextMenu();
         private final MenuItem closeCurrent = new MenuItem("关闭当前");
-        ;
         private final MenuItem closeAll = new MenuItem("关闭所有");
-        ;
         private final MenuItem closeLeft = new MenuItem("关闭左侧");
-        ;
         private final MenuItem closeRight = new MenuItem("关闭右侧");
-        ;
         private final MenuItem closeOther = new MenuItem("关闭其他");
-        ;
 
         private Object navigationTabOwner = null;
 
@@ -182,6 +177,9 @@ public class Workbench extends VBox implements EventListener
                 tabPaneManager.computeIfAbsent(e.owner(), tabPane -> Lists.newArrayList())
                         .add(tab);
                 tabPane.addAndSelect(tab);
+
+                tab.setOnCloseRequest(event ->
+                        tabPaneManager.values().forEach(o -> o.remove(tab)));
         }
 
         private void handleCloseTabEvent(CloseWorkbenchTabEvent e)
