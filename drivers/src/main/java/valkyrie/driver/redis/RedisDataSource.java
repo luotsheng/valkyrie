@@ -1,6 +1,6 @@
 package valkyrie.driver.redis;
 
-import valkyrie.driver.api.CloseableDataSource;
+import valkyrie.driver.api.VkDataSource;
 import valkyrie.driver.api.ConnectionConfig;
 import lombok.Getter;
 import redis.clients.jedis.Jedis;
@@ -17,7 +17,8 @@ import static valkyrie.utils.string.StaticLibrary.strnempty;
  * @author Luo Tiansheng
  * @since 2026/4/20
  */
-public class RedisDataSource implements CloseableDataSource {
+public class RedisDataSource implements VkDataSource
+{
 
         @Getter
         private final Jedis jedis;

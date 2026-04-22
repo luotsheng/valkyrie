@@ -5,8 +5,8 @@ import valkyrie.app.event.bus.EventBus;
 import valkyrie.app.model.ConnectionPropertyModel;
 import valkyrie.core.repository.ConnectionRepository;
 import valkyrie.core.utils.JSONUtils;
-import valkyrie.driver.api.CloseableDataSource;
-import valkyrie.driver.api.DataSourceFactory;
+import valkyrie.driver.api.VkDataSource;
+import valkyrie.driver.api.VkDataSourceFactory;
 import valkyrie.driver.api.DbType;
 import valkyrie.utils.exception.Causes;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -127,7 +127,7 @@ public class CreateOrEditConnectionDialog extends Stage
         public void testConnection()
         {
                 var config = newProperty.toConnectionConfig();
-                try (CloseableDataSource ds = DataSourceFactory.getDataSource(config)) {
+                try (VkDataSource ds = VkDataSourceFactory.create(config)) {
                         status.setText("Connected successfully...");
                         status.setStyle("-fx-text-fill: #28a745;");
                 } catch (Exception e) {

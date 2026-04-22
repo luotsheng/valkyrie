@@ -37,7 +37,7 @@ public class UIConnectionNode extends UIExplorerNode
         private boolean openFlag = false;
         private boolean cancelFlag = false;
         private Thread connecetThread = null;
-        private CloseableDataSource dataSource;
+        private VkDataSource dataSource;
 
         @Getter
         private Driver driver;
@@ -88,7 +88,7 @@ public class UIConnectionNode extends UIExplorerNode
         private void createDriver()
         {
                 ConnectionConfig config = propertyModel.toConnectionConfig();
-                dataSource = DataSourceFactory.getDataSource(config);
+                dataSource = VkDataSourceFactory.create(config);
 
                 driver = switch (config.getType()) {
                         case mysql -> new MySQLDriver(dataSource);

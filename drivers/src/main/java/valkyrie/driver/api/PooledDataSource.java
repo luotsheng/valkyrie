@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @since 2026/3/27
  */
 public class PooledDataSource
-        implements CloseableDataSource
+        implements VkDataSource
 {
         private final HikariDataSource ds;
 

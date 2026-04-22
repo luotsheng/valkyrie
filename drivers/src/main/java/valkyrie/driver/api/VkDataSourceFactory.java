@@ -6,9 +6,9 @@ import valkyrie.driver.redis.RedisDataSource;
  * @author Luo Tiansheng
  * @since 2026/4/20
  */
-public class DataSourceFactory
+public class VkDataSourceFactory
 {
-        public static CloseableDataSource getDataSource(ConnectionConfig config)
+        public static VkDataSource create(ConnectionConfig config)
         {
                 return switch (config.getType()) {
                         case mysql, dm -> new PooledDataSource(config);
