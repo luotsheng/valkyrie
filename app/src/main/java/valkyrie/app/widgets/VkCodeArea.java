@@ -68,7 +68,7 @@ public class VkCodeArea extends CodeArea
                 if (OS.isLinux())
                         setStyle("-fx-font-family: 'DejaVu Sans Mono'; -fx-font-size: 16px;");
 
-                getStyleClass().add("vfx-code-area");
+                getStyleClass().add("vk-code-area");
                 setParagraphGraphicFactory(LineNumberFactory.get(this));
 
                 multiPlainChanges()

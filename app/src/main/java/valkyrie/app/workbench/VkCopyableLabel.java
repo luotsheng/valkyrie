@@ -10,14 +10,14 @@ import javafx.scene.layout.Region;
  * @author Luo Tiansheng
  * @since 2026/4/9
  */
-public class VFXCopyableLabel extends TextArea
+public class VkCopyableLabel extends TextArea
 {
-        public VFXCopyableLabel()
+        public VkCopyableLabel()
         {
                 this(null);
         }
 
-        public VFXCopyableLabel(String text)
+        public VkCopyableLabel(String text)
         {
                 super(text);
 

@@ -12,9 +12,9 @@ import javafx.util.Duration;
  */
 public class VkTableView<S> extends TableView<S>
 {
-        public static final String FULL_STYLE = "vfx-table-view-full";
+        public static final String FULL_STYLE = "vk-table-view-full";
 
-        public static final String LITE_STYLE = "vfx-table-view-lite";
+        public static final String LITE_STYLE = "vk-table-view-lite";
 
         private TablePosition<?, ?> start;
 

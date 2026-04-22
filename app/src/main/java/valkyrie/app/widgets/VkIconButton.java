@@ -19,7 +19,7 @@ public class VkIconButton extends Button
 
         public VkIconButton(String tip, String text, String icon)
         {
-                getStyleClass().add("vfx-icon-button");
+                getStyleClass().add("vk-icon-button");
                 setText(text);
                 setTooltip(new Tooltip(tip));
                 setGraphic(Assets.use(icon));

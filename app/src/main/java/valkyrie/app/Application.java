@@ -56,7 +56,7 @@ public class Application extends javafx.application.Application
                 return Clipboard.getSystemClipboard().getString();
         }
 
-        private static void addVFXStylesheet(Scene scene, String path)
+        private static void addStylesheet(Scene scene, String path)
         {
                 URL url = aClass.getResource(path);
                 ObservableList<String> stylesheets = scene.getStylesheets();
@@ -77,11 +77,11 @@ public class Application extends javafx.application.Application
                 return stage;
         }
 
-        static void initializeVFX(Scene scene)
+        static void initialize(Scene scene)
         {
-                addVFXStylesheet(scene, "/css/vk-table-view.css");
-                addVFXStylesheet(scene, "/css/vk-icon-button.css");
-                addVFXStylesheet(scene, "/css/vk-code-area.css");
+                addStylesheet(scene, "/css/vk-table-view.css");
+                addStylesheet(scene, "/css/vk-icon-button.css");
+                addStylesheet(scene, "/css/vk-code-area.css");
         }
 
         @Override
@@ -94,7 +94,7 @@ public class Application extends javafx.application.Application
 
                 javafx.application.Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
                 Scene scene = new Scene(new MainLayout(), 1200, 800);
-                initializeVFX(scene);
+                initialize(scene);
                 stage.setTitle(TITLE);
                 stage.setScene(scene);
                 stage.setMaximized(true);
