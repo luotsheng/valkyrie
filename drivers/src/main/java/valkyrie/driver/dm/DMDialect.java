@@ -22,6 +22,7 @@ public class DMDialect implements Dialect
                 sql = sql.replaceAll("NOT\\s+CLUSTER\\s+PRIMARY\\s+KEY", "PRIMARY KEY");
                 sql = sql.replaceAll("(?i)\\s+ENCRYPT\\s+WITH\\s+AES256_CBC\\s+AUTO\\s+BY\\s+WRAPPED\\s+'[^']*'", "");
                 sql = sql.replaceAll("STORAGE\\s*\\([^)]*\\)", "");
+                sql = sql.replaceAll("\\((\\d+)\\s+CHAR\\)", "");
                 return sql;
         }
 
