@@ -1,5 +1,6 @@
 package valkyrie.app.explorer;
 
+import javafx.collections.ObservableList;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.event.RefreshQueryNodeEvent;
 import valkyrie.app.event.RefreshTableNodeEvent;
@@ -15,6 +16,7 @@ import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.core.model.ScriptFile;
 import valkyrie.core.repository.ScriptFileRepository;
 import valkyrie.driver.api.*;
+import valkyrie.utils.collection.Lists;
 import valkyrie.utils.collection.Maps;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -28,6 +30,8 @@ import lombok.Getter;
 import java.sql.SQLException;
 import java.text.Collator;
 import java.util.*;
+
+import static valkyrie.utils.string.StaticLibrary.streq;
 
 /**
  * @author Luo Tiansheng
@@ -206,9 +210,36 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
 
         private void reloadQueryNode()
         {
-                queryItem.getChildren().clear();
-                List<ScriptFile> scriptFiles = ScriptFileRepository.loadScriptFiles(connection.getName(), getName(), null);
-                scriptFiles.forEach(query -> queryItem.getChildren().add(new UIScriptNode(this, query)));
+                var children = queryItem.getChildren();
+                var scriptFiles = ScriptFileRepository.loadScriptFiles(connection.getName(), getName(), null);
+                List<UIScriptNode> reloadScriptNodes = Lists.newArrayList();
+                scriptFiles.forEach(query -> reloadScriptNodes.add(new UIScriptNode(this, query)));
+
+                List<UIScriptNode> newScriptNodes = Lists.newArrayList();
+                for (UIScriptNode newScriptNode : reloadScriptNodes) {
+                        var exists = children.stream().anyMatch(child ->
+                                streq(((UIScriptNode) child).getName(), newScriptNode.getName()));
+
+                        if (!exists)
+                                newScriptNodes.add(newScriptNode);
+                }
+
+                List<UIScriptNode> removeScriptNodes = Lists.newArrayList();
+                for (TreeItem<String> child : children) {
+                        var scriptNode = (UIScriptNode) child;
+
+                        var exists = reloadScriptNodes.stream().anyMatch(it ->
+                                streq(it.getName(), scriptNode.getName()));
+
+                        if (!exists)
+                                removeScriptNodes.add(scriptNode);
+                }
+
+                children.removeAll(removeScriptNodes);
+                children.addAll(newScriptNodes);
+
+                var collator = Collator.getInstance(Locale.CHINA);
+                children.sort(Comparator.comparing(it -> ((UIScriptNode) it).getName(), collator));
         }
 
         public void onSelected(UIExplorerNode node)
