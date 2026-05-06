@@ -1,5 +1,6 @@
 package valkyrie.monacofx;
 
+import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.*;
@@ -80,9 +81,11 @@ public class MonacoFx extends StackPane
 
         private void onCopy()
         {
-                ClipboardContent clipboardContent = new ClipboardContent();
-                clipboardContent.putString(getSelectedText());
-                clipboard().setContent(clipboardContent);
+                Platform.runLater(() -> {
+                        ClipboardContent clipboardContent = new ClipboardContent();
+                        clipboardContent.putString(getSelectedText());
+                        clipboard().setContent(clipboardContent);
+                });
         }
 
         private void onPaste()
