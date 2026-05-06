@@ -1,8 +1,13 @@
 package valkyrie.monacofx;
 
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+
+import static valkyrie.utils.string.StaticLibrary.strempty;
 
 /**
  * @author Luo Tiansheng
@@ -12,20 +17,95 @@ public class MonacoFx extends StackPane
 {
         private final WebView webView = new WebView();
         private final WebEngine engine = webView.getEngine();
+        private final Clipboard clipboard = Clipboard.getSystemClipboard();
+
+        private final ContextMenu contextMenu = new ContextMenu();
+        private final MenuItem copyMenuItem = new MenuItem("复制");
+        private final MenuItem pasteMenuItem = new MenuItem("粘贴");
 
         @SuppressWarnings("DataFlowIssue")
         public MonacoFx()
         {
+                initContextMenu();
+
                 webView.setContextMenuEnabled(false);
                 engine.load(getClass().getResource("/static/editor.html").toExternalForm());
                 getChildren().add(webView);
 
                 webView.prefWidthProperty().bind(widthProperty());
                 webView.prefHeightProperty().bind(heightProperty());
+
+                webView.setOnMousePressed(event -> {
+                        if (event.getButton() == MouseButton.SECONDARY) {
+                                showContextMenu(event.getScreenX(), event.getScreenY());
+                        } else {
+                                hideContextMenu();
+                        }
+                });
+        }
+
+        private void initContextMenu()
+        {
+                copyMenuItem.setOnAction(event -> onCopy());
+                copyMenuItem.setAccelerator(
+                        new KeyCodeCombination(KeyCode.C, KeyCombination.SHORTCUT_DOWN)
+                );
+
+                pasteMenuItem.setOnAction(event -> onPaste());
+                pasteMenuItem.setAccelerator(
+                        new KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN)
+                );
+
+                contextMenu.getItems().addAll(copyMenuItem, pasteMenuItem);
+        }
+
+        private void showContextMenu(double x, double y)
+        {
+                copyMenuItem.setDisable(strempty(getSelectedText()));
+                contextMenu.show(webView, x, y);
+        }
+
+        private void hideContextMenu()
+        {
+                contextMenu.hide();
+        }
+
+        private void onCopy()
+        {
+                ClipboardContent clipboardContent = new ClipboardContent();
+                clipboardContent.putString(getSelectedText());
+                clipboard.setContent(clipboardContent);
+        }
+
+        private void onPaste()
+        {
+                engine.executeScript(
+                        "editor.executeEdits('', [{ range: editor.getSelection(), text: " + toJsString(clipboard.getString()) + " }])"
+                );
+        }
+
+        public String getSelectedText()
+        {
+                return (String) engine.executeScript(
+                        "window.editor.getModel().getValueInRange(editor.getSelection())"
+                );
         }
 
         public WebEngine engine()
         {
                 return engine;
+        }
+
+        private static String toJsString(String str)
+        {
+                if (str == null)
+                        return "''";
+
+                return "'" + str
+                        .replace("\\", "\\\\")
+                        .replace("'", "\\'")
+                        .replace("\r", "")
+                        .replace("\n", "\\n")
+                        + "'";
         }
 }
