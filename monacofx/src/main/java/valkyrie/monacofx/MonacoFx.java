@@ -34,17 +34,8 @@ public class MonacoFx extends StackPane
                 void onRequest(ContextMenu contextMenu);
         }
 
-        public interface ValueChangeEvent {
-                void onChange();
-        }
-
-        public MonacoFx()
-        {
-                this(null);
-        }
-
         @SuppressWarnings("DataFlowIssue")
-        public MonacoFx(String initText)
+        public MonacoFx()
         {
                 webView.setContextMenuEnabled(false);
                 engine.load(getClass().getResource("/static/editor.html").toExternalForm());
@@ -57,9 +48,6 @@ public class MonacoFx extends StackPane
                                 hideContextMenu();
                         }
                 });
-
-                if (initText != null)
-                        replaceSelection(initText);
 
                 setConsole();
 
@@ -136,14 +124,14 @@ public class MonacoFx extends StackPane
 
         public void clear()
         {
-                waitAndRun(() -> engine.executeScript("editor.setValue('')"));
+                waitAndRun(() -> engine.executeScript("editor.getModel().setValue('')"));
         }
 
-        public void appendText(String text)
+        public void setValue(String text)
         {
                 waitAndRun(() -> {
                         engine.executeScript(
-                                "editor.setValue(editor.getValue() + " + toJsString(text) + ")"
+                                "editor.getModel().setValue(" + toJsString(text) + ");"
                         );
                 });
         }
@@ -157,7 +145,7 @@ public class MonacoFx extends StackPane
         {
                 Platform.runLater(() -> {
                         Object ready = engine.executeScript(
-                                "typeof window.editor !== 'undefined'"
+                                "window.editor && window.editor.getModel && window.editor.getModel() !== null"
                         );
 
                         if (Boolean.TRUE.equals(ready)) {
@@ -166,11 +154,6 @@ public class MonacoFx extends StackPane
                                 waitAndRun(task);
                         }
                 });
-        }
-
-        private static Clipboard clipboard()
-        {
-                return Clipboard.getSystemClipboard();
         }
 
         private static String toJsString(String str)

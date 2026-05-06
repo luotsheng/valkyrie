@@ -539,7 +539,7 @@ public class ScriptEditor extends SplitPane implements EventListener
                         }
 
                         editor.clear();
-                        editor.appendText(builder.toString().trim());
+                        editor.setValue(builder.toString().trim());
 
 
                 }
