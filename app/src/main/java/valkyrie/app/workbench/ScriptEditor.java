@@ -39,7 +39,6 @@ import valkyrie.driver.api.sql.SQL;
 import valkyrie.monacofx.MonacoFx;
 import valkyrie.utils.exception.Causes;
 
-import java.io.File;
 import java.io.FileReader;
 
 import static valkyrie.utils.string.StaticLibrary.fmt;
@@ -145,7 +144,7 @@ public class ScriptEditor extends SplitPane implements EventListener
                 MonacoFx editor = new MonacoFx();
                 ContextMenu contextMenu = new ContextMenu();
 
-                editor.setOnKeyPressed(event -> {
+                editor.setOnKeyPressedEvent(event -> {
                         if (event.isShortcutDown() && event.getCode() == KeyCode.C)
                                 Application.copyToClipboard(editor.getValueInSelectionRange());
                 });
@@ -541,6 +540,8 @@ public class ScriptEditor extends SplitPane implements EventListener
 
                         editor.clear();
                         editor.appendText(builder.toString().trim());
+
+
                 }
         }
 
@@ -568,6 +569,9 @@ public class ScriptEditor extends SplitPane implements EventListener
 
         private void save()
         {
+                String content = getCodeAreaContent();
+                System.out.println("content: " + content);
+
                 if (scriptFile == null) {
                         String saveScriptName = SaveScriptDialog.showDialog(this);
 
@@ -585,11 +589,11 @@ public class ScriptEditor extends SplitPane implements EventListener
                                 catalog.getName(),
                                 null,
                                 saveScriptName,
-                                getCodeAreaContent());
+                                content);
 
                         setScriptFile(newScriptFile);
                 } else {
-                        ScriptFileRepository.save(scriptFile, getCodeAreaContent());
+                        ScriptFileRepository.save(scriptFile, content);
                 }
 
                 EventBus.publish(new RefreshQueryNodeEvent());
@@ -603,14 +607,6 @@ public class ScriptEditor extends SplitPane implements EventListener
                 var text = owner.getText();
                 if (text.startsWith("* "))
                         owner.setText(text.substring(2));
-        }
-
-        public boolean sqlFileEquals(File file)
-        {
-                if (scriptFile == null || file == null)
-                        return false;
-
-                return scriptFile.getAbsolutePath().equals(file.getAbsolutePath());
         }
 
         public void close()

@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import valkyrie.monacofx.MonacoFx;
 
 import java.awt.*;
 import java.net.URL;
@@ -91,6 +92,7 @@ public class Application extends javafx.application.Application
         @SuppressWarnings("CommentedOutCode")
         public void start(Stage stage)
         {
+                new MonacoFx();
                 setDockIcon("/assets/icons/main.png");
 
                 primaryStage = stage;
