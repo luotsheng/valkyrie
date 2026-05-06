@@ -17,7 +17,6 @@ public class MonacoFx extends StackPane
 {
         private final WebView webView = new WebView();
         private final WebEngine engine = webView.getEngine();
-        private final Clipboard clipboard = Clipboard.getSystemClipboard();
 
         private final ContextMenu contextMenu = new ContextMenu();
         private final MenuItem copyMenuItem = new MenuItem("复制");
@@ -40,6 +39,15 @@ public class MonacoFx extends StackPane
                                 showContextMenu(event.getScreenX(), event.getScreenY());
                         } else {
                                 hideContextMenu();
+                        }
+                });
+
+                webView.setOnKeyPressed(e -> {
+                        if (e.isShortcutDown()) {
+                                switch (e.getCode()) {
+                                        case C: onCopy(); break;
+                                        case V: onPaste(); break;
+                                }
                         }
                 });
         }
@@ -74,13 +82,13 @@ public class MonacoFx extends StackPane
         {
                 ClipboardContent clipboardContent = new ClipboardContent();
                 clipboardContent.putString(getSelectedText());
-                clipboard.setContent(clipboardContent);
+                clipboard().setContent(clipboardContent);
         }
 
         private void onPaste()
         {
                 engine.executeScript(
-                        "editor.executeEdits('', [{ range: editor.getSelection(), text: " + toJsString(clipboard.getString()) + " }])"
+                        "editor.executeEdits('', [{ range: editor.getSelection(), text: " + toJsString(clipboard().getString()) + " }])"
                 );
         }
 
@@ -94,6 +102,11 @@ public class MonacoFx extends StackPane
         public WebEngine engine()
         {
                 return engine;
+        }
+
+        private static Clipboard clipboard()
+        {
+                return Clipboard.getSystemClipboard();
         }
 
         private static String toJsString(String str)
