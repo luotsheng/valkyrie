@@ -42,7 +42,21 @@
             {
                 value: '',
                 language: 'sql',
-                minimap: { enabled: false }
+                automaticLayout: true,
+                roundedSelection: false,
+                mouseWheelScrollSensitivity: 0.05,
+                scrollBeyondLastLine: false,
+                scrollbar: {
+                    useShadows: true,
+                    verticalHasArrows: true,
+                    horizontalHasArrows: true,
+                    vertical: 'auto',
+                    horizontal: 'auto',
+                    verticalScrollbarSize: 17,
+                    horizontalScrollbarSize: 17,
+                    arrowSize: 30,
+                    alwaysConsumeMouseWheel: false
+                }
             }
         );
     });

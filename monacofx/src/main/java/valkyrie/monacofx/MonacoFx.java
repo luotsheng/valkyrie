@@ -62,6 +62,9 @@ public class MonacoFx extends StackPane
                         replaceSelection(initText);
 
                 setConsole();
+
+                webView.prefWidthProperty().bind(this.widthProperty());
+                webView.prefHeightProperty().bind(this.heightProperty());
         }
 
         public static class Console {
