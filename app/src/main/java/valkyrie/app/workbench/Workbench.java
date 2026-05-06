@@ -11,6 +11,7 @@ import valkyrie.app.event.workbench.OpenNavigationPaneEvent;
 import valkyrie.app.event.workbench.OpenTabEvent;
 import valkyrie.app.exception.ApplicationException;
 import valkyrie.app.widgets.VkTabPane;
+import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.utils.collection.Lists;
 import valkyrie.utils.collection.Maps;
 import javafx.scene.Node;
@@ -22,6 +23,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import valkyrie.utils.exception.Causes;
 
 import java.util.List;
 import java.util.Map;
@@ -146,12 +148,16 @@ public class Workbench extends VBox implements EventListener
         @Override
         public void onEvent(Event event)
         {
-                switch (event) {
-                        case OpenTabEvent e -> handleOpenTabEvent(e);
-                        case CloseWorkbenchTabEvent e -> handleCloseTabEvent(e);
-                        case OpenNavigationPaneEvent e -> handleSetNavigationPaneEvent(e);
-                        case CloseNavigationPaneEvent e -> handleUnsetNavigationPaneEvent(e);
-                        default -> throw new ApplicationException("unsupported event type");
+                try {
+                        switch (event) {
+                                case OpenTabEvent e -> handleOpenTabEvent(e);
+                                case CloseWorkbenchTabEvent e -> handleCloseTabEvent(e);
+                                case OpenNavigationPaneEvent e -> handleSetNavigationPaneEvent(e);
+                                case CloseNavigationPaneEvent e -> handleUnsetNavigationPaneEvent(e);
+                                default -> throw new ApplicationException("unsupported event type");
+                        }
+                } catch (Exception e) {
+                        VkDialogHelper.alert(Causes.message(e));
                 }
         }
 
