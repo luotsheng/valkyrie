@@ -91,7 +91,7 @@ public class VkDialogHelper
          */
         public static void alert(Throwable e)
         {
-                LOG.error("", e);
+                LOG.error("error", e);
                 alert(Causes.message(e));
         }
 

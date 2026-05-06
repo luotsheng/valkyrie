@@ -2,17 +2,20 @@ package valkyrie.monacofx;
 
 import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.input.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import lombok.Setter;
 
 import java.util.Objects;
 
-import static valkyrie.utils.string.StaticLibrary.strempty;
-
 /**
+ * Monaco 编辑器
+ *
  * @author Luo Tiansheng
  * @since 2026/5/6
  */
@@ -21,9 +24,14 @@ public class MonacoFx extends StackPane
         private final WebView webView = new WebView();
         private final WebEngine engine = webView.getEngine();
 
-        private final ContextMenu contextMenu = new ContextMenu();
-        private final MenuItem copyMenuItem = new MenuItem("复制");
-        private final MenuItem pasteMenuItem = new MenuItem("粘贴");
+        private ContextMenu contextMenu = null;
+
+        @Setter
+        private ShowContextMenuRequestEvent showContextMenuRequestEvent = null;
+
+        public interface ShowContextMenuRequestEvent {
+                void request(ContextMenu contextMenu);
+        }
 
         public MonacoFx()
         {
@@ -33,8 +41,6 @@ public class MonacoFx extends StackPane
         @SuppressWarnings("DataFlowIssue")
         public MonacoFx(String initText)
         {
-                initContextMenu();
-
                 webView.setContextMenuEnabled(false);
                 engine.load(getClass().getResource("/static/editor.html").toExternalForm());
                 getChildren().add(webView);
@@ -63,29 +69,27 @@ public class MonacoFx extends StackPane
                         replaceSelection(initText);
         }
 
-        private void initContextMenu()
+        public void bindContextMenu(ContextMenu contextMenu)
         {
-                copyMenuItem.setOnAction(event -> onCopy());
-                copyMenuItem.setAccelerator(
-                        new KeyCodeCombination(KeyCode.C, KeyCombination.SHORTCUT_DOWN)
-                );
-
-                pasteMenuItem.setOnAction(event -> onPaste());
-                pasteMenuItem.setAccelerator(
-                        new KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN)
-                );
-
-                contextMenu.getItems().addAll(copyMenuItem, pasteMenuItem);
+                this.contextMenu = contextMenu;
         }
 
         private void showContextMenu(double x, double y)
         {
-                copyMenuItem.setDisable(strempty(getSelectedText()));
+                if (contextMenu == null)
+                        return;
+
+                if (showContextMenuRequestEvent != null)
+                        showContextMenuRequestEvent.request(contextMenu);
+
                 contextMenu.show(webView, x, y);
         }
 
         private void hideContextMenu()
         {
+                if (contextMenu == null)
+                        return;
+
                 contextMenu.hide();
         }
 
@@ -93,7 +97,7 @@ public class MonacoFx extends StackPane
         {
                 Platform.runLater(() -> {
                         ClipboardContent clipboardContent = new ClipboardContent();
-                        clipboardContent.putString(getSelectedText());
+                        clipboardContent.putString(getValueInSelectionRange());
                         clipboard().setContent(clipboardContent);
                 });
         }
@@ -103,7 +107,14 @@ public class MonacoFx extends StackPane
                 replaceSelection(clipboard().getString());
         }
 
-        public String getSelectedText()
+        public String getValue()
+        {
+                return (String) engine.executeScript(
+                        "editor.getValue()"
+                );
+        }
+
+        public String getValueInSelectionRange()
         {
                 return (String) engine.executeScript(
                         "window.editor.getModel().getValueInRange(editor.getSelection())"
@@ -112,14 +123,40 @@ public class MonacoFx extends StackPane
 
         public void replaceSelection(String text)
         {
-                engine.executeScript(
-                        "editor.executeEdits('', [{ range: editor.getSelection(), text: " + toJsString(text) + " }])"
-                );
+                waitAndRun(() -> {
+                        engine.executeScript(
+                                "editor.executeEdits('', [{ range: editor.getSelection(), text: " + toJsString(text) + " }])"
+                        );
+                });
         }
 
-        public WebEngine engine()
+        public void clear()
         {
-                return engine;
+                waitAndRun(() -> engine.executeScript("editor.setValue('')"));
+        }
+
+        public void appendText(String text)
+        {
+                waitAndRun(() -> {
+                        engine.executeScript(
+                                "editor.setValue(editor.getValue() + " + toJsString(text) + ")"
+                        );
+                });
+        }
+
+        private void waitAndRun(Runnable task)
+        {
+                Platform.runLater(() -> {
+                        Object ready = engine.executeScript(
+                                "typeof window.editor !== 'undefined'"
+                        );
+
+                        if (Boolean.TRUE.equals(ready)) {
+                                task.run();
+                        } else {
+                                waitAndRun(task);
+                        }
+                });
         }
 
         private static Clipboard clipboard()

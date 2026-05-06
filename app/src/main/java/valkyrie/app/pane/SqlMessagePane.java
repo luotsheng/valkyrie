@@ -1,12 +1,7 @@
 package valkyrie.app.pane;
 
-import valkyrie.app.widgets.VkCodeArea;
-import valkyrie.app.widgets.VkCodeAreaCreateInfo;
-import javafx.scene.control.MenuItem;
 import org.fxmisc.flowless.VirtualizedScrollPane;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.fxmisc.richtext.CodeArea;
 
 import static valkyrie.utils.string.StaticLibrary.fmt;
 
@@ -14,54 +9,28 @@ import static valkyrie.utils.string.StaticLibrary.fmt;
  * @author Luo Tiansheng
  * @since 2026/4/2
  */
-public class SqlMessagePane extends VirtualizedScrollPane<VkCodeArea>
+public class SqlMessagePane extends VirtualizedScrollPane<CodeArea>
 {
-        private final VkCodeArea codeArea;
-
-        static final Pattern PATTERN = Pattern.compile(
-                "(?<INFO>\\[\\s*OK\\s*])"
-                        + "|(?<SKIP>\\[\\s*SKIP\\s*])"
-                        + "|(?<FAIL>\\[\\s*FAIL\\s*])",
-                Pattern.CASE_INSENSITIVE
-        );
+        private final CodeArea codeArea;
 
         public SqlMessagePane()
         {
-                super(new VkCodeArea(new VkCodeAreaCreateInfo(true, false, null, null)));
+                super(new CodeArea());
 
                 codeArea = getContent();
                 codeArea.setEditable(false);
-                codeArea.addHighlightingListener(SqlMessagePane::applyHighlighting);
 
                 setupContextMenu();
         }
 
         private void setupContextMenu()
         {
-                MenuItem clearItem = new MenuItem("清空内容");
-                clearItem.setOnAction(event -> clearAll());
-                codeArea.addContextMenuGroup(clearItem);
+
         }
 
         private void clearAll()
         {
                 codeArea.replaceText("");
-        }
-
-        public static void applyHighlighting(VkCodeArea area)
-        {
-                String text = area.getText();
-
-                Matcher matcher = PATTERN.matcher(text);
-                while (matcher.find()) {
-                        if (matcher.group("INFO") != null) {
-                                area.setStyleClass(matcher.start(), matcher.end(), "info");
-                        } else if (matcher.group("SKIP") != null) {
-                                area.setStyleClass(matcher.start(), matcher.end(), "skip");
-                        } else if (matcher.group("FAIL") != null) {
-                                area.setStyleClass(matcher.start(), matcher.end(), "fail");
-                        }
-                }
         }
 
         public void appendInfo(String text)

@@ -1,6 +1,7 @@
 package valkyrie.app;
 
 import atlantafx.base.theme.CupertinoLight;
+import javafx.application.Platform;
 import valkyrie.app.layout.MainLayout;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -45,10 +46,12 @@ public class Application extends javafx.application.Application
 
         public static void copyToClipboard(String text)
         {
-                Clipboard clipboard = Clipboard.getSystemClipboard();
-                ClipboardContent clipboardContent = new ClipboardContent();
-                clipboardContent.putString(text);
-                clipboard.setContent(clipboardContent);
+                Platform.runLater(() -> {
+                        Clipboard clipboard = Clipboard.getSystemClipboard();
+                        ClipboardContent clipboardContent = new ClipboardContent();
+                        clipboardContent.putString(text);
+                        clipboard.setContent(clipboardContent);
+                });
         }
 
         public static String getClipboardText()

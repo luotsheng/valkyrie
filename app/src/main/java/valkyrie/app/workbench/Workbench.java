@@ -157,7 +157,7 @@ public class Workbench extends VBox implements EventListener
                                 default -> throw new ApplicationException("unsupported event type");
                         }
                 } catch (Exception e) {
-                        VkDialogHelper.alert(Causes.message(e));
+                        VkDialogHelper.alert(e);
                 }
         }
 

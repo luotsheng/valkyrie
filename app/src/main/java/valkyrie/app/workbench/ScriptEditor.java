@@ -1,5 +1,19 @@
 package valkyrie.app.workbench;
 
+import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import javafx.application.Platform;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.util.StringConverter;
+import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import valkyrie.app.Application;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.dialog.SaveScriptDialog;
 import valkyrie.app.event.RefreshQueryNodeEvent;
@@ -12,7 +26,9 @@ import valkyrie.app.explorer.UIConnectionNode;
 import valkyrie.app.model.UIExplorerStatus;
 import valkyrie.app.pane.DataGridViewPane;
 import valkyrie.app.pane.SqlMessagePane;
-import valkyrie.app.widgets.*;
+import valkyrie.app.widgets.VkComboBox;
+import valkyrie.app.widgets.VkIconButton;
+import valkyrie.app.widgets.VkSeparator;
 import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.core.model.ScriptFile;
 import valkyrie.core.repository.ScriptFileRepository;
@@ -20,28 +36,11 @@ import valkyrie.driver.api.DataGrid;
 import valkyrie.driver.api.Driver;
 import valkyrie.driver.api.Session;
 import valkyrie.driver.api.sql.SQL;
+import valkyrie.monacofx.MonacoFx;
 import valkyrie.utils.exception.Causes;
-import com.github.vertical_blank.sqlformatter.SqlFormatter;
-import javafx.application.Platform;
-import javafx.geometry.Orientation;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.util.StringConverter;
-import lombok.Getter;
-import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.CodeArea;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 import static valkyrie.utils.string.StaticLibrary.fmt;
 import static valkyrie.utils.string.StaticLibrary.strempty;
@@ -63,8 +62,7 @@ public class ScriptEditor extends SplitPane implements EventListener
         @Getter
         private final Tab owner;
         private final ToolBar toolBar;
-        private final VkCodeArea codeArea;
-        private final VirtualizedScrollPane<CodeArea> virtualizedScrollPane;
+        private final MonacoFx editor;
         private final BorderPane topBorderPane;
         private final DataGridViewPane dataGridViewPane;
         private final Tab sqlMessageTab;
@@ -87,10 +85,10 @@ public class ScriptEditor extends SplitPane implements EventListener
         private Button stop;
         private Button beautify;
 
+        private MenuItem copyItem;
+        private MenuItem pasteItem;
         private MenuItem runSelectedSQLItem;
         private MenuItem beautifySelectedSQLItem;
-
-        private final VkCodeCompletionPopup codeCompletionPopup = new VkCodeCompletionPopup();
 
         public ScriptEditor(UIConnectionNode conn, ScriptFile scriptFile, Tab owner)
         {
@@ -106,11 +104,9 @@ public class ScriptEditor extends SplitPane implements EventListener
 
                 topBorderPane = new BorderPane();
                 toolBar = new ToolBar();
-                codeArea = createCodeArea();
-                virtualizedScrollPane = new VirtualizedScrollPane<>(codeArea);
+                editor = createEditor();
                 dataGridViewPane = new DataGridViewPane(owner, false);
                 sqlMessagePane = new SqlMessagePane();
-                virtualizedScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
                 // 绑定日志标签
                 sqlMessageTab = new Tab("日志");
@@ -118,7 +114,7 @@ public class ScriptEditor extends SplitPane implements EventListener
                 sqlMessageTab.setContent(sqlMessagePane);
 
                 topBorderPane.setTop(toolBar);
-                topBorderPane.setCenter(virtualizedScrollPane);
+                topBorderPane.setCenter(editor);
 
                 if (scriptFile != null)
                         setScriptFile(scriptFile);
@@ -144,63 +140,57 @@ public class ScriptEditor extends SplitPane implements EventListener
                 }
         }
 
-        private VkCodeArea createCodeArea()
+        private MonacoFx createEditor()
         {
-                VkCodeAreaCreateInfo codeAreaCreateInfo = new VkCodeAreaCreateInfo();
+                MonacoFx editor = new MonacoFx();
+                ContextMenu contextMenu = new ContextMenu();
 
-                codeAreaCreateInfo.contextMenuHandler = (contextMenu) -> {
-                        runSelectedSQLItem = new MenuItem("运行当前选择的");
-                        runSelectedSQLItem.setOnAction(event -> runTask());
-                        runSelectedSQLItem.setAccelerator(
-                                new KeyCodeCombination(KeyCode.R, KeyCodeCombination.SHORTCUT_DOWN)
-                        );
-
-                        beautifySelectedSQLItem = new MenuItem("美化当前选择的");
-                        beautifySelectedSQLItem.setOnAction(event -> beautifySQL());
-
-                        List<MenuItem> copyPasteItems = new ArrayList<>(contextMenu.getItems());
-
-                        contextMenu.getItems().clear();
-                        contextMenu.getItems().addAll(
-                                runSelectedSQLItem,
-                                beautifySelectedSQLItem,
-                                new SeparatorMenuItem()
-                        );
-
-                        copyPasteItems.forEach(contextMenu.getItems()::add);
-                };
-
-                codeAreaCreateInfo.showingMenuListener = ((event, contextMenu) -> {
-                        contextMenu.getItems().forEach(contextMenuItem -> {
-                                boolean isEmptySelectedText = strempty(codeArea.getSelectedText());
-
-                                if (contextMenuItem == beautifySelectedSQLItem)
-                                        contextMenuItem.setDisable(isEmptySelectedText);
-
-                                if (contextMenuItem == runSelectedSQLItem) {
-                                        if (isEmptySelectedText) {
-                                                runSelectedSQLItem.setDisable(true);
-                                                return;
-                                        }
-                                        contextMenuItem.setDisable(run.isDisable());
-                                }
-                        });
+                editor.setOnKeyPressed(event -> {
+                        if (event.isShortcutDown() && event.getCode() == KeyCode.C)
+                                Application.copyToClipboard(editor.getValueInSelectionRange());
                 });
 
-                var codeArea = new VkCodeArea(codeAreaCreateInfo);
+                runSelectedSQLItem = new MenuItem("运行当前选择的");
+                runSelectedSQLItem.setOnAction(event -> runTask());
+                runSelectedSQLItem.setAccelerator(
+                        new KeyCodeCombination(KeyCode.R, KeyCodeCombination.SHORTCUT_DOWN)
+                );
 
-                codeArea.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-                        String word = codeArea.getCurrentWord();
+                beautifySelectedSQLItem = new MenuItem("美化当前选择的");
+                beautifySelectedSQLItem.setOnAction(event -> beautifySQL());
 
-                        if (strempty(word)) {
-                                codeCompletionPopup.hide();
-                                return;
-                        }
+                copyItem = new MenuItem("复制");
+                copyItem.setOnAction(event -> Application.copyToClipboard(editor.getValueInSelectionRange()));
+                copyItem.setAccelerator(
+                        new KeyCodeCombination(KeyCode.C, KeyCodeCombination.SHORTCUT_DOWN)
+                );
 
-                        codeCompletionPopup.show(codeArea, word);
+                pasteItem = new MenuItem("粘贴");
+                pasteItem.setOnAction(event -> editor.replaceSelection(Application.getClipboardText()));
+                pasteItem.setAccelerator(
+                        new KeyCodeCombination(KeyCode.V, KeyCodeCombination.SHORTCUT_DOWN)
+                );
+
+                contextMenu.getItems().addAll(
+                        runSelectedSQLItem,
+                        beautifySelectedSQLItem,
+                        new SeparatorMenuItem(),
+                        copyItem,
+                        pasteItem
+                );
+
+                editor.bindContextMenu(contextMenu);
+                editor.setShowContextMenuRequestEvent(ignored -> {
+                        boolean isUnselected = strempty(editor.getValueInSelectionRange());
+                        runSelectedSQLItem.setDisable(isUnselected);
+                        beautifySelectedSQLItem.setDisable(isUnselected);
+                        copyItem.setDisable(isUnselected);
+
+                        boolean emptyClipboardContent = strempty(Application.getClipboardText());
+                        pasteItem.setDisable(emptyClipboardContent);
                 });
 
-                return codeArea;
+                return editor;
         }
 
         private void setupPane()
@@ -258,21 +248,11 @@ public class ScriptEditor extends SplitPane implements EventListener
 
         public void setupCodeArea()
         {
-                codeArea.multiPlainChanges().successionEnds(Duration.ofMillis(500))
-                        .subscribe(ignored -> autoSave());
-
-                codeArea.setOnKeyPressed(event -> {
+                setOnKeyPressed(event -> {
                         if ((event.isShortcutDown())
                                 && event.getCode() == KeyCode.R) {
                                 runTask();
                                 event.consume();
-                        }
-                });
-
-                codeArea.textProperty().addListener((obs, oldVal, newVal) -> {
-                        if (saveFlag && scriptFile == null) {
-                                owner.setText("* " + owner.getText());
-                                saveFlag = false;
                         }
                 });
         }
@@ -458,56 +438,56 @@ public class ScriptEditor extends SplitPane implements EventListener
                 updateButtonForExecuting(true);
                 setLoadingIndicator();
 
-                new Thread(() -> {
+                Platform.runLater(() -> {
+                        String scriptText = editor.getValueInSelectionRange();
 
-                        try {
+                        if (scriptText == null || scriptText.isEmpty())
+                                scriptText = editor.getValue();
 
-                                String scriptText = codeArea.getSelectedText();
+                        String finalScriptText = scriptText;
 
-                                if (scriptText == null || scriptText.isEmpty())
-                                        scriptText = codeArea.getText();
+                        new Thread(() -> {
+                                try {
+                                        UIConnectionNode connection = connectionComboBox.getSelectionModel()
+                                                .getSelectedItem();
 
-                                UIConnectionNode connection = connectionComboBox.getSelectionModel()
-                                        .getSelectedItem();
+                                        UICatalogNode catalog = catalogComboBox.getSelectionModel()
+                                                .getSelectedItem();
 
-                                UICatalogNode catalog = catalogComboBox.getSelectionModel()
-                                        .getSelectedItem();
+                                        driver = connection.getDriver();
+                                        currentTaskId = System.currentTimeMillis();
 
-                                driver = connection.getDriver();
-                                currentTaskId = System.currentTimeMillis();
+                                        Session session = catalog.getSession();
+                                        SQL sql = new SQL(finalScriptText);
 
-                                Session session = catalog.getSession();
-                                SQL sql = new SQL(scriptText);
+                                        DataGrid grid = driver.execute(currentTaskId, session, sql);
 
-                                DataGrid grid = driver.execute(currentTaskId, session, sql);
+                                        if (grid != null) {
+                                                Platform.runLater(() -> {
+                                                        dataGridViewPane.render(grid);
+                                                        showResultSetTableViewPane(QUERY_RESULT_SET_FIRST);
+                                                });
+                                        } else {
+                                                Platform.runLater(() -> showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST));
+                                        }
+                                } catch (Throwable e) {
 
-                                if (grid != null) {
                                         Platform.runLater(() -> {
-                                                dataGridViewPane.render(grid);
-                                                showResultSetTableViewPane(QUERY_RESULT_SET_FIRST);
+                                                sqlMessagePane.appendError(Causes.message(e));
+                                                showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
+                                                LOG.error("run task error", e);
                                         });
-                                } else {
-                                        Platform.runLater(() -> showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST));
+
+                                } finally {
+
+                                        Platform.runLater(() -> {
+                                                updateButtonForExecuting(false);
+                                                removeLoadingIndicator();
+                                        });
+
                                 }
-
-                        } catch (Throwable e) {
-
-                                Platform.runLater(() -> {
-                                        sqlMessagePane.appendError(Causes.message(e));
-                                        showResultSetTableViewPane(QUERY_MESSAGE_LOG_FIRST);
-                                        LOG.error("run task error", e);
-                                });
-
-                        } finally {
-
-                                Platform.runLater(() -> {
-                                        updateButtonForExecuting(false);
-                                        removeLoadingIndicator();
-                                });
-
-                        }
-
-                }).start();
+                        }).start();
+                });
         }
 
         private void stopTask()
@@ -518,24 +498,15 @@ public class ScriptEditor extends SplitPane implements EventListener
 
         private void beautifySQL()
         {
-                String selected = codeArea.getSelectedText();
+                String selected = editor.getValueInSelectionRange();
 
-                if (selected != null && !selected.isEmpty()) {
-                        int start = codeArea.getSelection().getStart();
-                        int end = codeArea.getSelection().getEnd();
-
-                        String formatted = SqlFormatter.format(selected);
-                        codeArea.replaceText(start, end, formatted);
-                } else {
-                        codeArea.replaceText(SqlFormatter.format(codeArea.getText()));
-                }
-
-                codeArea.applyHighlightAll();
+                String formatted = SqlFormatter.format(selected);
+                editor.replaceSelection(formatted);
         }
 
         public String getCodeAreaContent()
         {
-                return codeArea.getText();
+                return editor.getValue();
         }
 
         public VkComboBox<UIConnectionNode> copyConnectionComboBox()
@@ -568,9 +539,8 @@ public class ScriptEditor extends SplitPane implements EventListener
                                 VkDialogHelper.alert(e);
                         }
 
-                        codeArea.clear();
-                        codeArea.appendText(builder.toString().trim());
-                        codeArea.applyHighlightAll();
+                        editor.clear();
+                        editor.appendText(builder.toString().trim());
                 }
         }
 
