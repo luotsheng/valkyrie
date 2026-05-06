@@ -8,6 +8,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import java.util.Objects;
+
 import static valkyrie.utils.string.StaticLibrary.strempty;
 
 /**
@@ -23,8 +25,13 @@ public class MonacoFx extends StackPane
         private final MenuItem copyMenuItem = new MenuItem("复制");
         private final MenuItem pasteMenuItem = new MenuItem("粘贴");
 
-        @SuppressWarnings("DataFlowIssue")
         public MonacoFx()
+        {
+                this(null);
+        }
+
+        @SuppressWarnings("DataFlowIssue")
+        public MonacoFx(String initText)
         {
                 initContextMenu();
 
@@ -43,14 +50,17 @@ public class MonacoFx extends StackPane
                         }
                 });
 
+                // 好像 WebView 中不能直接通过 Document.copy() 函数直接复制内容到
+                // 系统剪贴板，所以这里在外层自己实现 Ctrl+C 操作。
                 webView.setOnKeyPressed(e -> {
                         if (e.isShortcutDown()) {
-                                switch (e.getCode()) {
-                                        case C: onCopy(); break;
-                                        case V: onPaste(); break;
-                                }
+                                if (Objects.requireNonNull(e.getCode()) == KeyCode.C)
+                                        onCopy();
                         }
                 });
+
+                if (initText != null)
+                        replaceSelection(initText);
         }
 
         private void initContextMenu()
@@ -90,15 +100,20 @@ public class MonacoFx extends StackPane
 
         private void onPaste()
         {
-                engine.executeScript(
-                        "editor.executeEdits('', [{ range: editor.getSelection(), text: " + toJsString(clipboard().getString()) + " }])"
-                );
+                replaceSelection(clipboard().getString());
         }
 
         public String getSelectedText()
         {
                 return (String) engine.executeScript(
                         "window.editor.getModel().getValueInRange(editor.getSelection())"
+                );
+        }
+
+        public void replaceSelection(String text)
+        {
+                engine.executeScript(
+                        "editor.executeEdits('', [{ range: editor.getSelection(), text: " + toJsString(text) + " }])"
                 );
         }
 
