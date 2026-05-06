@@ -16,6 +16,7 @@
         <module>drivers</module>
         <module>core</module>
         <module>richtextfx</module>
+        <module>monacofx</module>
     </modules>
 
     <properties>
@@ -41,9 +42,24 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.apache.groovy</groupId>
-                <artifactId>groovy</artifactId>
-                <version>${groovy.version}</version>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-controls</artifactId>
+                <version>${openjfx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-fxml</artifactId>
+                <version>${openjfx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-web</artifactId>
+                <version>${openjfx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.changhong.valkyrie</groupId>
+                <artifactId>monacofx</artifactId>
+                <version>v1.0.0-arch.1</version>
             </dependency>
             <dependency>
                 <groupId>com.changhong.valkyrie</groupId>
@@ -77,12 +93,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.groovy</groupId>
-            <artifactId>groovy</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>
