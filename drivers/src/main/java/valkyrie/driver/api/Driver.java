@@ -258,6 +258,23 @@ public abstract class Driver implements SQLExecutor
         }
 
         /**
+         * 获取当前数据库方言定义的所有保留关键字（Reserved Keywords）列表。
+         * <p>
+         * 返回的关键字通常包括 SQL 标准保留字以及数据库特有的扩展关键字。这些关键字在
+         * 作为标识符（表名、列名等）使用时需要被正确转义，以避免语法错误。
+         * <p>
+         * <b>实现要求：</b>
+         * <ul>
+         *   <li>返回的列表应为不可变副本或不可修改视图，防止调用方意外修改</li>
+         *   <li>关键字应使用大写形式，与数据库系统内部表示保持一致</li>
+         *   <li>建议从数据库元数据或内置常量中获取，确保与实际数据库版本匹配</li>
+         * </ul>
+         *
+         * @return 保留关键字列表（永不返回 {@code null}，若无关键字则返回空列表）
+         */
+        public abstract List<String> getKeywords(Session session);
+
+        /**
          * 获取指定会话上下文中所有用户定义的表名称列表。
          * <p>
          * 该方法调用 {@link DatabaseMetaData#getTables(String, String, String, String[])}，

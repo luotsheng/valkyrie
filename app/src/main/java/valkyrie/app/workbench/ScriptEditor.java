@@ -311,7 +311,6 @@ public class ScriptEditor extends SplitPane implements EventListener
                 comboBox.getSelectionModel().selectedItemProperty()
                         .addListener((obs, oldVal, newVal) -> {
                                 editor.registerKeywords(newVal.getCatalogNodes().stream().map(UICatalogNode::getName).toList());
-                                newVal.getCatalogNodes().forEach(catalog -> editor.registerKeywords(catalog.getTableNames()));
                 });
 
                 comboBox.setOnAction(event -> {
@@ -369,6 +368,12 @@ public class ScriptEditor extends SplitPane implements EventListener
 
         private void configureDatabaseComboBox(VkComboBox<UICatalogNode> comboBox)
         {
+                comboBox.getSelectionModel().selectedItemProperty()
+                                .addListener((obs, oldVal, newVal) -> {
+                                        editor.registerKeywords(newVal.getTableNames());
+                                        editor.registerKeywords(newVal.getKeywords());
+                                });
+
                 comboBox.setButtonCell(new ListCell<>()
                 {
                         @Override

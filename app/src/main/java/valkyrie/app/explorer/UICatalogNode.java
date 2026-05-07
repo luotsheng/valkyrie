@@ -304,6 +304,11 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
                 super.showContextMenu(node, x, y);
         }
 
+        public List<String> getKeywords()
+        {
+                return driver.getKeywords(session);
+        }
+
         public List<String> getTableNames()
         {
                 return tables.stream().map(Table::getName).toList();

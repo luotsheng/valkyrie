@@ -64,6 +64,14 @@ public class MySQLDriver extends Driver
         }
 
         @Override
+        public List<String> getKeywords(Session session)
+        {
+                DataGrid grid = execute(session,
+                        "SELECT DISTINCT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE();");
+                return grid.getRows().stream().map(ArrayList::getFirst).toList();
+        }
+
+        @Override
         public List<Table> getTables(Session session)
         {
                 List<Table> tables = Lists.newArrayList();

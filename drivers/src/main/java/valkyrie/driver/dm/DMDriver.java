@@ -12,10 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static valkyrie.utils.TypeConverter.atobool;
 import static valkyrie.utils.TypeConverter.atos;
@@ -64,6 +61,14 @@ public class DMDriver extends Driver
                 ));
 
                 return beg(beg(dataGrid.getRows()));
+        }
+
+        @Override
+        public List<String> getKeywords(Session session)
+        {
+                DataGrid grid = execute(session,
+                        "SELECT DISTINCT COLUMN_NAME FROM ALL_TAB_COLUMNS WHERE OWNER = '%s';", session.schema());
+                return grid.getRows().stream().map(ArrayList::getFirst).toList();
         }
 
         @Override

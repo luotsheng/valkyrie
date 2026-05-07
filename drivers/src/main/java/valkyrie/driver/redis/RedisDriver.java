@@ -123,6 +123,12 @@ public class RedisDriver extends Driver
         }
 
         @Override
+        public List<String> getKeywords(Session session)
+        {
+                return List.of();
+        }
+
+        @Override
         public List<Table> getTables(Session session)
         {
                 return Lists.newArrayList();
