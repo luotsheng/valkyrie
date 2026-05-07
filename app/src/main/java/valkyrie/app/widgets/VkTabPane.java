@@ -16,6 +16,14 @@ import java.util.*;
  */
 public class VkTabPane extends TabPane implements ObservableList<Tab>
 {
+        /**
+         * 构造函数
+         */
+        public VkTabPane()
+        {
+                setTabDragPolicy(TabDragPolicy.REORDER);
+        }
+
         /// ///////////////////////////////////////////////////////////
         /// 增强函数
         /// ///////////////////////////////////////////////////////////
