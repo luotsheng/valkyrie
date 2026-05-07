@@ -61,10 +61,10 @@
             }
         );
 
-        /*
-     * Ctrl/Cmd + W
-     * 智能扩大选择
-     */
+        /**
+         * Ctrl/Cmd + W
+         * 智能扩大选择
+         */
         editor.addAction({
             id: 'smart-select-expand',
             label: 'Expand Selection',
@@ -82,7 +82,7 @@
             }
         });
 
-        /*
+        /**
          * Ctrl/Cmd + Shift + W
          * 缩小选择
          */
@@ -103,7 +103,7 @@
             }
         });
 
-        /*
+        /**
          * Alt + Shift + Up
          * 上方插入多光标
          */
@@ -123,7 +123,7 @@
             }
         });
 
-        /*
+        /**
          * Alt + Shift + Down
          * 下方插入多光标
          */
@@ -138,6 +138,27 @@
                 editor.trigger(
                     'keyboard',
                     'editor.action.insertCursorBelow',
+                    {}
+                );
+            }
+        });
+
+        /**
+         * Ctrl + D
+         * 复制一行
+         */
+        editor.addAction({
+            id: 'duplicate-line',
+            label: 'Duplicate Line',
+            keybindings: [
+                monaco.KeyMod.CtrlCmd |
+                monaco.KeyCode.KeyD
+            ],
+            run: function(editor) {
+
+                editor.trigger(
+                    'keyboard',
+                    'editor.action.copyLinesDownAction',
                     {}
                 );
             }
