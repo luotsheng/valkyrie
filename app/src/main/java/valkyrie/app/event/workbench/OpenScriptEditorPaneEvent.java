@@ -49,11 +49,6 @@ public class OpenScriptEditorPaneEvent extends OpenTabEvent
         {
                 tab.setGraphic(Assets.use("sql"));
 
-                tab.setOnCloseRequest(e -> {
-                        if (tab.getContent() instanceof ScriptEditor editor)
-                                editor.close();
-                });
-
                 ScriptEditor scriptEditor = new ScriptEditor(connection, scriptFile, tab);
 
                 /* tabId 不为空时，重新设置 Tab 标题 */

@@ -102,8 +102,8 @@ public class Workbench extends VBox implements EventListener
 
         private void handleTabRemoveEvent(Tab tab)
         {
-                if (tab != null && tab.getContent() instanceof ScriptEditor se)
-                        se.dispose();
+                if (tab != null && tab.getContent() instanceof ScriptEditor editor)
+                        editor.close();
         }
 
         private void setupContextMenu()

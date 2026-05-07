@@ -129,7 +129,7 @@ public class ScriptEditor extends SplitPane implements EventListener
                 EventBus.subscribe(ConnectionOpenedNotifyEvent.class, this);
         }
 
-        public void dispose()
+        private void dispose()
         {
                 EventBus.unscribe(ConnectionOpenedNotifyEvent.class, this);
 
@@ -580,7 +580,6 @@ public class ScriptEditor extends SplitPane implements EventListener
         private void save()
         {
                 String content = getCodeAreaContent();
-                System.out.println("content: " + content);
 
                 if (scriptFile == null) {
                         String saveScriptName = SaveScriptDialog.showDialog(this);
@@ -625,6 +624,8 @@ public class ScriptEditor extends SplitPane implements EventListener
                         if (VkDialogHelper.ask("%s 未保存，是否保存？", owner.getText()))
                                 save();
                 }
+
+                dispose();
         }
 }
 
