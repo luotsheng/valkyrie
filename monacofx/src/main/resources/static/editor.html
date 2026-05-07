@@ -192,6 +192,50 @@
             }
         });
 
+        /**
+         * Ctrl + Shift + U
+         * 大小写转换
+         */
+        editor.addAction({
+            id: 'toggle-case',
+            label: 'Toggle CASE',
+            keybindings: [
+                monaco.KeyMod.Shift |
+                monaco.KeyMod.CtrlCmd |
+                monaco.KeyCode.KeyU
+            ],
+            run: function (editor) {
+                const selections = editor.getSelections();
+                const edits = [];
+
+                selections.forEach(sel => {
+
+                    const text = editor.getModel().getValueInRange(sel);
+
+                    if (!text)
+                        return;
+
+                    let newText;
+
+                    const hasUpper = /[A-Z]/.test(text);
+                    const hasLower = /[a-z]/.test(text);
+
+                    if (hasUpper && !hasLower) {
+                        newText = text.toLowerCase();
+                    } else {
+                        newText = text.toUpperCase();
+                    }
+
+                    edits.push({
+                        range: sel,
+                        text: newText
+                    });
+                });
+
+                editor.executeEdits('toggle-case', edits);
+            }
+        });
+
         editor.layout();
     });
 </script>
