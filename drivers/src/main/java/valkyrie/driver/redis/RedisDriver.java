@@ -125,7 +125,7 @@ public class RedisDriver extends Driver
         @Override
         public List<String> getKeywords(Session session)
         {
-                return List.of();
+                return Lists.newArrayList(RedisKeywords.KEYWORDS);
         }
 
         @Override

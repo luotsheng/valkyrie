@@ -3,6 +3,7 @@ package valkyrie.driver.dm;
 import valkyrie.driver.api.*;
 import valkyrie.driver.api.exception.DriverException;
 import valkyrie.driver.api.sql.SQL;
+import valkyrie.driver.keywords.SqlStandardKeywords;
 import valkyrie.utils.Captor;
 import valkyrie.utils.collection.Lists;
 import valkyrie.utils.collection.Sets;
@@ -66,9 +67,15 @@ public class DMDriver extends Driver
         @Override
         public List<String> getKeywords(Session session)
         {
+                Set<String> ret = Sets.newHashSet();
+
+                ret.addAll(DMKeywords.KEYWORDS);
+
                 DataGrid grid = execute(session,
                         "SELECT DISTINCT COLUMN_NAME FROM ALL_TAB_COLUMNS WHERE OWNER = '%s';", session.schema());
-                return grid.getRows().stream().map(ArrayList::getFirst).toList();
+                ret.addAll(grid.getRows().stream().map(ArrayList::getFirst).toList());
+
+                return Lists.newArrayList(ret);
         }
 
         @Override
