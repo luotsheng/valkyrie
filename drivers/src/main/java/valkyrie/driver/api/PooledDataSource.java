@@ -2,6 +2,7 @@ package valkyrie.driver.api;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import dm.jdbc.driver.DmDriver;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -20,19 +21,25 @@ public class PooledDataSource
 {
         private final HikariDataSource ds;
 
-        public PooledDataSource(ConnectionConfig connectionConfig)
+        public PooledDataSource(ConnectionConfig conf)
         {
-                HikariConfig conf = new HikariConfig();
+                HikariConfig hconf = new HikariConfig();
 
-                conf.setJdbcUrl(connectionConfig.getJdbcUrl());
-                conf.setUsername(connectionConfig.getUsername());
-                conf.setPassword(connectionConfig.getPassword());
+                hconf.setJdbcUrl(conf.getJdbcUrl());
+                hconf.setUsername(conf.getUsername());
+                hconf.setPassword(conf.getPassword());
 
-                conf.setMaximumPoolSize(16);
-                conf.setMinimumIdle(1);
-                conf.setConnectionTimeout(30000);
+                hconf.setMaximumPoolSize(16);
+                hconf.setMinimumIdle(1);
+                hconf.setConnectionTimeout(30000);
 
-                ds = new HikariDataSource(conf);
+                switch (conf.getType()) {
+                        case mysql -> hconf.setDriverClassName("com.mysql.cj.jdbc.Driver");
+                        case dm -> hconf.setDriverClassName("dm.jdbc.driver.DmDriver");
+                        default -> {}
+                }
+
+                ds = new HikariDataSource(hconf);
         }
 
         /* ******************************************************************************** */
