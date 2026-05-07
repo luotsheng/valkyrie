@@ -59,7 +59,7 @@ public class DMDriver extends Driver
         {
                 DataGrid dataGrid = execute(session, new SQL(
                         fmt("""
-                                SELECT DBMS_METADATA.GET_DDL('TABLE', '%s', '%s') AS "DDL" FROM DUAL
+                                SELECT DMDBA.GET_DDL_FIX('TABLE', '%s', '%s') AS "DDL" FROM DUAL
                                 """, table, session.schema())
                 ));
 
