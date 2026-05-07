@@ -156,7 +156,7 @@ public class ScriptEditor extends SplitPane implements EventListener
 
                 editor.setWebViewOnKeyPressedEvent(event -> {
                         if (event.isShortcutDown() && event.getCode() == KeyCode.C)
-                                Application.copyToClipboard(editor.getValueInSelectionRange());
+                                Application.copyToClipboard(editor.getSelectedValue());
                 });
 
                 runSelectedSQLItem = new MenuItem("运行当前选择的");
@@ -169,7 +169,7 @@ public class ScriptEditor extends SplitPane implements EventListener
                 beautifySelectedSQLItem.setOnAction(event -> beautifySQL());
 
                 copyItem = new MenuItem("复制");
-                copyItem.setOnAction(event -> Application.copyToClipboard(editor.getValueInSelectionRange()));
+                copyItem.setOnAction(event -> Application.copyToClipboard(editor.getSelectedValue()));
                 copyItem.setAccelerator(
                         new KeyCodeCombination(KeyCode.C, KeyCodeCombination.SHORTCUT_DOWN)
                 );
@@ -190,7 +190,7 @@ public class ScriptEditor extends SplitPane implements EventListener
 
                 editor.bindContextMenu(contextMenu);
                 editor.setShowContextMenuRequestEvent(ignored -> {
-                        boolean isUnselected = strempty(editor.getValueInSelectionRange());
+                        boolean isUnselected = strempty(editor.getSelectedValue());
                         runSelectedSQLItem.setDisable(isUnselected);
                         beautifySelectedSQLItem.setDisable(isUnselected);
                         copyItem.setDisable(isUnselected);
@@ -448,7 +448,7 @@ public class ScriptEditor extends SplitPane implements EventListener
                 setLoadingIndicator();
 
                 Platform.runLater(() -> {
-                        String scriptText = editor.getValueInSelectionRange();
+                        String scriptText = editor.getSelectedValue();
 
                         if (scriptText == null || scriptText.isEmpty())
                                 scriptText = editor.getValue();
@@ -507,7 +507,7 @@ public class ScriptEditor extends SplitPane implements EventListener
 
         private void beautifySQL()
         {
-                String selected = editor.getValueInSelectionRange();
+                String selected = editor.getSelectedValue();
 
                 String formatted = SqlFormatter.format(selected);
                 editor.replaceSelection(formatted);

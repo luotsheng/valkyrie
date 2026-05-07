@@ -136,7 +136,7 @@ public class MonacoEditor extends StackPane
                 return (String) engine.executeScript("editor.getValue()");
         }
 
-        public String getValueInSelectionRange()
+        public String getSelectedValue()
         {
                 return (String) engine.executeScript(
                         "window.editor.getModel().getValueInRange(editor.getSelection())"
