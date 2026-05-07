@@ -129,6 +129,16 @@ public class ScriptEditor extends SplitPane implements EventListener
                 EventBus.subscribe(ConnectionOpenedNotifyEvent.class, this);
         }
 
+        public void dispose()
+        {
+                EventBus.unscribe(ConnectionOpenedNotifyEvent.class, this);
+
+                if (driver != null)
+                        driver.cancel(currentTaskId);
+
+                editor.dispose();
+        }
+
         @Override
         public void onEvent(Event event)
         {

@@ -54,6 +54,37 @@ public class MonacoEditor extends StackPane
                 webView.prefHeightProperty().bind(this.heightProperty());
         }
 
+        @SuppressWarnings("TrailingWhitespacesInTextBlock")
+        public void dispose()
+        {
+                waitAndRun(() -> engine.executeScript("""
+                        try {
+                                const model =
+                                        editor.getModel();
+                                        
+                                if (model)
+                                        model.dispose();
+                                        
+                                editor.dispose();
+                        } catch (e) {
+                                console.log(e);
+                        }
+                        """));
+
+                engine.getLoadWorker().cancel();
+                engine.loadContent("");
+
+                engine.executeScript("""
+                        document.body.innerHTML = '';
+                        window.close();
+                        """);
+
+                JSObject window = (JSObject) engine.executeScript("window");
+                window.setMember("javaConsole", null);
+
+                System.gc();
+        }
+
         public static class Console {
                 @SuppressWarnings("unused")
                 public void log(Object message) {

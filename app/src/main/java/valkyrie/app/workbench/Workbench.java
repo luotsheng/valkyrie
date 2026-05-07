@@ -1,5 +1,6 @@
 package valkyrie.app.workbench;
 
+import javafx.collections.ListChangeListener;
 import valkyrie.app.Application;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.event.bus.Event;
@@ -88,6 +89,21 @@ public class Workbench extends VBox implements EventListener
                                 node = node.getParent();
                         }
                 });
+
+                tabPane.getTabs().addListener((ListChangeListener<Tab>) change -> {
+                        while (change.next()) {
+                                if (change.wasRemoved()) {
+                                        for (Tab tab : change.getRemoved())
+                                                handleTabRemoveEvent(tab);
+                                }
+                        }
+                });
+        }
+
+        private void handleTabRemoveEvent(Tab tab)
+        {
+                if (tab != null && tab.getContent() instanceof ScriptEditor se)
+                        se.dispose();
         }
 
         private void setupContextMenu()

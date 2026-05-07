@@ -1,9 +1,11 @@
 package valkyrie.app.event.bus;
 
+import valkyrie.app.event.workbench.ConnectionOpenedNotifyEvent;
 import valkyrie.app.event.workbench.OpenTabEvent;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import valkyrie.app.workbench.ScriptEditor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,6 +31,16 @@ public class EventBus
         {
                 eventListeners.computeIfAbsent(event, k -> new CopyOnWriteArrayList<>())
                         .add(listener);
+        }
+
+        /**
+         * 取消订阅
+         */
+        public static void unscribe(Class<? extends Event> event, EventListener listener)
+        {
+                CopyOnWriteArrayList<EventListener> eventListeners = EventBus.eventListeners.get(event);
+                if (eventListeners != null)
+                        eventListeners.remove(listener);
         }
 
         /**
