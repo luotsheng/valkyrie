@@ -3,7 +3,6 @@ package valkyrie.monacofx;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.input.Clipboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
@@ -20,7 +19,7 @@ import static valkyrie.utils.io.IOUtils.printf;
  * @author Luo Tiansheng
  * @since 2026/5/6
  */
-public class MonacoFx extends StackPane
+public class MonacoEditor extends StackPane
 {
         private final WebView webView = new WebView();
         private final WebEngine engine = webView.getEngine();
@@ -35,7 +34,7 @@ public class MonacoFx extends StackPane
         }
 
         @SuppressWarnings("DataFlowIssue")
-        public MonacoFx()
+        public MonacoEditor()
         {
                 webView.setContextMenuEnabled(false);
                 engine.load(getClass().getResource("/static/editor.html").toExternalForm());
@@ -130,13 +129,27 @@ public class MonacoFx extends StackPane
         public void setValue(String text)
         {
                 waitAndRun(() -> {
-                        engine.executeScript(
-                                "editor.getModel().setValue(" + toJsString(text) + ");"
-                        );
+                        engine.executeScript("""
+                                setTimeout(() => {
+                                    const model = editor.getModel();
+                                
+                                    editor.executeEdits('', [{
+                                        range: model.getFullModelRange(),
+                                        text: %s
+                                    }]);
+                                
+                                    editor.layout();
+                                
+                                    requestAnimationFrame(() => {
+                                        editor.layout();
+                                        editor.focus();
+                                    });
+                                }, 0);
+                                """.formatted(toJsString(text)));
                 });
         }
 
-        public void setOnKeyPressedEvent(
+        public void setWebViewOnKeyPressedEvent(
                 EventHandler<? super KeyEvent> value) {
                 webView.setOnKeyPressed(value);
         }

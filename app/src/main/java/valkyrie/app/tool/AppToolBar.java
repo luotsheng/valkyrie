@@ -2,7 +2,6 @@ package valkyrie.app.tool;
 
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.BorderPane;
 import valkyrie.app.event.bus.EventBus;
 import valkyrie.app.event.workbench.OpenScriptEditorPaneEvent;
 import valkyrie.app.event.workbench.OpenTabEvent;
@@ -15,7 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseButton;
-import valkyrie.monacofx.MonacoFx;
+import valkyrie.monacofx.MonacoEditor;
 import valkyrie.utils.Generator;
 
 /**
@@ -71,7 +70,7 @@ public class AppToolBar extends ToolBar
                         @Override
                         public Node createPane(Tab tab)
                         {
-                                return new MonacoFx();
+                                return new MonacoEditor();
                         }
                 };
 

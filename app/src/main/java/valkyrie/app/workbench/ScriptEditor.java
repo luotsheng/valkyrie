@@ -36,7 +36,7 @@ import valkyrie.driver.api.DataGrid;
 import valkyrie.driver.api.Driver;
 import valkyrie.driver.api.Session;
 import valkyrie.driver.api.sql.SQL;
-import valkyrie.monacofx.MonacoFx;
+import valkyrie.monacofx.MonacoEditor;
 import valkyrie.utils.exception.Causes;
 
 import java.io.FileReader;
@@ -61,7 +61,7 @@ public class ScriptEditor extends SplitPane implements EventListener
         @Getter
         private final Tab owner;
         private final ToolBar toolBar;
-        private final MonacoFx editor;
+        private final MonacoEditor editor;
         private final BorderPane topBorderPane;
         private final DataGridViewPane dataGridViewPane;
         private final Tab sqlMessageTab;
@@ -139,12 +139,12 @@ public class ScriptEditor extends SplitPane implements EventListener
                 }
         }
 
-        private MonacoFx createEditor()
+        private MonacoEditor createEditor()
         {
-                MonacoFx editor = new MonacoFx();
+                MonacoEditor editor = new MonacoEditor();
                 ContextMenu contextMenu = new ContextMenu();
 
-                editor.setOnKeyPressedEvent(event -> {
+                editor.setWebViewOnKeyPressedEvent(event -> {
                         if (event.isShortcutDown() && event.getCode() == KeyCode.C)
                                 Application.copyToClipboard(editor.getValueInSelectionRange());
                 });
