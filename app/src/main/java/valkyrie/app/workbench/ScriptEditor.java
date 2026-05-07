@@ -32,6 +32,7 @@ import valkyrie.app.widgets.VkSeparator;
 import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.core.model.ScriptFile;
 import valkyrie.core.repository.ScriptFileRepository;
+import valkyrie.driver.api.Catalog;
 import valkyrie.driver.api.DataGrid;
 import valkyrie.driver.api.Driver;
 import valkyrie.driver.api.Session;
@@ -40,6 +41,8 @@ import valkyrie.monacofx.MonacoEditor;
 import valkyrie.utils.exception.Causes;
 
 import java.io.FileReader;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static valkyrie.utils.string.StaticLibrary.fmt;
 import static valkyrie.utils.string.StaticLibrary.strempty;
@@ -144,8 +147,10 @@ public class ScriptEditor extends SplitPane implements EventListener
         {
                 if (event instanceof ConnectionOpenedNotifyEvent e) {
                         UIConnectionNode selectedItem = connectionComboBox.getSelectionModel().getSelectedItem();
-                        if (selectedItem == e.connection)
-                                catalogComboBox.getItems().setAll(selectedItem.getCatalogNodes());
+                        if (selectedItem == e.connection) {
+                                List<UICatalogNode> catalogNodes = selectedItem.getCatalogNodes();
+                                catalogComboBox.getItems().setAll(catalogNodes);
+                        }
                 }
         }
 
@@ -303,10 +308,17 @@ public class ScriptEditor extends SplitPane implements EventListener
 
         private void configureConnectionComboBox(VkComboBox<UIConnectionNode> comboBox)
         {
+                comboBox.getSelectionModel().selectedItemProperty()
+                        .addListener((obs, oldVal, newVal) -> {
+                                editor.registerKeywords(newVal.getCatalogNodes().stream().map(UICatalogNode::getName).toList());
+                                newVal.getCatalogNodes().forEach(catalog -> editor.registerKeywords(catalog.getTableNames()));
+                });
+
                 comboBox.setOnAction(event -> {
                         UIConnectionNode item = comboBox.getSelectionModel().getSelectedItem();
-                        if (item != null)
+                        if (item != null) {
                                 catalogComboBox.getItems().setAll(item.getCatalogNodes());
+                        }
                 });
 
                 comboBox.setButtonCell(new ListCell<>()

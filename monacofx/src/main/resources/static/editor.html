@@ -35,12 +35,12 @@
     var require = { paths: { vs: './vs' } };
 </script>
 <script src="./vs/loader.js"></script>
+<script src="./keywords.js"></script>
 
 <script>
     require(['vs/editor/editor.main'], function () {
         window.editor = monaco.editor.create(
-            document.getElementById('container'),
-            {
+            document.getElementById('container'), {
                 value: '',
                 language: 'sql',
                 automaticLayout: true,
@@ -60,6 +60,34 @@
                 }
             }
         );
+
+        monaco.languages.registerCompletionItemProvider('sql', {
+            triggerCharacters: [' ', '.'],
+
+            provideCompletionItems: function(model, position) {
+                const word = model.getWordUntilPosition(position);
+
+                const range = {
+                    startLineNumber: position.lineNumber,
+                    endLineNumber: position.lineNumber,
+                    startColumn: word.startColumn,
+                    endColumn: word.endColumn
+                };
+
+                const suggestions = Array.from(window.SqlKeywords).map(keyword => {
+                    return {
+                        label: keyword,
+                        kind: monaco.languages.CompletionItemKind.Keyword,
+                        insertText: keyword,
+                        range: range
+                    };
+                });
+
+                return {
+                    suggestions: suggestions
+                };
+            }
+        });
 
         /**
          * Ctrl/Cmd + W

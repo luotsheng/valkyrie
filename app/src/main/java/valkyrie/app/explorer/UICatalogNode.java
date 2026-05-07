@@ -304,6 +304,11 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
                 super.showContextMenu(node, x, y);
         }
 
+        public List<String> getTableNames()
+        {
+                return tables.stream().map(Table::getName).toList();
+        }
+
         public UITableNode getUITableNode(String name)
         {
                 return tableNodes.get(name);

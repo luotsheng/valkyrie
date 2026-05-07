@@ -10,6 +10,10 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import lombok.Setter;
 import netscape.javascript.JSObject;
+import valkyrie.utils.collection.Sets;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static valkyrie.utils.io.IOUtils.printf;
 
@@ -19,11 +23,11 @@ import static valkyrie.utils.io.IOUtils.printf;
  * @author Luo Tiansheng
  * @since 2026/5/6
  */
+@SuppressWarnings("ALL")
 public class MonacoEditor extends StackPane
 {
         private final WebView webView = new WebView();
         private final WebEngine engine = webView.getEngine();
-
         private ContextMenu contextMenu = null;
 
         @Setter
@@ -54,7 +58,6 @@ public class MonacoEditor extends StackPane
                 webView.prefHeightProperty().bind(this.heightProperty());
         }
 
-        @SuppressWarnings("TrailingWhitespacesInTextBlock")
         public void dispose()
         {
                 waitAndRun(() -> engine.executeScript("""
@@ -129,6 +132,17 @@ public class MonacoEditor extends StackPane
                         return;
 
                 contextMenu.hide();
+        }
+
+        public void registerKeywords(Collection<String> keywords)
+        {
+                String distinctKeyWords = Sets.newHashSet(keywords).stream()
+                        .map(s -> "'" + s + "'")
+                        .collect(Collectors.joining(","));
+
+                waitAndRun(() -> {
+                        engine.executeScript("window.addSqlKeywords([" + distinctKeyWords + "]);");
+                });
         }
 
         public String getValue()
