@@ -6,6 +6,11 @@ window.addSqlKeywords = function (kws) {
         const keyword = parts[0];
         const kind = parts[1] || 'Keyword';
 
+        // 去重检查
+        if (SqlKeywords.some(item => item.label === keyword)) {
+            return;
+        }
+
         SqlKeywords.push({
             label: keyword,
             kind: kind,
@@ -22,7 +27,8 @@ function getDetail(kind) {
         'Operator': '操作符',
         'Class': '表',
         'Field': '字段',
-        'Module': '模块'
+        'Module': '模块',
+        'Folder': '文件夹'
     };
     return details[kind] || '';
 }

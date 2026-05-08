@@ -43,6 +43,7 @@
             document.getElementById('container'), {
                 value: '',
                 language: 'sql',
+                fontSize: 14,
                 automaticLayout: true,
                 roundedSelection: false,
                 mouseWheelScrollSensitivity: 0.03,
@@ -86,7 +87,7 @@
 
                 function getKind(kind) {
                     const kinds = {
-                        'Keyword': monaco.languages.CompletionItemKind.Keyword,
+                        'Keyword': monaco.languages.CompletionItemKind.Function,
                         'Function': monaco.languages.CompletionItemKind.Function,
                         'Operator': monaco.languages.CompletionItemKind.Operator,
                         'Class': monaco.languages.CompletionItemKind.Class,
