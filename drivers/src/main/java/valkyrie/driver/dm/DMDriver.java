@@ -73,7 +73,7 @@ public class DMDriver extends Driver
 
                 DataGrid grid = execute(session,
                         "SELECT DISTINCT COLUMN_NAME FROM ALL_TAB_COLUMNS WHERE OWNER = '%s';", session.schema());
-                ret.addAll(grid.getRows().stream().map(ArrayList::getFirst).toList());
+                ret.addAll(grid.getRows().stream().map(t -> t.getFirst() + ":Field").toList());
 
                 return Lists.newArrayList(ret);
         }

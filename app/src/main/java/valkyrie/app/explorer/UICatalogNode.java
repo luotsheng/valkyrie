@@ -309,9 +309,11 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
                 return driver.getKeywords(session);
         }
 
-        public List<String> getTableNames()
+        public List<String> getTableNameKeywords()
         {
-                return tables.stream().map(Table::getName).toList();
+                return tables.stream()
+                        .map(t -> t.getName() + ":Class")
+                        .toList();
         }
 
         public UITableNode getUITableNode(String name)

@@ -310,7 +310,7 @@ public class ScriptEditor extends SplitPane implements EventListener
         {
                 comboBox.getSelectionModel().selectedItemProperty()
                         .addListener((obs, oldVal, newVal) -> {
-                                editor.registerKeywords(newVal.getCatalogNodes().stream().map(UICatalogNode::getName).toList());
+                                editor.registerKeywords(newVal.getCatalogKeywords());
                 });
 
                 comboBox.setOnAction(event -> {
@@ -370,7 +370,7 @@ public class ScriptEditor extends SplitPane implements EventListener
         {
                 comboBox.getSelectionModel().selectedItemProperty()
                                 .addListener((obs, oldVal, newVal) -> {
-                                        editor.registerKeywords(newVal.getTableNames());
+                                        editor.registerKeywords(newVal.getTableNameKeywords());
                                         editor.registerKeywords(newVal.getKeywords());
                                 });
 

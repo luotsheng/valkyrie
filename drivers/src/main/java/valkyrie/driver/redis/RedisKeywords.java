@@ -19,61 +19,61 @@ public class RedisKeywords
 
                 Collections.addAll(keywords,
                         // 连接与认证
-                        "AUTH", "ECHO", "HELLO", "PING", "QUIT", "SELECT", "SWAPDB",
+                        "AUTH:Function", "ECHO:Function", "HELLO:Function", "PING:Function", "QUIT:Function", "SELECT:Function", "SWAPDB:Function",
                         // 字符串操作
-                        "APPEND", "DECR", "DECRBY", "GET", "GETDEL", "GETEX", "GETRANGE", "GETSET",
-                        "INCR", "INCRBY", "INCRBYFLOAT", "MGET", "MSET", "MSETNX", "PSETEX", "SET",
-                        "SETBIT", "SETEX", "SETNX", "SETRANGE", "STRLEN", "SUBSTR",
+                        "APPEND:Function", "DECR:Function", "DECRBY:Function", "GET:Function", "GETDEL:Function", "GETEX:Function", "GETRANGE:Function", "GETSET:Function",
+                        "INCR:Function", "INCRBY:Function", "INCRBYFLOAT:Function", "MGET:Function", "MSET:Function", "MSETNX:Function", "PSETEX:Function", "SET:Function",
+                        "SETBIT:Function", "SETEX:Function", "SETNX:Function", "SETRANGE:Function", "STRLEN:Function", "SUBSTR:Function",
                         // 列表操作
-                        "BLMOVE", "BLPOP", "BRPOP", "BRPOPLPUSH", "LINDEX", "LINSERT", "LLEN", "LMOVE",
-                        "LPOP", "LPOS", "LPUSH", "LPUSHX", "LRANGE", "LREM", "LSET", "LTRIM", "RPOP",
-                        "RPOPLPUSH", "RPUSH", "RPUSHX",
+                        "BLMOVE:Function", "BLPOP:Function", "BRPOP:Function", "BRPOPLPUSH:Function", "LINDEX:Function", "LINSERT:Function", "LLEN:Function", "LMOVE:Function",
+                        "LPOP:Function", "LPOS:Function", "LPUSH:Function", "LPUSHX:Function", "LRANGE:Function", "LREM:Function", "LSET:Function", "LTRIM:Function", "RPOP:Function",
+                        "RPOPLPUSH:Function", "RPUSH:Function", "RPUSHX:Function",
                         // 集合操作
-                        "SADD", "SCARD", "SDIFF", "SDIFFSTORE", "SINTER", "SINTERSTORE", "SISMEMBER",
-                        "SMISMEMBER", "SMEMBERS", "SMOVE", "SPOP", "SRANDMEMBER", "SREM", "SSCAN", "SUNION",
-                        "SUNIONSTORE",
+                        "SADD:Function", "SCARD:Function", "SDIFF:Function", "SDIFFSTORE:Function", "SINTER:Function", "SINTERSTORE:Function", "SISMEMBER:Function",
+                        "SMISMEMBER:Function", "SMEMBERS:Function", "SMOVE:Function", "SPOP:Function", "SRANDMEMBER:Function", "SREM:Function", "SSCAN:Function", "SUNION:Function",
+                        "SUNIONSTORE:Function",
                         // 有序集合操作
-                        "ZADD", "ZCARD", "ZCOUNT", "ZDIFF", "ZDIFFSTORE", "ZINCRBY", "ZINTER", "ZINTERSTORE",
-                        "ZLEXCOUNT", "ZMSCORE", "ZPOPMAX", "ZPOPMIN", "ZRANDMEMBER", "ZRANGE", "ZRANGEBYLEX",
-                        "ZRANGEBYSCORE", "ZRANK", "ZREM", "ZREMRANGEBYLEX", "ZREMRANGEBYRANK", "ZREMRANGEBYSCORE",
-                        "ZREVRANGE", "ZREVRANGEBYLEX", "ZREVRANGEBYSCORE", "ZREVRANK", "ZSCORE", "ZUNION",
-                        "ZUNIONSTORE", "ZMSCORE",
+                        "ZADD:Function", "ZCARD:Function", "ZCOUNT:Function", "ZDIFF:Function", "ZDIFFSTORE:Function", "ZINCRBY:Function", "ZINTER:Function", "ZINTERSTORE:Function",
+                        "ZLEXCOUNT:Function", "ZMSCORE:Function", "ZPOPMAX:Function", "ZPOPMIN:Function", "ZRANDMEMBER:Function", "ZRANGE:Function", "ZRANGEBYLEX:Function",
+                        "ZRANGEBYSCORE:Function", "ZRANK:Function", "ZREM:Function", "ZREMRANGEBYLEX:Function", "ZREMRANGEBYRANK:Function", "ZREMRANGEBYSCORE:Function",
+                        "ZREVRANGE:Function", "ZREVRANGEBYLEX:Function", "ZREVRANGEBYSCORE:Function", "ZREVRANK:Function", "ZSCORE:Function", "ZUNION:Function",
+                        "ZUNIONSTORE:Function",
                         // 哈希操作
-                        "HDEL", "HEXISTS", "HGET", "HGETALL", "HINCRBY", "HINCRBYFLOAT", "HKEYS", "HLEN",
-                        "HMGET", "HMSET", "HRANDFIELD", "HSCAN", "HSET", "HSETNX", "HSTRLEN", "HVALS",
+                        "HDEL:Function", "HEXISTS:Function", "HGET:Function", "HGETALL:Function", "HINCRBY:Function", "HINCRBYFLOAT:Function", "HKEYS:Function", "HLEN:Function",
+                        "HMGET:Function", "HMSET:Function", "HRANDFIELD:Function", "HSCAN:Function", "HSET:Function", "HSETNX:Function", "HSTRLEN:Function", "HVALS:Function",
                         // 超长文本/比特操作
-                        "BITCOUNT", "BITFIELD", "BITOP", "BITPOS", "GETBIT", "SETBIT",
+                        "BITCOUNT:Function", "BITFIELD:Function", "BITOP:Function", "BITPOS:Function", "GETBIT:Function", "SETBIT:Function",
                         // Geo 地理操作
-                        "GEOADD", "GEODIST", "GEOHASH", "GEOPOS", "GEORADIUS", "GEORADIUSBYMEMBER", "GEOSEARCH",
-                        "GEOSEARCHSTORE",
+                        "GEOADD:Function", "GEODIST:Function", "GEOHASH:Function", "GEOPOS:Function", "GEORADIUS:Function", "GEORADIUSBYMEMBER:Function", "GEOSEARCH:Function",
+                        "GEOSEARCHSTORE:Function",
                         // Stream 流操作
-                        "XACK", "XADD", "XAUTOCLAIM", "XCLAIM", "XDEL", "XGROUP", "XINFO", "XLEN", "XPENDING",
-                        "XRANGE", "XREAD", "XREADGROUP", "XREVRANGE", "XTRIM",
+                        "XACK:Function", "XADD:Function", "XAUTOCLAIM:Function", "XCLAIM:Function", "XDEL:Function", "XGROUP:Function", "XINFO:Function", "XLEN:Function", "XPENDING:Function",
+                        "XRANGE:Function", "XREAD:Function", "XREADGROUP:Function", "XREVRANGE:Function", "XTRIM:Function",
                         // 键操作
-                        "COPY", "DEL", "EXISTS", "EXPIRE", "EXPIREAT", "KEYS", "MOVE", "OBJECT", "PERSIST",
-                        "PEXPIRE", "PEXPIREAT", "PTTL", "RANDOMKEY", "RENAME", "RENAMENX", "RESTORE",
-                        "SORT", "TOUCH", "TTL", "TYPE", "UNLINK", "WAIT", "WATCH", "UNWATCH",
+                        "COPY:Function", "DEL:Function", "EXISTS:Function", "EXPIRE:Function", "EXPIREAT:Function", "KEYS:Function", "MOVE:Function", "OBJECT:Function", "PERSIST:Function",
+                        "PEXPIRE:Function", "PEXPIREAT:Function", "PTTL:Function", "RANDOMKEY:Function", "RENAME:Function", "RENAMENX:Function", "RESTORE:Function",
+                        "SORT:Function", "TOUCH:Function", "TTL:Function", "TYPE:Function", "UNLINK:Function", "WAIT:Function", "WATCH:Function", "UNWATCH:Function",
                         // 数据库操作
-                        "DBSIZE", "FLUSHALL", "FLUSHDB", "LASTSAVE", "SAVE",
+                        "DBSIZE:Function", "FLUSHALL:Function", "FLUSHDB:Function", "LASTSAVE:Function", "SAVE:Function",
                         // 脚本与事务
-                        "EVAL", "EVALSHA", "EVALSHA_RO", "EVAL_RO", "FCALL", "FCALL_RO", "SCRIPT",
-                        "DEBUG", "MULTI", "EXEC", "DISCARD",
+                        "EVAL:Function", "EVALSHA:Function", "EVALSHA_RO:Function", "EVAL_RO:Function", "FCALL:Function", "FCALL_RO:Function", "SCRIPT:Function",
+                        "DEBUG:Function", "MULTI:Function", "EXEC:Function", "DISCARD:Function",
                         // 集群操作
-                        "CLUSTER", "READONLY", "READWRITE", "REPLICAOF", "SLAVEOF", "ROLE",
+                        "CLUSTER:Keyword", "READONLY:Function", "READWRITE:Function", "REPLICAOF:Function", "SLAVEOF:Function", "ROLE:Function",
                         // 慢查询与监控
-                        "SLOWLOG", "LATENCY", "MONITOR", "MEMORY", "INFO",
+                        "SLOWLOG:Function", "LATENCY:Function", "MONITOR:Function", "MEMORY:Function", "INFO:Function",
                         // 配置与服务器
-                        "ACL", "ACL_CAT", "ACL_DELUSER", "ACL_DRYRUN", "ACL_GETUSER", "ACL_LIST",
-                        "ACL_LOAD", "ACL_LOG", "ACL_SETUSER", "ACL_USERS", "ACL WHOAMI",
-                        "BGREWRITEAOF", "BGSAVE", "COMMAND", "COMMAND COUNT", "COMMAND DOCS", "COMMAND GETKEYS",
-                        "COMMAND GETKEYSANDFLAGS", "COMMAND INFO", "COMMAND LIST", "CONFIG", "FAILOVER",
-                        "MODULE", "MODULE LIST", "MODULE LOAD", "MODULE UNLOAD", "PUBLISH", "PUBSUB",
-                        "PSUBSCRIBE", "PUNSUBSCRIBE", "SHUTDOWN", "SUBSCRIBE", "UNSUBSCRIBE",
+                        "ACL:Keyword", "ACL_CAT:Function", "ACL_DELUSER:Function", "ACL_DRYRUN:Function", "ACL_GETUSER:Function", "ACL_LIST:Function",
+                        "ACL_LOAD:Function", "ACL_LOG:Function", "ACL_SETUSER:Function", "ACL_USERS:Function", "ACL WHOAMI:Function",
+                        "BGREWRITEAOF:Function", "BGSAVE:Function", "COMMAND:Function", "COMMAND COUNT:Function", "COMMAND DOCS:Function", "COMMAND GETKEYS:Function",
+                        "COMMAND GETKEYSANDFLAGS:Function", "COMMAND INFO:Function", "COMMAND LIST:Function", "CONFIG:Keyword", "FAILOVER:Function",
+                        "MODULE:Keyword", "MODULE LIST:Function", "MODULE LOAD:Function", "MODULE UNLOAD:Function", "PUBLISH:Function", "PUBSUB:Keyword",
+                        "PSUBSCRIBE:Function", "PUNSUBSCRIBE:Function", "SHUTDOWN:Function", "SUBSCRIBE:Function", "UNSUBSCRIBE:Function",
                         // 哨兵
-                        "SENTINEL", "MASTERS", "SLAVES", "INFO", "GET", "RESET", "FAILOVER", "RESET",
-                        "SET", "MONITOR", "REMOVE", "CKQUORUM", "DEBUG", "FLUSHCONFIG", "GETMASTER",
-                        "HARD_RESET", "INFO", "IS_MASTER_DOWN_BY_ADDR", "MASTER", "MYID", "pending",
-                        "POSTRUN", "PREREQUISITES", "REMOVE", "RESET", "SET", "SOFT_RESET", "TYPE"
+                        "SENTINEL:Keyword", "MASTERS:Function", "SLAVES:Function", "INFO:Function", "GET:Function", "RESET:Function", "FAILOVER:Function", "RESET:Function",
+                        "SET:Function", "MONITOR:Function", "REMOVE:Function", "CKQUORUM:Function", "DEBUG:Function", "FLUSHCONFIG:Function", "GETMASTER:Function",
+                        "HARD_RESET:Function", "INFO:Function", "IS_MASTER_DOWN_BY_ADDR:Function", "MASTER:Keyword", "MYID:Function", "pending:Function",
+                        "POSTRUN:Function", "PREREQUISITES:Function", "REMOVE:Function", "RESET:Function", "SET:Function", "SOFT_RESET:Function", "TYPE:Function"
                 );
 
                 KEYWORDS = Collections.unmodifiableSet(keywords);

@@ -21,58 +21,58 @@ public class DMKeywords
 
                 Collections.addAll(keywords,
                         // 系统函数
-                        "SYSDATE", "SYSTIMESTAMP", "UID", "USER", "USERENV", "SYS_GUID",
-                        "FROM_BASE64",
+                        "SYSDATE:Function", "SYSTIMESTAMP:Function", "UID:Function", "USER:Keyword", "USERENV:Function", "SYS_GUID:Function",
+                        "FROM_BASE64:Function",
                         // 层次查询
-                        "CONNECT_BY_ISCYCLE", "CONNECT_BY_ISLEAF", "CONNECT_BY_ROOT", "PRIOR", "LEVEL",
+                        "CONNECT_BY_ISCYCLE:Function", "CONNECT_BY_ISLEAF:Function", "CONNECT_BY_ROOT:Function", "PRIOR:Keyword", "LEVEL:Keyword",
                         // 序列
-                        "CURRVAL", "NEXTVAL", "INCREMENT", "CYCLE", "NOMAXVALUE", "NOMINVALUE", "MAXSIZE",
-                        "MINEXTENTS", "MAXEXTENTS", "CACHE", "NOCACHE", "ORDER", "NOORDER",
+                        "CURRVAL:Keyword", "NEXTVAL:Keyword", "INCREMENT:Keyword", "CYCLE:Keyword", "NOMAXVALUE:Keyword", "NOMINVALUE:Keyword", "MAXSIZE:Keyword",
+                        "MINEXTENTS:Keyword", "MAXEXTENTS:Keyword", "CACHE:Keyword", "NOCACHE:Keyword", "ORDER:Keyword", "NOORDER:Keyword",
                         // 表空间与数据文件
-                        "TABLESPACE", "DATAFILE", "DBFILE", "TEMPFILE", "TEMP", "UNDO", "ONLINE", "OFFLINE",
-                        "AUTOEXTEND", "NEXT", "MAXSIZE", "UNLIMITED", "FREELIST", "FREELISTS", "PCTFREE",
-                        "PCTUSED", "INITRANS", "MAXTRANS",
+                        "TABLESPACE:Keyword", "DATAFILE:Keyword", "DBFILE:Keyword", "TEMPFILE:Keyword", "TEMP:Keyword", "UNDO:Keyword", "ONLINE:Keyword", "OFFLINE:Keyword",
+                        "AUTOEXTEND:Keyword", "NEXT:Keyword", "MAXSIZE:Keyword", "UNLIMITED:Keyword", "FREELIST:Keyword", "FREELISTS:Keyword", "PCTFREE:Keyword",
+                        "PCTUSED:Keyword", "INITRANS:Keyword", "MAXTRANS:Keyword",
                         // 归档与恢复
-                        "ARCHIVELOG", "NOARCHIVELOG", "ARCHIVEDIR", "RECOVER", "BACKUP", "RESTORE",
+                        "ARCHIVELOG:Keyword", "NOARCHIVELOG:Keyword", "ARCHIVEDIR:Keyword", "RECOVER:Keyword", "BACKUP:Keyword", "RESTORE:Keyword",
                         // 用户与权限
-                        "IDENTIFIED", "AUTHID", "SYSDBA", "DBA", "PUBLIC", "PRIVATE", "ROLE",
+                        "IDENTIFIED:Keyword", "AUTHID:Keyword", "SYSDBA:Keyword", "DBA:Keyword", "PUBLIC:Keyword", "PRIVATE:Keyword", "ROLE:Keyword",
                         // 闪回
-                        "AS OF", "TIMESTAMP", "SCN", "FLASHBACK", "VERSIONS", "MINING",
+                        "AS OF:Keyword", "TIMESTAMP:Keyword", "SCN:Keyword", "FLASHBACK:Keyword", "VERSIONS:Keyword", "MINING:Keyword",
                         // 约束
-                        "DISABLE", "ENABLE", "VALIDATE", "NOVALIDATE", "DEFERRED", "IMMEDIATE",
+                        "DISABLE:Keyword", "ENABLE:Keyword", "VALIDATE:Keyword", "NOVALIDATE:Keyword", "DEFERRED:Keyword", "IMMEDIATE:Keyword",
                         // 索引类型
-                        "BITMAP", "HASH", "CLUSTER", "FUNCTION", "DOMAIN",
+                        "BITMAP:Keyword", "HASH:Keyword", "CLUSTER:Keyword", "FUNCTION:Keyword", "DOMAIN:Keyword",
                         // 会话与事务
-                        "SESSION", "INSTANCE", "TRANSACTION", "MOUNT", "EXCLUSIVE", "RESOURCE",
+                        "SESSION:Keyword", "INSTANCE:Keyword", "TRANSACTION:Keyword", "MOUNT:Keyword", "EXCLUSIVE:Keyword", "RESOURCE:Keyword",
                         // PL/SQL 相关
-                        "PRAGMA", "EXCEPTION", "RAISE", "ASSERT", "AUTONOMOUS_TRANSACTION",
+                        "PRAGMA:Keyword", "EXCEPTION:Keyword", "RAISE:Keyword", "ASSERT:Keyword", "AUTONOMOUS_TRANSACTION:Keyword",
                         // 行列转换
-                        "PIVOT", "UNPIVOT", "ANY", "SOME",
+                        "PIVOT:Keyword", "UNPIVOT:Keyword", "ANY:Keyword", "SOME:Keyword",
                         // 分区
-                        "PARTITION", "SUBPARTITION", "RANGE", "LIST", "HASH", "VALUE", "KEY",
+                        "PARTITION:Keyword", "SUBPARTITION:Keyword", "RANGE:Keyword", "LIST:Keyword", "HASH:Keyword", "VALUE:Keyword", "KEY:Keyword",
                         // 其他达梦特有
-                        "ABORT", "AUTO", "BLOCKSIZE", "BLOCK_SIZE", "BUFFER", "CLUSTER", "COMMENT", "COMPRESS",
-                        "CONNECT", "DECRYPT", "ENCRYPT", "EXIT", "FILE", "FREELIST", "GLOBALLY", "KEEP",
-                        "LOGFILE", "LOGGING", "MODE", "MOUNT", "NOCOMPRESS", "NOCYCLE", "NOLOGGING", "NOSORT",
-                        "NOWAIT", "NUMBER", "NVARCHAR", "NVARCHAR2", "PACKAGE", "PLAN", "RAW", "REUSE",
-                        "ROWID", "ROWNUM", "SAVEPOINT", "SEQUENCE", "SHARE", "SIZE", "SNAPSHOT", "START",
-                        "SYNONYM", "THREAD", "TRIGGER", "UNLIMITED", "VARCHAR", "VARCHAR2", "INT", "WAIT",
-                        "DUAL", "DECLARE", "END", "BODY", "FOR", "LOOP", "WHILE", "IF", "THEN", "ELSE",
-                        "ELSIF", "CASE", "WHEN", "RETURN", "OUT", "INOUT", "IS", "AS", "PROCEDURE",
-                        "FUNCTION", "PACKAGE", "TYPE", "RECORD", "TABLE", "VARRAY", "CURSOR", "OPEN",
-                        "CLOSE", "FETCH", "NULL", "TRUE", "FALSE", "DEFAULT", "NOT", "UNIQUE", "CHECK",
-                        "PRIMARY", "FOREIGN", "REFERENCES", "CONSTRAINT", "INDEX", "VIEW", "SEQUENCE",
-                        "GRANT", "REVOKE", "COMMIT", "ROLLBACK", "SAVEPOINT", "SET", "SHOW", "SVRMODE",
-                        "LINK", "DATABASE", "SCHEMA", "DATAFILE", "LOGFILE", "SIZE", "OFFLINE", "ONLINE",
-                        "BEGIN", "DECLARE", "EXCEPTION", "EXISTS", "KILL", "PURGE", "REBUILD", "RENAME",
-                        "REPAIR", "STORAGE", "TRUNCATE", "UNDOFILE", "WORK", "RELEASE", "ROW", "ROWS",
-                        "READ", "WRITE", "ONLY", "WITH", "GRAGMENT", "LOCATION", "REPLICATED", "LOCAL",
-                        "GLOBAL", "IMMUTABLE", "STABLE", "VOLATILE", "CALLED", "RETURNING", "BULK",
-                        "COLLECT", "FORALL", "LIMIT", "REJECT", "LOG", "SKIP", "SWAP", "TRIM", "CONCAT",
-                        "YEAR", "MONTH", "DAY", "HOUR", "MINUTE", "SECOND", "TIMEZONE", "DAY", "TIME",
+                        "ABORT:Keyword", "AUTO:Keyword", "BLOCKSIZE:Keyword", "BLOCK_SIZE:Keyword", "BUFFER:Keyword", "CLUSTER:Keyword", "COMMENT:Keyword", "COMPRESS:Keyword",
+                        "CONNECT:Keyword", "DECRYPT:Function", "ENCRYPT:Function", "EXIT:Keyword", "FILE:Keyword", "FREELIST:Keyword", "GLOBALLY:Keyword", "KEEP:Keyword",
+                        "LOGFILE:Keyword", "LOGGING:Keyword", "MODE:Keyword", "MOUNT:Keyword", "NOCOMPRESS:Keyword", "NOCYCLE:Keyword", "NOLOGGING:Keyword", "NOSORT:Keyword",
+                        "NOWAIT:Keyword", "NUMBER:Keyword", "NVARCHAR:Keyword", "NVARCHAR2:Keyword", "PACKAGE:Keyword", "PLAN:Keyword", "RAW:Keyword", "REUSE:Keyword",
+                        "ROWID:Keyword", "ROWNUM:Keyword", "SAVEPOINT:Keyword", "SEQUENCE:Keyword", "SHARE:Keyword", "SIZE:Keyword", "SNAPSHOT:Keyword", "START:Keyword",
+                        "SYNONYM:Keyword", "THREAD:Keyword", "TRIGGER:Keyword", "UNLIMITED:Keyword", "VARCHAR:Keyword", "VARCHAR2:Keyword", "INT:Keyword", "WAIT:Keyword",
+                        "DUAL:Keyword", "DECLARE:Keyword", "END:Keyword", "BODY:Keyword", "FOR:Keyword", "LOOP:Keyword", "WHILE:Keyword", "IF:Keyword", "THEN:Keyword", "ELSE:Keyword",
+                        "ELSIF:Keyword", "CASE:Keyword", "WHEN:Keyword", "RETURN:Keyword", "OUT:Keyword", "INOUT:Keyword", "IS:Keyword", "AS:Keyword", "PROCEDURE:Keyword",
+                        "FUNCTION:Keyword", "PACKAGE:Keyword", "TYPE:Keyword", "RECORD:Keyword", "TABLE:Keyword", "VARRAY:Keyword", "CURSOR:Keyword", "OPEN:Keyword",
+                        "CLOSE:Keyword", "FETCH:Keyword", "NULL:Keyword", "TRUE:Keyword", "FALSE:Keyword", "DEFAULT:Keyword", "NOT:Operator", "UNIQUE:Keyword", "CHECK:Keyword",
+                        "PRIMARY:Keyword", "FOREIGN:Keyword", "REFERENCES:Keyword", "CONSTRAINT:Keyword", "INDEX:Keyword", "VIEW:Keyword", "SEQUENCE:Keyword",
+                        "GRANT:Keyword", "REVOKE:Keyword", "COMMIT:Keyword", "ROLLBACK:Keyword", "SAVEPOINT:Keyword", "SET:Keyword", "SHOW:Keyword", "SVRMODE:Keyword",
+                        "LINK:Keyword", "DATABASE:Keyword", "SCHEMA:Keyword", "DATAFILE:Keyword", "LOGFILE:Keyword", "SIZE:Keyword", "OFFLINE:Keyword", "ONLINE:Keyword",
+                        "BEGIN:Keyword", "DECLARE:Keyword", "EXCEPTION:Keyword", "EXISTS:Keyword", "KILL:Keyword", "PURGE:Keyword", "REBUILD:Keyword", "RENAME:Keyword",
+                        "REPAIR:Keyword", "STORAGE:Keyword", "TRUNCATE:Keyword", "UNDOFILE:Keyword", "WORK:Keyword", "RELEASE:Keyword", "ROW:Keyword", "ROWS:Keyword",
+                        "READ:Keyword", "WRITE:Keyword", "ONLY:Keyword", "WITH:Keyword", "GRAGMENT:Keyword", "LOCATION:Keyword", "REPLICATED:Keyword", "LOCAL:Keyword",
+                        "GLOBAL:Keyword", "IMMUTABLE:Keyword", "STABLE:Keyword", "VOLATILE:Keyword", "CALLED:Keyword", "RETURNING:Keyword", "BULK:Keyword",
+                        "COLLECT:Keyword", "FORALL:Keyword", "LIMIT:Keyword", "REJECT:Keyword", "LOG:Keyword", "SKIP:Keyword", "SWAP:Keyword", "TRIM:Function", "CONCAT:Function",
+                        "YEAR:Keyword", "MONTH:Keyword", "DAY:Keyword", "HOUR:Keyword", "MINUTE:Keyword", "SECOND:Keyword", "TIMEZONE:Keyword", "TIME:Keyword",
                         // 函数包
-                        "UTL_ENCODE", "BASE64_DECODE",
-                        "UTL_RAW", "CAST_TO_VARCHAR2", "CAST_TO_RAW"
+                        "UTL_ENCODE:Module", "BASE64_DECODE:Function",
+                        "UTL_RAW:Module", "CAST_TO_VARCHAR2:Function", "CAST_TO_RAW:Function"
                 );
 
                 keywords.addAll(SqlStandardKeywords.KEYWORDS);

@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -233,6 +234,13 @@ public class UIConnectionNode extends UIExplorerNode
                 for (Catalog cat : cats)
                         catalogNodes.add(new UICatalogNode(this, driver, cat));
                 getChildren().addAll(catalogNodes);
+        }
+
+        public List<String> getCatalogKeywords()
+        {
+                return getCatalogNodes().stream()
+                        .map(t -> t.getName() + ":Module")
+                        .toList();
         }
 
         @SuppressWarnings("BooleanMethodIsAlwaysInverted")

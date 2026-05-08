@@ -74,7 +74,7 @@ public class MySQLDriver extends Driver
 
                 DataGrid grid = execute(session,
                         "SELECT DISTINCT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE();");
-                ret.addAll(grid.getRows().stream().map(ArrayList::getFirst).toList());
+                ret.addAll(grid.getRows().stream().map(t -> t.getFirst() + ":Field").toList());
 
                 return Lists.newArrayList(ret);
         }
