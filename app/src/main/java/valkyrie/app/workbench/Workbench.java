@@ -29,7 +29,7 @@ import valkyrie.utils.exception.Causes;
 import java.util.List;
 import java.util.Map;
 
-import static valkyrie.utils.collection.Lists.beg;
+import static valkyrie.utils.collection.Lists.first;
 import static valkyrie.utils.string.StaticLibrary.streq;
 
 /**
@@ -187,7 +187,7 @@ public class Workbench extends VBox implements EventListener
                                 .toList();
 
                         if (!tabs.isEmpty()) {
-                                tabPane.select(beg(tabs));
+                                tabPane.select(first(tabs));
                                 return;
                         }
                 }

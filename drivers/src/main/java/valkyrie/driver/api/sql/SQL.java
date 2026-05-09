@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Iterator;
 import java.util.List;
 
-import static valkyrie.utils.collection.Lists.end;
+import static valkyrie.utils.collection.Lists.last;
 import static valkyrie.utils.string.StaticLibrary.fmt;
 
 /**
@@ -87,6 +87,6 @@ public class SQL implements Iterable<SQLParsedStatement>
 
         public String getSingleTableName()
         {
-                return end(statements).getSingleTableName();
+                return last(statements).getSingleTableName();
         }
 }

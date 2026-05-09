@@ -17,7 +17,8 @@ import java.util.*;
 
 import static valkyrie.utils.TypeConverter.atobool;
 import static valkyrie.utils.TypeConverter.atos;
-import static valkyrie.utils.collection.Lists.beg;
+import static valkyrie.utils.collection.Lists.first;
+import static valkyrie.utils.collection.Lists.second;
 import static valkyrie.utils.string.StaticLibrary.*;
 
 /**
@@ -61,7 +62,7 @@ public class DMDriver extends Driver
                                 """, table, session.schema())
                 ));
 
-                return beg(beg(dataGrid.getRows()));
+                return first(first(dataGrid.getRows()));
         }
 
         @Override
@@ -71,9 +72,21 @@ public class DMDriver extends Driver
 
                 ret.addAll(DMSuggestions.VALUES);
 
-                DataGrid grid = execute(session,
-                        "SELECT DISTINCT COLUMN_NAME FROM ALL_TAB_COLUMNS WHERE OWNER = '%s';", session.schema());
-                ret.addAll(grid.getRows().stream().map(t -> Suggestion.ofField(t.getFirst())).toList());
+                DataGrid grid = execute(session, """
+                        SELECT
+                          c.COLUMN_NAME,
+                          MAX(cc.COMMENTS) as "COMMENT"
+                        FROM
+                          ALL_TAB_COLUMNS c
+                          LEFT JOIN ALL_COL_COMMENTS cc ON c.OWNER = cc.OWNER
+                          AND c.TABLE_NAME = cc.TABLE_NAME
+                          AND c.COLUMN_NAME = cc.COLUMN_NAME
+                        WHERE
+                          c.OWNER = 'OPENSER'
+                        GROUP BY
+                          c.COLUMN_NAME;
+                        """, session.schema());
+                ret.addAll(grid.getRows().stream().map(t -> Suggestion.ofField(first(t), second(t))).toList());
 
                 return Lists.newArrayList(ret);
         }

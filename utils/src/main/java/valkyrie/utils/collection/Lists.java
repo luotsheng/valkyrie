@@ -107,7 +107,7 @@ public class Lists {
      *         对象为 {@code null} 或 {@code size} == 0 那么则会返回 {@code null}
      */
     @SuppressWarnings("unchecked")
-    public static <E> E beg(Collection<E> collection) {
+    public static <E> E first(Collection<E> collection) {
         if (collection == null || collection.isEmpty())
             return null;
         Object[] array = collection.toArray();
@@ -115,11 +115,23 @@ public class Lists {
     }
 
     /**
+     * @return 返回 {@link Collection} 接口实例中的第二个元素，如果 {@link Collection}
+     *         对象为 {@code null} 或 {@code size} < 2 那么则会返回 {@code null}
+     */
+    @SuppressWarnings("unchecked")
+    public static <E> E second(Collection<E> collection) {
+        if (collection == null || collection.size() < 2)
+            return null;
+        Object[] array = collection.toArray();
+        return (E) array[1];
+    }
+
+    /**
      * @return 返回 {@link Collection} 接口实例中的最后一个元素，如果 {@link Collection}
      *         对象为 {@code null} 或 {@code size} == 0 那么则会返回 {@code null}
      */
     @SuppressWarnings("unchecked")
-    public static <E> E end(Collection<E> collection) {
+    public static <E> E last(Collection<E> collection) {
         if (collection == null || collection.isEmpty())
             return null;
         Object[] array = collection.toArray();

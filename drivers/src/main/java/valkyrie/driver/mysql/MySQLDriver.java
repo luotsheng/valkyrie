@@ -23,7 +23,8 @@ import java.util.*;
 
 import static valkyrie.utils.TypeConverter.atobool;
 import static valkyrie.utils.TypeConverter.atos;
-import static valkyrie.utils.collection.Lists.beg;
+import static valkyrie.utils.collection.Lists.first;
+import static valkyrie.utils.collection.Lists.second;
 import static valkyrie.utils.string.StaticLibrary.*;
 
 /**
@@ -61,7 +62,7 @@ public class MySQLDriver extends Driver
                         fmt("SHOW CREATE TABLE %s;", dialect.quote(table))
                 ));
 
-                return beg(dataGrid.getRows()).get(1);
+                return first(dataGrid.getRows()).get(1);
         }
 
         @Override
@@ -71,9 +72,20 @@ public class MySQLDriver extends Driver
 
                 ret.addAll(MySQLSuggestions.VALUES);
 
-                DataGrid grid = execute(session,
-                        "SELECT DISTINCT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE();");
-                ret.addAll(grid.getRows().stream().map(t -> Suggestion.ofField(t.getFirst())).toList());
+                DataGrid grid = execute(session, """
+                        SELECT
+                          COLUMN_NAME,
+                          MAX(COLUMN_COMMENT) AS COLUMN_COMMENT
+                        FROM
+                          INFORMATION_SCHEMA.COLUMNS
+                        WHERE
+                          TABLE_SCHEMA = DATABASE()
+                        GROUP BY
+                          COLUMN_NAME
+                        ORDER BY
+                          COLUMN_NAME;
+                        """);
+                ret.addAll(grid.getRows().stream().map(t -> Suggestion.ofField(first(t), second(t))).toList());
 
                 return Lists.newArrayList(ret);
         }

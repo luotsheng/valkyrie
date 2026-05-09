@@ -311,7 +311,7 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
         public List<Suggestion> getTableNameSuggestions()
         {
                 return tables.stream()
-                        .map(t -> Suggestion.ofClass(t.getName()))
+                        .map(t -> Suggestion.ofClass(t.getName(), t.getComment()))
                         .toList();
         }
 

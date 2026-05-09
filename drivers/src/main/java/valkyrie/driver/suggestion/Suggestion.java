@@ -1,6 +1,7 @@
 package valkyrie.driver.suggestion;
 
 import lombok.Getter;
+import valkyrie.utils.Optional;
 
 /**
  * Monaco 代码补全项
@@ -18,15 +19,20 @@ public class Suggestion
 
         private Suggestion(String label, String kind)
         {
-                this(label, label, kind);
+                this(label, label, kind, getDetail(kind));
         }
 
-        private Suggestion(String label, String insertText, String kind)
+        private Suggestion(String label, String kind, String detail)
+        {
+                this(label, label, kind, detail);
+        }
+
+        private Suggestion(String label, String insertText, String kind, String detail)
         {
                 this.label = label;
                 this.kind = kind;
                 this.insertText = insertText;
-                this.detail = getDetail(kind);
+                this.detail = detail;
         }
 
         public static Suggestion ofKeyword(String label)
@@ -44,14 +50,14 @@ public class Suggestion
                 return new Suggestion(label, "Operator");
         }
 
-        public static Suggestion ofClass(String label)
+        public static Suggestion ofClass(String label, String detail)
         {
-                return new Suggestion(label, "Class");
+                return new Suggestion(label, "Class", Optional.ifNullable(detail, ""));
         }
 
-        public static Suggestion ofField(String label)
+        public static Suggestion ofField(String label, String detail)
         {
-                return new Suggestion(label, "Field");
+                return new Suggestion(label, "Field", Optional.ifNullable(detail, ""));
         }
 
         public static Suggestion ofModule(String label)

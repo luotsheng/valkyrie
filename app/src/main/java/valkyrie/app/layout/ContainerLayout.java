@@ -5,7 +5,7 @@ import valkyrie.app.workbench.Workbench;
 import javafx.application.Platform;
 import javafx.scene.control.SplitPane;
 
-import static valkyrie.utils.collection.Lists.beg;
+import static valkyrie.utils.collection.Lists.first;
 
 /**
  * @author Luo Tiansheng
@@ -23,7 +23,7 @@ public class ContainerLayout extends SplitPane
                 getItems().addAll(navigator, workbench);
                 setDividerPositions(ratio);
 
-                SplitPane.Divider divider = beg(getDividers());
+                SplitPane.Divider divider = first(getDividers());
 
                 Platform.runLater(() -> lookupAll(".split-pane-divider").forEach(node -> {
 
