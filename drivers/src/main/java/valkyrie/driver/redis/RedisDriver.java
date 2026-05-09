@@ -2,6 +2,7 @@ package valkyrie.driver.redis;
 
 import valkyrie.driver.api.*;
 import valkyrie.driver.api.sql.SQL;
+import valkyrie.driver.suggestion.Suggestion;
 import valkyrie.utils.collection.Lists;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.commands.ProtocolCommand;
@@ -123,9 +124,9 @@ public class RedisDriver extends Driver
         }
 
         @Override
-        public List<String> getKeywords(Session session)
+        public List<Suggestion> getSuggestion(Session session)
         {
-                return Lists.newArrayList(RedisKeywords.KEYWORDS);
+                return Lists.newArrayList(RedisSuggestions.VALUES);
         }
 
         @Override

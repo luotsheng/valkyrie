@@ -35,9 +35,23 @@
     var require = { paths: { vs: './vs' } };
 </script>
 <script src="./vs/loader.js"></script>
-<script src="./keywords.js"></script>
 
 <script>
+    window.Suggestions = [];
+
+    window.addSuggestions = function (suggestions) {
+        suggestions.forEach(it => {
+            const exists = window.Suggestions.some(v =>
+                v.label === it.label &&
+                v.kind === it.kind
+            );
+
+            if (!exists) {
+                window.Suggestions.push(it);
+            }
+        });
+    }
+
     require(['vs/editor/editor.main'], function () {
         window.editor = monaco.editor.create(
             document.getElementById('container'), {
@@ -75,90 +89,22 @@
                     endColumn: word.endColumn
                 };
 
-                const suggestions = Array.from(window.SqlKeywords).map(item => {
-                    return {
+                const suggestions = Array.from(window.Suggestions).map(item => {
+                    let ret = {
                         label: item.label,
                         kind: getKind(item.kind),
-                        insertText: item.label,
+                        insertText: item.insertText,
                         detail: item.detail,
                         range: range
                     };
-                });
 
-                [
-                    {
-                        label: 'sela',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'SELECT * FROM ${1:table_name};',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'SELECT 查询模板',
-                        detail: 'Snippet',
-                        range: range
-                    },
-                    {
-                        label: 'selw',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'SELECT * FROM ${1:table_name} WHERE ${2:condition};',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'SELECT 查询模板',
-                        detail: 'Snippet',
-                        range: range
-                    },
-                    {
-                        label: 'sel1',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'SELECT * FROM ${1:table_name} LIMIT 1;',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'SELECT 查询模板',
-                        detail: 'Snippet',
-                        range: range
-                    },
-                    {
-                        label: 'join',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'JOIN ${1:table_name} ${2:alias} ON ${3:condition}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: '关联查询模板',
-                        detail: 'Snippet',
-                        range: range
-                    },
-                    {
-                        label: 'rig',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'RIGHT JOIN ${1:table_name} ${2:alias} ON ${3:condition}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: '右链接模板',
-                        detail: 'Snippet',
-                        range: range
-                    },
-                    {
-                        label: 'lef',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'LEFT JOIN ${1:table_name} ${2:alias} ON ${3:condition}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: '左链接模板',
-                        detail: 'Snippet',
-                        range: range
-                    },
-                    {
-                        label: 'inner',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'INNER JOIN ${1:table_name} ${2:alias} ON ${3:condition}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: '左链接模板',
-                        detail: 'Snippet',
-                        range: range
-                    },
-                    {
-                        label: 'upd',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'UPDATE ${1:table_name} SET ${2:column_name} = ${3:column_value} WHERE ${4:condition};',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: '左链接模板',
-                        detail: 'Snippet',
-                        range: range
+                    if (item.kind == 'Snippet') {
+                        ret.insertTextRules =
+                            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
                     }
-                ].forEach((v) => suggestions.push(v));
+
+                    return ret;
+                });
 
                 function getKind(kind) {
                     const kinds = {
@@ -167,7 +113,8 @@
                         'Operator': monaco.languages.CompletionItemKind.Operator,
                         'Class': monaco.languages.CompletionItemKind.Class,
                         'Field': monaco.languages.CompletionItemKind.Field,
-                        'Module': monaco.languages.CompletionItemKind.Module
+                        'Module': monaco.languages.CompletionItemKind.Module,
+                        'Snippet': monaco.languages.CompletionItemKind.Snippet,
                     };
                     return kinds[kind] || monaco.languages.CompletionItemKind.Keyword;
                 }

@@ -1,5 +1,6 @@
 package valkyrie.monacofx;
 
+import com.alibaba.fastjson.JSONObject;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
@@ -134,14 +135,13 @@ public class MonacoEditor extends StackPane
                 contextMenu.hide();
         }
 
-        public void registerKeywords(Collection<String> keywords)
+        /**
+         * 使用 Suggestion 对象注册提示
+         */
+        public void registerSuggestion(Collection<?> suggestions)
         {
-                String distinctKeyWords = Sets.newHashSet(keywords).stream()
-                        .map(s -> "'" + s + "'")
-                        .collect(Collectors.joining(","));
-
                 waitAndRun(() -> {
-                        engine.executeScript("window.addSqlKeywords([" + distinctKeyWords + "]);");
+                        engine.executeScript("window.addSuggestions(" + JSONObject.toJSONString(suggestions) + ")");
                 });
         }
 

@@ -1,6 +1,5 @@
 package valkyrie.app.explorer;
 
-import javafx.collections.ObservableList;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.event.RefreshQueryNodeEvent;
 import valkyrie.app.event.RefreshTableNodeEvent;
@@ -13,9 +12,9 @@ import valkyrie.app.event.workbench.OpenNavigationPaneEvent;
 import valkyrie.app.event.workbench.OpenScriptEditorPaneEvent;
 import valkyrie.app.pane.TableOverviewPane;
 import valkyrie.app.widgets.dialog.VkDialogHelper;
-import valkyrie.core.model.ScriptFile;
 import valkyrie.core.repository.ScriptFileRepository;
 import valkyrie.driver.api.*;
+import valkyrie.driver.suggestion.Suggestion;
 import valkyrie.utils.collection.Lists;
 import valkyrie.utils.collection.Maps;
 import javafx.application.Platform;
@@ -304,15 +303,15 @@ public class UICatalogNode extends UIExplorerNode implements EventListener
                 super.showContextMenu(node, x, y);
         }
 
-        public List<String> getKeywords()
+        public List<Suggestion> getSuggestion()
         {
-                return driver.getKeywords(session);
+                return driver.getSuggestion(session);
         }
 
-        public List<String> getTableNameKeywords()
+        public List<Suggestion> getTableNameSuggestions()
         {
                 return tables.stream()
-                        .map(t -> t.getName() + ":Class")
+                        .map(t -> Suggestion.ofClass(t.getName()))
                         .toList();
         }
 

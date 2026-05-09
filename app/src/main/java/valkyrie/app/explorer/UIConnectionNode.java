@@ -10,6 +10,7 @@ import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.core.repository.ConnectionRepository;
 import valkyrie.driver.api.*;
 import valkyrie.driver.dm.DMDriver;
+import valkyrie.driver.suggestion.Suggestion;
 import valkyrie.driver.mysql.MySQLDriver;
 import valkyrie.driver.redis.RedisDriver;
 import javafx.application.Platform;
@@ -22,7 +23,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -236,10 +236,10 @@ public class UIConnectionNode extends UIExplorerNode
                 getChildren().addAll(catalogNodes);
         }
 
-        public List<String> getCatalogKeywords()
+        public List<Suggestion> getCatalogSuggestion()
         {
                 return getCatalogNodes().stream()
-                        .map(t -> t.getName() + ":Module")
+                        .map(t -> Suggestion.ofModule(t.getName()))
                         .toList();
         }
 

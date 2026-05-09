@@ -32,7 +32,6 @@ import valkyrie.app.widgets.VkSeparator;
 import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.core.model.ScriptFile;
 import valkyrie.core.repository.ScriptFileRepository;
-import valkyrie.driver.api.Catalog;
 import valkyrie.driver.api.DataGrid;
 import valkyrie.driver.api.Driver;
 import valkyrie.driver.api.Session;
@@ -42,7 +41,6 @@ import valkyrie.utils.exception.Causes;
 
 import java.io.FileReader;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static valkyrie.utils.string.StaticLibrary.fmt;
 import static valkyrie.utils.string.StaticLibrary.strempty;
@@ -310,8 +308,10 @@ public class ScriptEditor extends SplitPane implements EventListener
         {
                 comboBox.getSelectionModel().selectedItemProperty()
                         .addListener((obs, oldVal, newVal) -> {
-                                editor.registerKeywords(newVal.getCatalogKeywords());
-                });
+                                editor.registerSuggestion(newVal.getCatalogSuggestion());
+                                newVal.getCatalogNodes().forEach(catalog ->
+                                        editor.registerSuggestion(catalog.getTableNameSuggestions()));
+                        });
 
                 comboBox.setOnAction(event -> {
                         UIConnectionNode item = comboBox.getSelectionModel().getSelectedItem();
@@ -370,8 +370,7 @@ public class ScriptEditor extends SplitPane implements EventListener
         {
                 comboBox.getSelectionModel().selectedItemProperty()
                                 .addListener((obs, oldVal, newVal) -> {
-                                        editor.registerKeywords(newVal.getTableNameKeywords());
-                                        editor.registerKeywords(newVal.getKeywords());
+                                        editor.registerSuggestion(newVal.getSuggestion());
                                 });
 
                 comboBox.setButtonCell(new ListCell<>()
