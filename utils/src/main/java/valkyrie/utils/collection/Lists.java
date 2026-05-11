@@ -610,7 +610,7 @@ public class Lists {
             chunks.add((List<E>) of(ArrayUtils.copyOf(array, i * avgSize, avgSize)));
 
         if (remainder != 0)
-            chunks.get(chunks.size() - 1).addAll((List<E>) of(ArrayUtils.copyOf(array, chunkNum * avgSize, remainder)));
+            chunks.getLast().addAll((List<E>) of(ArrayUtils.copyOf(array, chunkNum * avgSize, remainder)));
 
         return chunks;
     }
