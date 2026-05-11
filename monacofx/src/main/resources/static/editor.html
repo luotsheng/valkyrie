@@ -126,7 +126,7 @@
         });
 
         /**
-         * Ctrl/Cmd + W
+         * Ctrl + W
          * 智能扩大选择
          */
         editor.addAction({
@@ -137,7 +137,6 @@
                 monaco.KeyCode.KeyW
             ],
             run: function (editor) {
-
                 editor.trigger(
                     'keyboard',
                     'editor.action.smartSelect.expand',
@@ -146,8 +145,49 @@
             }
         });
 
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX, () => {
+            const model = editor.getModel();
+            const selection = editor.getSelection();
+
+            let text;
+            let range;
+
+            if (selection.isEmpty()) {
+                const line = selection.startLineNumber;
+                text = model.getLineContent(line);
+
+                if (line < model.getLineCount()) {
+                    text += '\n';
+
+                    range = new monaco.Range(
+                        line,
+                        1,
+                        line + 1,
+                        1
+                    );
+                } else {
+                    range = new monaco.Range(
+                        line,
+                        1,
+                        line,
+                        model.getLineMaxColumn(line)
+                    );
+                }
+            } else {
+                text = model.getValueInRange(selection);
+                range = selection;
+            }
+
+            editor.executeEdits('', [{
+                range: range,
+                text: ''
+            }]);
+
+            window.writeClipboard(text);
+        });
+
         /**
-         * Ctrl/Cmd + Shift + W
+         * Ctrl + Shift + W
          * 缩小选择
          */
         editor.addAction({
@@ -219,7 +259,6 @@
                 monaco.KeyCode.KeyD
             ],
             run: function(editor) {
-
                 editor.trigger(
                     'keyboard',
                     'editor.action.copyLinesDownAction',
@@ -245,7 +284,6 @@
                 const edits = [];
 
                 selections.forEach(sel => {
-
                     const text = editor.getModel().getValueInRange(sel);
 
                     if (!text)

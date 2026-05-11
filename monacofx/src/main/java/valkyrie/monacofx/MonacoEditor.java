@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
@@ -11,11 +13,10 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import lombok.Setter;
 import netscape.javascript.JSObject;
-import valkyrie.utils.collection.Sets;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
+import static valkyrie.utils.TypeConverter.atos;
 import static valkyrie.utils.io.IOUtils.printf;
 
 /**
@@ -29,6 +30,7 @@ public class MonacoEditor extends StackPane
 {
         private final WebView webView = new WebView();
         private final WebEngine engine = webView.getEngine();
+        private final JavaHook javaHook = new JavaHook();
         private ContextMenu contextMenu = null;
 
         @Setter
@@ -53,7 +55,7 @@ public class MonacoEditor extends StackPane
                         }
                 });
 
-                setConsole();
+                setHook();
 
                 webView.prefWidthProperty().bind(this.widthProperty());
                 webView.prefHeightProperty().bind(this.heightProperty());
@@ -84,27 +86,47 @@ public class MonacoEditor extends StackPane
                         """);
 
                 JSObject window = (JSObject) engine.executeScript("window");
-                window.setMember("javaConsole", null);
+                window.setMember("javaHook", null);
 
                 System.gc();
         }
 
-        public static class Console {
-                @SuppressWarnings("unused")
-                public void log(Object message) {
-                        printf("[JavaScript] %s\n", message);
+        /**
+         * 钩子函数
+         */
+        @SuppressWarnings("unused")
+        public static class JavaHook {
+                /**
+                 * 打印日志
+                 */
+                public void println(Object message)
+                {
+                        System.out.println(message);
+                }
+                /**
+                 * 写入剪贴板
+                 */
+                public void writeClipboard(Object text)
+                {
+                        ClipboardContent content = new ClipboardContent();
+                        content.putString(atos(text));
+                        Clipboard.getSystemClipboard().setContent(content);
                 }
         }
 
-        private void setConsole()
+        private void setHook()
         {
                 waitAndRun(() -> {
                         JSObject window = (JSObject) engine.executeScript("window");
-                        window.setMember("javaConsole", new Console());
+                        window.setMember("javaHook", javaHook);
                         engine.executeScript(
                                 """
                                    console.log = function(message) {
-                                       window.javaConsole.log(message);
+                                       window.javaHook.println(message);
+                                   };
+                                   
+                                   window.writeClipboard = function(message) {
+                                       window.javaHook.writeClipboard(message);
                                    };
                                    """
                         );
