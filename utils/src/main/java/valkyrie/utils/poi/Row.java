@@ -71,7 +71,7 @@ public class Row extends ArrayList<String> {
      * @param values 初始化行的字符串值。
      */
     public Row(String... values) {
-        super(Lists.fromVarargs(values));
+        super(Lists.of(values));
     }
 
     /**

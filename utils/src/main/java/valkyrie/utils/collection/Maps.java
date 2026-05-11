@@ -124,7 +124,7 @@ public class Maps {
      *
      * @return 合并后的 {@link HashMap} 对象。
      */
-    public static <K, V> Map<K, V> fromVarargs(Map<K, V> a, Map<K, V> b) {
+    public static <K, V> Map<K, V> of(Map<K, V> a, Map<K, V> b) {
         Map<K, V> retmap = newHashMap();
         retmap.putAll(a);
         retmap.putAll(b);
@@ -146,7 +146,7 @@ public class Maps {
      *
      * @return 返回一个包含传入的 key 和 value 的 {@link Map} 对象实例。
      */
-    public static <K, V> Map<K, V> fromVarargs(K k1, V v1) {
+    public static <K, V> Map<K, V> of(K k1, V v1) {
         Map<K, V> retmap = newHashMap();
         retmap.put(k1, v1);
         return retmap;
@@ -161,7 +161,7 @@ public class Maps {
      *
      * @return 返回一个包含传入的 key 和 value 的 {@link Map} 对象实例。
      */
-    public static <K, V> Map<K, V> fromVarargs(K k1, V v1, K k2, V v2) {
+    public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2) {
         Map<K, V> retmap = newHashMap();
         retmap.put(k1, v1);
         retmap.put(k2, v2);
@@ -177,7 +177,7 @@ public class Maps {
      *
      * @return 返回一个包含传入的 key 和 value 的 {@link Map} 对象实例。
      */
-    public static <K, V> Map<K, V> fromVarargs(K k1, V v1, K k2, V v2, K k3, V v3) {
+    public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
         Map<K, V> retmap = newHashMap();
         retmap.put(k1, v1);
         retmap.put(k2, v2);
@@ -194,7 +194,7 @@ public class Maps {
      *
      * @return 返回一个包含传入的 key 和 value 的 {@link Map} 对象实例。
      */
-    public static <K, V> Map<K, V> fromVarargs(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+    public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
         Map<K, V> retmap = newHashMap();
         retmap.put(k1, v1);
         retmap.put(k2, v2);
@@ -212,7 +212,7 @@ public class Maps {
      *
      * @return 返回一个包含传入的 key 和 value 的 {@link Map} 对象实例。
      */
-    public static <K, V> Map<K, V> fromVarargs(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
+    public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
         Map<K, V> retmap = newHashMap();
         retmap.put(k1, v1);
         retmap.put(k2, v2);
@@ -231,7 +231,7 @@ public class Maps {
      *
      * @return 返回一个包含传入的 key 和 value 的 {@link Map} 对象实例。
      */
-    public static <K, V> Map<K, V> fromVarargs(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
+    public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
         Map<K, V> retmap = newHashMap();
         retmap.put(k1, v1);
         retmap.put(k2, v2);

@@ -219,7 +219,7 @@ public class Lists {
      * @see #newArrayList(Collection)
      */
     @SafeVarargs
-    public static <E> ArrayList<E> fromVarargs(E... a) {
+    public static <E> ArrayList<E> of(E... a) {
         return newArrayList(Arrays.asList(a));
     }
 
@@ -298,7 +298,7 @@ public class Lists {
      * @return 返回通过 {@link TypeMapper} 转换后的集合实例。
      */
     public static <T, R> List<R> map(T[] a, TypeMapper<T, R> builder) {
-        return map(fromVarargs(a), builder);
+        return map(of(a), builder);
     }
 
     /**
@@ -607,10 +607,10 @@ public class Lists {
         Object[] array = collection.toArray(new Object[0]);
 
         for (int i = 0; i < chunkNum; i++)
-            chunks.add((List<E>) fromVarargs(ArrayUtils.copyOf(array, i * avgSize, avgSize)));
+            chunks.add((List<E>) of(ArrayUtils.copyOf(array, i * avgSize, avgSize)));
 
         if (remainder != 0)
-            chunks.get(chunks.size() - 1).addAll((List<E>) fromVarargs(ArrayUtils.copyOf(array, chunkNum * avgSize, remainder)));
+            chunks.get(chunks.size() - 1).addAll((List<E>) of(ArrayUtils.copyOf(array, chunkNum * avgSize, remainder)));
 
         return chunks;
     }
@@ -636,7 +636,7 @@ public class Lists {
         int size = origin.size();
 
         if (chunkSize >= size)
-            return fromVarargs(origin);
+            return of(origin);
 
         Object[] array = origin.toArray(new Object[0]);
 
@@ -644,13 +644,13 @@ public class Lists {
 
         for (int i = 0; i < count; i++) {
             Object[] chunk = ArrayUtils.copyOf(array, i * chunkSize, chunkSize);
-            chunks.add((List<E>) fromVarargs(chunk));
+            chunks.add((List<E>) of(chunk));
         }
 
         int copyCount = count * chunkSize;
         if (size > copyCount) {
             Object[] chunk = ArrayUtils.copyOf(array, copyCount, size - copyCount);
-            chunks.add((List<E>) fromVarargs(chunk));
+            chunks.add((List<E>) of(chunk));
         }
 
         return chunks;

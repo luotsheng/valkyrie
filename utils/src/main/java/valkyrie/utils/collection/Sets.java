@@ -171,7 +171,7 @@ public class Sets {
      * @see #newHashSet(Collection)
      */
     @SafeVarargs
-    public static <E> HashSet<E> fromVarargs(E... a) {
+    public static <E> HashSet<E> of(E... a) {
         return newHashSet(Arrays.asList(a));
     }
 

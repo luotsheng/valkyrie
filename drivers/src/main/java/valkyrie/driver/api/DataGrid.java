@@ -80,7 +80,7 @@ public class DataGrid
                 col.setName("Value");
                 col.setType("Object");
 
-                dataGrid.setColumns(Lists.fromVarargs(col));
+                dataGrid.setColumns(Lists.of(col));
                 dataGrid.addEmptyRow();
                 dataGrid.getRows().getFirst().set(0, value);
 
@@ -96,7 +96,7 @@ public class DataGrid
                 col.setName("Value");
                 col.setType("ANY");
 
-                dataGrid.setColumns(Lists.fromVarargs(col));
+                dataGrid.setColumns(Lists.of(col));
 
                 list.forEach(e -> {
                         GridRow row = new GridRow();
