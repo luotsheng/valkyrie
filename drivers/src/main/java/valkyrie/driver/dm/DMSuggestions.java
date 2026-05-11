@@ -264,7 +264,13 @@ public class DMSuggestions
                         Suggestion.ofFunction("BASE64_DECODE"),
                         Suggestion.ofModule("UTL_RAW"),
                         Suggestion.ofFunction("CAST_TO_VARCHAR2"),
-                        Suggestion.ofFunction("CAST_TO_RAW")
+                        Suggestion.ofFunction("CAST_TO_RAW"),
+                        // 代码片段
+                        Suggestion.ofSnippet("b64d", """
+                                UTL_RAW.CAST_TO_VARCHAR2(
+                                    UTL_ENCODE.BASE64_DECODE(UTL_RAW.CAST_TO_RAW(${1:column_name}))
+                                ) AS VARCHAR
+                                """)
                 );
 
                 values.addAll(SqlStandardSuggestions.VALUES);

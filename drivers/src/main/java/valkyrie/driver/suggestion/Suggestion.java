@@ -67,7 +67,7 @@ public class Suggestion
 
         public static Suggestion ofSnippet(String label, String insertText)
         {
-                return new Suggestion(label, insertText, "Snippet");
+                return new Suggestion(label, insertText, "Snippet", "");
         }
 
         private static String getDetail(String kind)
