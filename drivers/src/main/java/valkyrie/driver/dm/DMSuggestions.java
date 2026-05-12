@@ -259,18 +259,10 @@ public class DMSuggestions
                         Suggestion.ofKeyword("SECOND"),
                         Suggestion.ofKeyword("TIMEZONE"),
                         Suggestion.ofKeyword("TIME"),
-                        // 函数包
-                        Suggestion.ofModule("UTL_ENCODE"),
-                        Suggestion.ofFunction("BASE64_DECODE"),
-                        Suggestion.ofModule("UTL_RAW"),
-                        Suggestion.ofFunction("CAST_TO_VARCHAR2"),
-                        Suggestion.ofFunction("CAST_TO_RAW"),
+                        Suggestion.ofFunction("FROM_BASE64"),
+                        Suggestion.ofFunction("BINTOCHAR"),
                         // 代码片段
-                        Suggestion.ofSnippet("b64d", """
-                                UTL_RAW.CAST_TO_VARCHAR2(
-                                    UTL_ENCODE.BASE64_DECODE(UTL_RAW.CAST_TO_RAW(${1:column_name}))
-                                ) AS VARCHAR
-                                """)
+                        Suggestion.ofSnippet("de64", "BINTOCHAR(FROM_BASE64(${1:column_name}))")
                 );
 
                 values.addAll(SqlStandardSuggestions.VALUES);
