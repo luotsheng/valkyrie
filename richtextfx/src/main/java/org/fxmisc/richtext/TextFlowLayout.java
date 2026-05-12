@@ -1,10 +1,5 @@
 package org.fxmisc.richtext;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.fxmisc.richtext.model.TwoLevelNavigator;
-
 import javafx.beans.Observable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -14,6 +9,10 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.PathElement;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.fxmisc.richtext.model.TwoLevelNavigator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jurgen (admedfx@gmail.com)

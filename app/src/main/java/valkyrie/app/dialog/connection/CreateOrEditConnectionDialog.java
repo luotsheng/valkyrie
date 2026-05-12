@@ -1,14 +1,5 @@
 package valkyrie.app.dialog.connection;
 
-import valkyrie.app.event.RefreshConnectionEvent;
-import valkyrie.app.event.bus.EventBus;
-import valkyrie.app.model.ConnectionPropertyModel;
-import valkyrie.core.repository.ConnectionRepository;
-import valkyrie.core.utils.JSONUtils;
-import valkyrie.driver.api.VkDataSource;
-import valkyrie.driver.api.VkDataSourceFactory;
-import valkyrie.driver.api.DbType;
-import valkyrie.utils.exception.Causes;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,6 +12,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import valkyrie.app.event.RefreshConnectionEvent;
+import valkyrie.app.event.bus.EventBus;
+import valkyrie.app.model.ConnectionPropertyModel;
+import valkyrie.core.repository.ConnectionRepository;
+import valkyrie.core.utils.JSONUtils;
+import valkyrie.driver.api.DbType;
+import valkyrie.driver.api.VkDataSource;
+import valkyrie.driver.api.VkDataSourceFactory;
+import valkyrie.utils.exception.Causes;
 
 /**
  * @author Luo Tiansheng

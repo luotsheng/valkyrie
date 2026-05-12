@@ -1,13 +1,14 @@
 package org.fxmisc.richtext.model;
 
-import static org.fxmisc.richtext.model.ReadOnlyStyledDocument.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.reactfx.util.Tuple3;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import org.junit.jupiter.api.Test;
-import org.reactfx.util.Tuple3;
+import static org.fxmisc.richtext.model.ReadOnlyStyledDocument.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ReadOnlyStyledDocumentTest {
     private static final Void NULL = new Void();

@@ -1,6 +1,15 @@
 package valkyrie.app.workbench;
 
 import javafx.collections.ListChangeListener;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import valkyrie.app.Application;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.event.bus.Event;
@@ -15,16 +24,6 @@ import valkyrie.app.widgets.VkTabPane;
 import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.utils.collection.Lists;
 import valkyrie.utils.collection.Maps;
-import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import valkyrie.utils.exception.Causes;
 
 import java.util.List;
 import java.util.Map;

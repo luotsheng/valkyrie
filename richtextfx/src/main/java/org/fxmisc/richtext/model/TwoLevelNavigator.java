@@ -1,9 +1,10 @@
 package org.fxmisc.richtext.model;
 
-import static org.fxmisc.richtext.model.TwoDimensional.Bias.*;
-
 import java.util.function.IntSupplier;
 import java.util.function.IntUnaryOperator;
+
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Backward;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Forward;
 
 /**
  * Default implementation of {@link TwoDimensional} that makes it trivial to calculate a position within a

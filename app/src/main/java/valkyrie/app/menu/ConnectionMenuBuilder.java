@@ -1,11 +1,11 @@
 package valkyrie.app.menu;
 
-import valkyrie.app.assets.Assets;
-import valkyrie.app.dialog.connection.CreateOrEditConnectionDialog;
-import valkyrie.driver.api.DbType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import valkyrie.app.assets.Assets;
+import valkyrie.app.dialog.connection.CreateOrEditConnectionDialog;
+import valkyrie.driver.api.DbType;
 
 /**
  * @author Luo Tiansheng

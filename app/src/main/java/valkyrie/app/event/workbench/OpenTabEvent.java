@@ -1,8 +1,8 @@
 package valkyrie.app.event.workbench;
 
-import valkyrie.app.event.bus.Event;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
+import valkyrie.app.event.bus.Event;
 
 /**
  * 在工作区打开新的标签页

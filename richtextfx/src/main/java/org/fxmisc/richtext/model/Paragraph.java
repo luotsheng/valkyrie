@@ -1,20 +1,14 @@
 package org.fxmisc.richtext.model;
 
-import static org.fxmisc.richtext.model.TwoDimensional.Bias.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 import javafx.scene.control.IndexRange;
-
 import org.fxmisc.richtext.model.TwoDimensional.Position;
 import org.reactfx.util.Tuple2;
 import org.reactfx.util.Tuples;
+
+import java.util.*;
+
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Backward;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Forward;
 
 /**
  * One paragraph in the document that can itself be styled and which contains a list of styled segments.

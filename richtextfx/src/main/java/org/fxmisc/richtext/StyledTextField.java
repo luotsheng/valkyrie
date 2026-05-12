@@ -1,13 +1,5 @@
 package org.fxmisc.richtext;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.regex.Pattern;
-
-import org.fxmisc.richtext.model.EditableStyledDocument;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
@@ -21,11 +13,7 @@ import javafx.css.StyleableObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.AccessibleRole;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -37,6 +25,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
+import org.fxmisc.richtext.model.EditableStyledDocument;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.regex.Pattern;
 
 /**
  * A text field whose segment generic has been specified to be a {@link String}. How the text

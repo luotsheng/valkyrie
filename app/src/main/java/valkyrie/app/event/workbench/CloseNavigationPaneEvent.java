@@ -1,7 +1,7 @@
 package valkyrie.app.event.workbench;
 
-import valkyrie.app.event.bus.Event;
 import lombok.Getter;
+import valkyrie.app.event.bus.Event;
 
 /**
  * 在工作区导航页 Tab 关闭面板事件

@@ -1,9 +1,9 @@
 package org.fxmisc.richtext.model;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import javafx.scene.control.IndexRange;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SimpleEditableStyledDocumentTest {
 

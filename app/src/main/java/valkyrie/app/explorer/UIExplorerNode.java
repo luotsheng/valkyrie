@@ -1,6 +1,5 @@
 package valkyrie.app.explorer;
 
-import valkyrie.app.assets.Assets;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeItem;
@@ -8,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.Setter;
+import valkyrie.app.assets.Assets;
 
 /**
  * @author Luo Tiansheng

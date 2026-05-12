@@ -1,11 +1,11 @@
 package valkyrie.driver.redis;
 
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.commands.ProtocolCommand;
 import valkyrie.driver.api.*;
 import valkyrie.driver.api.sql.SQL;
 import valkyrie.driver.suggestion.Suggestion;
 import valkyrie.utils.collection.Lists;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.commands.ProtocolCommand;
 
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;

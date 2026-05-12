@@ -1,11 +1,11 @@
 package valkyrie.driver.utils;
 
-import valkyrie.driver.api.Column;
-import valkyrie.driver.api.Dialect;
-import valkyrie.utils.exception.SystemRuntimeException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.create.table.ColumnDefinition;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
+import valkyrie.driver.api.Column;
+import valkyrie.driver.api.Dialect;
+import valkyrie.utils.exception.SystemRuntimeException;
 
 import java.util.List;
 import java.util.Map;

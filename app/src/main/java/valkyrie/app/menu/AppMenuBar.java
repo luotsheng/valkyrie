@@ -1,10 +1,10 @@
 package valkyrie.app.menu;
 
-import valkyrie.utils.system.OS;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import valkyrie.utils.system.OS;
 
 /**
  * @author Luo Tiansheng

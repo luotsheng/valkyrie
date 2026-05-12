@@ -1,15 +1,14 @@
 package org.fxmisc.richtext.model;
 
+import javafx.scene.paint.Color;
+import org.reactfx.util.Either;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import javafx.scene.paint.Color;
-
-import org.reactfx.util.Either;
 
 /**
  * Specifies a way to serialize an object to/from a data stream

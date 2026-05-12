@@ -1,9 +1,9 @@
 package valkyrie.driver.redis;
 
-import valkyrie.driver.api.VkDataSource;
-import valkyrie.driver.api.ConnectionConfig;
 import lombok.Getter;
 import redis.clients.jedis.Jedis;
+import valkyrie.driver.api.ConnectionConfig;
+import valkyrie.driver.api.VkDataSource;
 
 import java.io.PrintWriter;
 import java.sql.Connection;

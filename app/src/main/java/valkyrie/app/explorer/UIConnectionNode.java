@@ -1,5 +1,13 @@
 package valkyrie.app.explorer;
 
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.ImageView;
+import lombok.Getter;
+import lombok.Setter;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.dialog.connection.CreateOrEditConnectionDialog;
 import valkyrie.app.event.bus.EventBus;
@@ -10,17 +18,9 @@ import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.core.repository.ConnectionRepository;
 import valkyrie.driver.api.*;
 import valkyrie.driver.dm.DMDriver;
-import valkyrie.driver.suggestion.Suggestion;
 import valkyrie.driver.mysql.MySQLDriver;
 import valkyrie.driver.redis.RedisDriver;
-import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.image.ImageView;
-import lombok.Getter;
-import lombok.Setter;
+import valkyrie.driver.suggestion.Suggestion;
 
 import java.util.ArrayList;
 import java.util.List;

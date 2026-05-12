@@ -1,10 +1,10 @@
 package valkyrie.app.dialog.connection;
 
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import valkyrie.app.model.ConnectionPropertyModel;
 import valkyrie.app.pane.PropertyGridPane;
 import valkyrie.app.widgets.VkComboBox;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
 
 /**
  * @author Luo Tiansheng

@@ -1,17 +1,12 @@
 package org.fxmisc.richtext;
 
-import java.util.function.BiConsumer;
-
 import javafx.beans.NamedArg;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.text.TextFlow;
+import org.fxmisc.richtext.model.*;
 
-import org.fxmisc.richtext.model.EditableStyledDocument;
-import org.fxmisc.richtext.model.SegmentOps;
-import org.fxmisc.richtext.model.SimpleEditableStyledDocument;
-import org.fxmisc.richtext.model.StyledSegment;
-import org.fxmisc.richtext.model.TextOps;
+import java.util.function.BiConsumer;
 
 /**
  * A {@link GenericStyledArea} whose segment generic has been specified to be a {@link String}. How the text

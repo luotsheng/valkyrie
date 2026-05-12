@@ -1,51 +1,16 @@
 package org.fxmisc.richtext;
 
-import static org.reactfx.EventStreams.*;
-import static org.reactfx.util.Tuples.*;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.IntSupplier;
-import java.util.function.IntUnaryOperator;
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
-
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
-import javafx.css.CssMetaData;
-import javafx.css.PseudoClass;
-import javafx.css.StyleConverter;
-import javafx.css.Styleable;
-import javafx.css.StyleableObjectProperty;
+import javafx.css.*;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.IndexRange;
@@ -60,42 +25,26 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.TextFlow;
-
-import org.fxmisc.flowless.Cell;
-import org.fxmisc.flowless.VirtualFlow;
-import org.fxmisc.flowless.VirtualFlowHit;
-import org.fxmisc.flowless.Virtualized;
-import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.model.Codec;
-import org.fxmisc.richtext.model.EditableStyledDocument;
-import org.fxmisc.richtext.model.GenericEditableStyledDocument;
-import org.fxmisc.richtext.model.Paragraph;
-import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
-import org.fxmisc.richtext.model.PlainTextChange;
-import org.fxmisc.richtext.model.Replacement;
-import org.fxmisc.richtext.model.RichTextChange;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyledDocument;
-import org.fxmisc.richtext.model.StyledSegment;
-import org.fxmisc.richtext.model.TextOps;
-import org.fxmisc.richtext.model.TwoDimensional;
-import org.fxmisc.richtext.model.TwoLevelNavigator;
+import org.fxmisc.flowless.*;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
+import org.fxmisc.richtext.model.*;
 import org.fxmisc.richtext.util.SubscribeableContentsObsSet;
 import org.fxmisc.richtext.util.UndoUtils;
 import org.fxmisc.undo.UndoManager;
-import org.reactfx.EventStream;
-import org.reactfx.EventStreams;
-import org.reactfx.Guard;
-import org.reactfx.Subscription;
-import org.reactfx.Suspendable;
-import org.reactfx.SuspendableEventStream;
-import org.reactfx.SuspendableNo;
+import org.reactfx.*;
 import org.reactfx.collection.LiveList;
 import org.reactfx.collection.SuspendableList;
 import org.reactfx.util.Tuple2;
 import org.reactfx.value.Val;
 import org.reactfx.value.Var;
+
+import java.time.Duration;
+import java.util.*;
+import java.util.function.*;
+
+import static org.reactfx.EventStreams.invalidationsOf;
+import static org.reactfx.EventStreams.merge;
+import static org.reactfx.util.Tuples.t;
 
 /**
  * Text editing control that renders and edits a {@link EditableStyledDocument}.

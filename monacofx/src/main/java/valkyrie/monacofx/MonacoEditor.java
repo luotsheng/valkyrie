@@ -17,7 +17,6 @@ import netscape.javascript.JSObject;
 import java.util.Collection;
 
 import static valkyrie.utils.TypeConverter.atos;
-import static valkyrie.utils.io.IOUtils.printf;
 
 /**
  * Monaco 编辑器

@@ -1,5 +1,10 @@
 package valkyrie.app.explorer;
 
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import valkyrie.app.Application;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.dialog.RenameScriptDialog;
@@ -8,11 +13,6 @@ import valkyrie.app.event.bus.EventBus;
 import valkyrie.app.event.workbench.OpenScriptEditorPaneEvent;
 import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.core.model.ScriptFile;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
 

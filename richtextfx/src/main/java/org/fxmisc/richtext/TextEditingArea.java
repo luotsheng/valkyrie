@@ -4,13 +4,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.scene.control.IndexRange;
-
-import org.fxmisc.richtext.model.EditableStyledDocument;
-import org.fxmisc.richtext.model.Paragraph;
-import org.fxmisc.richtext.model.PlainTextChange;
-import org.fxmisc.richtext.model.RichTextChange;
-import org.fxmisc.richtext.model.SegmentOps;
-import org.fxmisc.richtext.model.StyledDocument;
+import org.fxmisc.richtext.model.*;
 import org.reactfx.EventStream;
 import org.reactfx.SuspendableNo;
 import org.reactfx.value.Var;

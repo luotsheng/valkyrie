@@ -1,7 +1,7 @@
 package valkyrie.driver.dm;
 
-import valkyrie.driver.suggestion.Suggestion;
 import valkyrie.driver.suggestion.SqlStandardSuggestions;
+import valkyrie.driver.suggestion.Suggestion;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;

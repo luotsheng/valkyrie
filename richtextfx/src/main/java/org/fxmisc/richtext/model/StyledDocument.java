@@ -1,12 +1,13 @@
 package org.fxmisc.richtext.model;
 
-import static org.fxmisc.richtext.model.TwoDimensional.Bias.*;
+import javafx.scene.control.IndexRange;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javafx.scene.control.IndexRange;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Backward;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Forward;
 
 /**
  * An object (document) that is a list of styleable {@link Paragraph} that each contain a list of styleable segments.

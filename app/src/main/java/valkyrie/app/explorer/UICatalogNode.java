@@ -1,5 +1,13 @@
 package valkyrie.app.explorer;
 
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TreeItem;
+import javafx.scene.image.ImageView;
+import lombok.Getter;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.event.RefreshQueryNodeEvent;
 import valkyrie.app.event.RefreshTableNodeEvent;
@@ -17,14 +25,6 @@ import valkyrie.driver.api.*;
 import valkyrie.driver.suggestion.Suggestion;
 import valkyrie.utils.collection.Lists;
 import valkyrie.utils.collection.Maps;
-import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TreeItem;
-import javafx.scene.image.ImageView;
-import lombok.Getter;
 
 import java.sql.SQLException;
 import java.text.Collator;

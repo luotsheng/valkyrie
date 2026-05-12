@@ -1,7 +1,6 @@
 package org.fxmisc.richtext.model;
 
-import static org.fxmisc.richtext.model.TwoDimensional.Bias.Backward;
-import static org.fxmisc.richtext.model.TwoDimensional.Bias.Forward;
+import javafx.scene.control.IndexRange;
 
 import java.util.Iterator;
 import java.util.Objects;
@@ -12,7 +11,8 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import javafx.scene.control.IndexRange;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Backward;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Forward;
 
 /**
  * Essentially, a list of {@link StyleSpan} objects.

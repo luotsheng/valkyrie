@@ -3,14 +3,13 @@ package org.fxmisc.richtext;
 
 import javafx.beans.NamedArg;
 import javafx.scene.text.TextFlow;
-
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
-
 import org.fxmisc.richtext.model.Codec;
 import org.fxmisc.richtext.model.EditableStyledDocument;
 import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
 import org.fxmisc.richtext.model.SimpleEditableStyledDocument;
+
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 import static org.fxmisc.richtext.model.Codec.styledTextCodec;
 

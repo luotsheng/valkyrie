@@ -1,10 +1,10 @@
 package valkyrie.app.widgets.table.cell;
 
-import valkyrie.app.widgets.VkTextField;
-import valkyrie.app.workbench.ModifyCell;
 import javafx.application.Platform;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
+import valkyrie.app.widgets.VkTextField;
+import valkyrie.app.workbench.ModifyCell;
 
 /**
  * @author Luo Tiansheng

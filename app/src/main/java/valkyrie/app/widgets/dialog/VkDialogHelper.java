@@ -1,9 +1,5 @@
 package valkyrie.app.widgets.dialog;
 
-import valkyrie.app.Application;
-import valkyrie.app.assets.Assets;
-import valkyrie.utils.exception.Causes;
-import valkyrie.utils.exception.SystemRuntimeException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -19,6 +15,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import valkyrie.app.Application;
+import valkyrie.app.assets.Assets;
+import valkyrie.utils.exception.Causes;
+import valkyrie.utils.exception.SystemRuntimeException;
 
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;

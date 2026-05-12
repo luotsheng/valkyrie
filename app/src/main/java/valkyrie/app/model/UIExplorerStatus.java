@@ -1,7 +1,7 @@
 package valkyrie.app.model;
 
-import valkyrie.app.explorer.UIConnectionNode;
 import lombok.Getter;
+import valkyrie.app.explorer.UIConnectionNode;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

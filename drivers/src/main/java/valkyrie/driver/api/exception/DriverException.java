@@ -1,7 +1,7 @@
 package valkyrie.driver.api.exception;
 
-import valkyrie.utils.exception.Causes;
 import lombok.Getter;
+import valkyrie.utils.exception.Causes;
 
 import java.sql.SQLException;
 

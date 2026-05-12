@@ -1,46 +1,24 @@
 package org.fxmisc.richtext;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
-
-import org.fxmisc.richtext.model.Paragraph;
-import org.fxmisc.richtext.model.StyledSegment;
-import org.reactfx.util.Tuple2;
-import org.reactfx.util.Tuples;
-import org.reactfx.value.Val;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
-import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
+import javafx.collections.*;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.IndexRange;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.PathElement;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.*;
+import org.fxmisc.richtext.model.Paragraph;
+import org.fxmisc.richtext.model.StyledSegment;
+import org.reactfx.util.Tuple2;
+import org.reactfx.util.Tuples;
+import org.reactfx.value.Val;
+
+import java.util.*;
+import java.util.function.*;
 
 /**
  * The class responsible for rendering the segments in an paragraph. It also renders additional RichTextFX-specific

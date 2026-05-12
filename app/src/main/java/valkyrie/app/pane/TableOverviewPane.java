@@ -1,18 +1,5 @@
 package valkyrie.app.pane;
 
-import valkyrie.app.assets.Assets;
-import valkyrie.app.event.bus.EventBus;
-import valkyrie.app.event.workbench.OpenTableDataPaneEvent;
-import valkyrie.app.explorer.UICatalogNode;
-import valkyrie.app.explorer.UITableNode;
-import valkyrie.app.widgets.VkIconButton;
-import valkyrie.app.widgets.VkSeparator;
-import valkyrie.app.widgets.VkTextField;
-import valkyrie.app.widgets.dialog.VkDialogHelper;
-import valkyrie.app.widgets.table.VkTableColumn;
-import valkyrie.app.widgets.table.VkTableView;
-import valkyrie.app.widgets.table.cell.VkDateTableCell;
-import valkyrie.driver.api.Table;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +14,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
+import valkyrie.app.assets.Assets;
+import valkyrie.app.event.bus.EventBus;
+import valkyrie.app.event.workbench.OpenTableDataPaneEvent;
+import valkyrie.app.explorer.UICatalogNode;
+import valkyrie.app.explorer.UITableNode;
+import valkyrie.app.widgets.VkIconButton;
+import valkyrie.app.widgets.VkSeparator;
+import valkyrie.app.widgets.VkTextField;
+import valkyrie.app.widgets.dialog.VkDialogHelper;
+import valkyrie.app.widgets.table.VkTableColumn;
+import valkyrie.app.widgets.table.VkTableView;
+import valkyrie.app.widgets.table.cell.VkDateTableCell;
+import valkyrie.driver.api.Table;
 
 import java.util.Date;
 import java.util.List;

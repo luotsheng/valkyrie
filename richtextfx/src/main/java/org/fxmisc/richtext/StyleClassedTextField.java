@@ -1,11 +1,10 @@
 package org.fxmisc.richtext;
 
-import java.util.Collection;
-import java.util.Collections;
-
+import javafx.scene.text.TextAlignment;
 import org.fxmisc.richtext.model.SimpleEditableStyledDocument;
 
-import javafx.scene.text.TextAlignment;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A TextField that uses style classes, i.e. <code>getStyleClass().add(String)</code>, to define the styles of text segments.

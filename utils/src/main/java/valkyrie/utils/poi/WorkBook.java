@@ -18,6 +18,10 @@ package valkyrie.utils.poi;
 |*                                                                                  *|
 \* -------------------------------------------------------------------------------- */
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import valkyrie.utils.Captor;
 import valkyrie.utils.Optional;
 import valkyrie.utils.TypeConverter;
@@ -30,10 +34,6 @@ import valkyrie.utils.reflect.UField;
 import valkyrie.utils.stream.Streams;
 import valkyrie.utils.string.StaticLibrary;
 import valkyrie.utils.time.DateFormatter;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;

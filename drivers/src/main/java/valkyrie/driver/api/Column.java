@@ -1,8 +1,8 @@
 package valkyrie.driver.api;
 
-import valkyrie.utils.security.Codec;
 import lombok.Getter;
 import lombok.Setter;
+import valkyrie.utils.security.Codec;
 
 import static valkyrie.utils.string.StaticLibrary.strip;
 

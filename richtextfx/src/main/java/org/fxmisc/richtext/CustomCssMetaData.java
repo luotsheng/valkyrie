@@ -1,10 +1,6 @@
 package org.fxmisc.richtext;
 
-import javafx.css.CssMetaData;
-import javafx.css.StyleConverter;
-import javafx.css.Styleable;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import javafx.css.*;
 
 import java.util.function.Function;
 

@@ -1,9 +1,5 @@
 package valkyrie.driver.api;
 
-import valkyrie.driver.api.sql.SQL;
-import valkyrie.utils.Optional;
-import valkyrie.utils.collection.Lists;
-import valkyrie.utils.collection.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import net.sf.jsqlparser.expression.Expression;
@@ -16,6 +12,10 @@ import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.select.Limit;
 import net.sf.jsqlparser.statement.update.Update;
+import valkyrie.driver.api.sql.SQL;
+import valkyrie.utils.Optional;
+import valkyrie.utils.collection.Lists;
+import valkyrie.utils.collection.Maps;
 
 import java.util.*;
 

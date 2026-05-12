@@ -1,5 +1,6 @@
 package org.fxmisc.richtext.util;
 
+import javafx.beans.value.ObservableBooleanValue;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.MultiChangeBuilder;
 import org.fxmisc.richtext.model.PlainTextChange;
@@ -11,8 +12,6 @@ import org.fxmisc.undo.impl.MultiChangeUndoManagerImpl;
 import org.fxmisc.undo.impl.UnlimitedChangeQueue;
 import org.reactfx.SuspendableYes;
 import org.reactfx.value.Val;
-
-import javafx.beans.value.ObservableBooleanValue;
 
 import java.time.Duration;
 import java.util.List;

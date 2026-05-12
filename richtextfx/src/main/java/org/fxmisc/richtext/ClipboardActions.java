@@ -1,25 +1,16 @@
 package org.fxmisc.richtext;
 
-import static org.fxmisc.richtext.ClipboardHelper.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.Optional;
-
 import javafx.scene.control.IndexRange;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
-
-import org.fxmisc.richtext.model.Codec;
-import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
-import org.fxmisc.richtext.model.SegmentOps;
-import org.fxmisc.richtext.model.StyledDocument;
-import org.fxmisc.richtext.model.StyledSegment;
+import org.fxmisc.richtext.model.*;
 import org.reactfx.util.Tuple2;
+
+import java.io.*;
+import java.util.Optional;
+
+import static org.fxmisc.richtext.ClipboardHelper.dataFormat;
 
 /**
  * Clipboard actions for {@link TextEditingArea}.

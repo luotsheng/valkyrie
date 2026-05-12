@@ -1,9 +1,9 @@
 package org.fxmisc.richtext.model;
 
+import org.reactfx.util.Either;
+
 import java.util.Optional;
 import java.util.function.BiFunction;
-
-import org.reactfx.util.Either;
 
 /**
  * Defines the operations which are supported on a specific segment type.

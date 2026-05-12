@@ -1,15 +1,15 @@
 package org.fxmisc.richtext;
 
+import javafx.beans.NamedArg;
+import org.fxmisc.richtext.model.Codec;
+import org.fxmisc.richtext.model.EditableStyledDocument;
+import org.fxmisc.richtext.model.SimpleEditableStyledDocument;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
-
-import javafx.beans.NamedArg;
-import org.fxmisc.richtext.model.Codec;
-import org.fxmisc.richtext.model.EditableStyledDocument;
-import org.fxmisc.richtext.model.SimpleEditableStyledDocument;
 
 /**
  * Text area that uses style classes to define style of text segments and paragraph segments.

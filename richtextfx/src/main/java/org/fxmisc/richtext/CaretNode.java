@@ -10,23 +10,14 @@ import javafx.geometry.Bounds;
 import javafx.scene.shape.Path;
 import org.fxmisc.richtext.model.PlainTextChange;
 import org.fxmisc.richtext.model.TwoDimensional;
-import org.reactfx.EventStream;
-import org.reactfx.EventStreams;
-import org.reactfx.StateMachine;
-import org.reactfx.Subscription;
-import org.reactfx.Suspendable;
-import org.reactfx.SuspendableNo;
+import org.reactfx.*;
 import org.reactfx.value.SuspendableVal;
 import org.reactfx.value.Val;
 import org.reactfx.value.Var;
 
 import java.text.BreakIterator;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static javafx.util.Duration.ZERO;

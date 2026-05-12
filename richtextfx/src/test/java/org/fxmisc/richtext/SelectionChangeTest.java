@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SelectionChangeTest {
     private void checkChange(int startBefore, int endBefore, int startAfter, int endAfter, PlainTextChange... changes) {

@@ -1,5 +1,12 @@
 package valkyrie.app.pane;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.pane.designer.TableColumnDesignerPane;
 import valkyrie.app.pane.designer.TableIndexDesignerPane;
@@ -13,13 +20,6 @@ import valkyrie.app.widgets.table.cell.VkComboBoxTableCell;
 import valkyrie.app.widgets.table.cell.VkTextFieldTableCell;
 import valkyrie.driver.api.*;
 import valkyrie.driver.mysql.MySQL;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 
 import java.util.Collection;
 import java.util.List;

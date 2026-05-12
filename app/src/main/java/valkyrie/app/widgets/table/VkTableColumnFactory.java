@@ -1,11 +1,11 @@
 package valkyrie.app.widgets.table;
 
+import javafx.scene.control.cell.PropertyValueFactory;
+import lombok.Setter;
 import valkyrie.utils.Assert;
 import valkyrie.utils.bean.BeanUtils;
 import valkyrie.utils.reflect.UClass;
 import valkyrie.utils.reflect.UField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import lombok.Setter;
 
 /**
  * @author Luo Tiansheng

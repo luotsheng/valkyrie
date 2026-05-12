@@ -1,15 +1,5 @@
 package org.fxmisc.richtext;
 
-import static java.lang.Character.*;
-import static javafx.scene.input.KeyCode.*;
-import static javafx.scene.input.KeyCombination.*;
-import static org.fxmisc.richtext.model.TwoDimensional.Bias.*;
-import static org.fxmisc.wellbehaved.event.EventPattern.*;
-import static org.fxmisc.wellbehaved.event.template.InputMapTemplate.*;
-import static org.reactfx.EventStreams.*;
-
-import java.util.function.Predicate;
-
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.event.Event;
@@ -17,13 +7,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.IndexRange;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-
+import javafx.scene.input.*;
 import org.fxmisc.richtext.NavigationActions.SelectionPolicy;
 import org.fxmisc.richtext.model.TwoDimensional.Position;
 import org.fxmisc.wellbehaved.event.EventPattern;
@@ -32,6 +16,17 @@ import org.fxmisc.wellbehaved.event.template.InputMapTemplate;
 import org.reactfx.EventStream;
 import org.reactfx.value.Val;
 import org.reactfx.value.Var;
+
+import java.util.function.Predicate;
+
+import static java.lang.Character.isWhitespace;
+import static javafx.scene.input.KeyCode.*;
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Forward;
+import static org.fxmisc.wellbehaved.event.EventPattern.*;
+import static org.fxmisc.wellbehaved.event.template.InputMapTemplate.*;
+import static org.reactfx.EventStreams.*;
 
 /**
  * Controller for GenericStyledArea.

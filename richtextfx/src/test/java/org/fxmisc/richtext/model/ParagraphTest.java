@@ -1,14 +1,13 @@
 package org.fxmisc.richtext.model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import javafx.scene.control.IndexRange;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-import javafx.scene.control.IndexRange;
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ParagraphTest {
     private <T> void checkStyle(Paragraph<?, ?, T> paragraph, int length, T[] styles, int... ranges) {

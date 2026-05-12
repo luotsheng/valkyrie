@@ -10,9 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.TextFlow;
-
-import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
+import org.fxmisc.richtext.model.Paragraph;
 import org.reactfx.EventStream;
 import org.reactfx.collection.LiveList;
 import org.reactfx.value.Val;

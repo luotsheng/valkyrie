@@ -1,29 +1,16 @@
 package org.fxmisc.richtext.model;
 
-import static org.fxmisc.richtext.model.TwoDimensional.Bias.*;
+import org.reactfx.*;
+import org.reactfx.collection.*;
+import org.reactfx.value.SuspendableVal;
+import org.reactfx.value.Val;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 
-import org.reactfx.EventSource;
-import org.reactfx.EventStream;
-import org.reactfx.Subscription;
-import org.reactfx.Suspendable;
-import org.reactfx.SuspendableEventStream;
-import org.reactfx.SuspendableNo;
-import org.reactfx.collection.ListChangeAccumulator;
-import org.reactfx.collection.LiveList;
-import org.reactfx.collection.LiveListBase;
-import org.reactfx.collection.MaterializedListModification;
-import org.reactfx.collection.QuasiListModification;
-import org.reactfx.collection.SuspendableList;
-import org.reactfx.collection.UnmodifiableByDefaultLiveList;
-import org.reactfx.util.Tuple2;
-import org.reactfx.util.Tuples;
-import org.reactfx.value.SuspendableVal;
-import org.reactfx.value.Val;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Backward;
+import static org.fxmisc.richtext.model.TwoDimensional.Bias.Forward;
 
 class GenericEditableStyledDocumentBase<PS, SEG, S> implements EditableStyledDocument<PS, SEG, S> {
 

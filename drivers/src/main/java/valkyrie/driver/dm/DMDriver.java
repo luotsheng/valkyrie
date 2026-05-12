@@ -13,7 +13,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static valkyrie.utils.TypeConverter.atobool;
 import static valkyrie.utils.TypeConverter.atos;

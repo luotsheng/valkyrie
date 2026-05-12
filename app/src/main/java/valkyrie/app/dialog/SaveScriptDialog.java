@@ -1,10 +1,5 @@
 package valkyrie.app.dialog;
 
-import valkyrie.app.Application;
-import valkyrie.app.explorer.UICatalogNode;
-import valkyrie.app.explorer.UIConnectionNode;
-import valkyrie.app.widgets.VkComboBox;
-import valkyrie.app.workbench.ScriptEditor;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,6 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import valkyrie.app.Application;
+import valkyrie.app.explorer.UICatalogNode;
+import valkyrie.app.explorer.UIConnectionNode;
+import valkyrie.app.widgets.VkComboBox;
+import valkyrie.app.workbench.ScriptEditor;
 
 /**
  * @author Luo Tiansheng

@@ -2,7 +2,6 @@ package valkyrie.app;
 
 import atlantafx.base.theme.CupertinoLight;
 import javafx.application.Platform;
-import valkyrie.app.layout.MainLayout;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.input.Clipboard;
@@ -12,6 +11,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import valkyrie.app.layout.MainLayout;
 import valkyrie.monacofx.MonacoEditor;
 
 import java.awt.*;

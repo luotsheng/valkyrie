@@ -2,7 +2,6 @@ package valkyrie.driver.api;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import dm.jdbc.driver.DmDriver;
 
 import java.io.PrintWriter;
 import java.sql.Connection;

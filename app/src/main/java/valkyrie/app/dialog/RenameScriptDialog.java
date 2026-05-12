@@ -1,10 +1,5 @@
 package valkyrie.app.dialog;
 
-import valkyrie.app.Application;
-import valkyrie.app.event.RefreshQueryNodeEvent;
-import valkyrie.app.event.bus.EventBus;
-import valkyrie.core.model.ScriptFile;
-import valkyrie.core.repository.ScriptFileRepository;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,6 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import valkyrie.app.Application;
+import valkyrie.app.event.RefreshQueryNodeEvent;
+import valkyrie.app.event.bus.EventBus;
+import valkyrie.core.model.ScriptFile;
+import valkyrie.core.repository.ScriptFileRepository;
 
 /**
  * @author Luo Tiansheng

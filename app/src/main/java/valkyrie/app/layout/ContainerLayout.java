@@ -1,9 +1,9 @@
 package valkyrie.app.layout;
 
-import valkyrie.app.pane.ObjectExplorerPane;
-import valkyrie.app.workbench.Workbench;
 import javafx.application.Platform;
 import javafx.scene.control.SplitPane;
+import valkyrie.app.pane.ObjectExplorerPane;
+import valkyrie.app.workbench.Workbench;
 
 import static valkyrie.utils.collection.Lists.first;
 

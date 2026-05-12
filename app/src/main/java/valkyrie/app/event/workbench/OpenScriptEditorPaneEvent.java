@@ -1,12 +1,12 @@
 package valkyrie.app.event.workbench;
 
+import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.explorer.UICatalogNode;
 import valkyrie.app.explorer.UIConnectionNode;
 import valkyrie.app.workbench.ScriptEditor;
 import valkyrie.core.model.ScriptFile;
-import javafx.scene.Node;
-import javafx.scene.control.Tab;
 
 import static valkyrie.utils.string.StaticLibrary.fmt;
 import static valkyrie.utils.string.StaticLibrary.strnempty;

@@ -1,13 +1,9 @@
 package org.fxmisc.richtext.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.BiFunction;
-
 import javafx.scene.control.IndexRange;
+
+import java.util.*;
+import java.util.function.BiFunction;
 
 /**
  * A one-time-use builder that Builds a memory efficient {@link StyleSpans} object.

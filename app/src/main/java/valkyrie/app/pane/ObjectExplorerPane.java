@@ -1,5 +1,16 @@
 package valkyrie.app.pane;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.event.RefreshConnectionEvent;
 import valkyrie.app.event.bus.Event;
@@ -14,17 +25,6 @@ import valkyrie.app.widgets.VkTextField;
 import valkyrie.core.model.ConnectionProfile;
 import valkyrie.core.repository.ConnectionRepository;
 import valkyrie.utils.thread.ThreadPool;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 
 import java.text.Collator;
 import java.util.*;

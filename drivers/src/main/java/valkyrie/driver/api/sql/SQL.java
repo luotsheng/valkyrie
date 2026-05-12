@@ -1,12 +1,12 @@
 package valkyrie.driver.api.sql;
 
-import valkyrie.utils.collection.Lists;
 import lombok.Getter;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.Statements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import valkyrie.utils.collection.Lists;
 
 import java.util.Iterator;
 import java.util.List;

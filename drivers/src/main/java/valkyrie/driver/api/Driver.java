@@ -1,5 +1,6 @@
 package valkyrie.driver.api;
 
+import lombok.Getter;
 import valkyrie.driver.api.exception.DriverException;
 import valkyrie.driver.api.sql.SQL;
 import valkyrie.driver.api.sql.SQLExecutor;
@@ -10,7 +11,6 @@ import valkyrie.driver.utils.SQLUtils;
 import valkyrie.utils.Captor;
 import valkyrie.utils.Optional;
 import valkyrie.utils.collection.Lists;
-import lombok.Getter;
 
 import javax.sql.DataSource;
 import java.sql.*;

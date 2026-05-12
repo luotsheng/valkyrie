@@ -1,9 +1,8 @@
 package org.fxmisc.richtext;
 
-import org.fxmisc.richtext.model.SimpleEditableStyledDocument;
-
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
+import org.fxmisc.richtext.model.SimpleEditableStyledDocument;
 
 /**
  * A TextField that uses inline CSS, i.e. <code>setStyle(String)</code>, to define the styles of text segments.

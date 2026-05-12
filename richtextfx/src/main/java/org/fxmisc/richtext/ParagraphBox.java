@@ -1,21 +1,6 @@
 package org.fxmisc.richtext;
 
-import static org.reactfx.util.Tuples.*;
-
-import java.time.Duration;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 import javafx.geometry.Bounds;
@@ -25,15 +10,23 @@ import javafx.scene.Node;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.TextFlow;
-
+import org.fxmisc.richtext.event.MouseStationaryHelper;
 import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.StyledSegment;
-import org.fxmisc.richtext.event.MouseStationaryHelper;
 import org.reactfx.EventStream;
 import org.reactfx.util.Either;
 import org.reactfx.util.Tuple2;
 import org.reactfx.value.Val;
 import org.reactfx.value.Var;
+
+import java.time.Duration;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.IntFunction;
+
+import static org.reactfx.util.Tuples.t;
 
 /**
  * Node responsible for rendering a single paragraph in the viewport, which may include a paragraph graphic factory

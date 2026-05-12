@@ -1,7 +1,8 @@
 package org.fxmisc.richtext.model;
 
-import static org.reactfx.util.Either.*;
-import static org.reactfx.util.Tuples.*;
+import org.reactfx.collection.MaterializedListModification;
+import org.reactfx.util.*;
+import org.reactfx.util.FingerTree.NonEmptyFingerTree;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,16 +17,9 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.reactfx.collection.MaterializedListModification;
-import org.reactfx.util.BiIndex;
-import org.reactfx.util.Either;
-import org.reactfx.util.FingerTree;
-import org.reactfx.util.FingerTree.NonEmptyFingerTree;
-import org.reactfx.util.Lists;
-import org.reactfx.util.ToSemigroup;
-import org.reactfx.util.Tuple2;
-import org.reactfx.util.Tuple3;
-import org.reactfx.util.Tuples;
+import static org.reactfx.util.Either.left;
+import static org.reactfx.util.Either.right;
+import static org.reactfx.util.Tuples.t;
 
 /**
  * An immutable implementation of {@link StyledDocument} that does not allow editing. For a {@link StyledDocument}

@@ -1,15 +1,15 @@
 package valkyrie.app.pane;
 
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.BorderPane;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.widgets.dialog.VkDialogHelper;
 import valkyrie.driver.api.DataGrid;
 import valkyrie.driver.api.Driver;
 import valkyrie.driver.api.Session;
 import valkyrie.driver.api.Table;
-import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.BorderPane;
 
 /**
  * 打开表数据展示面板

@@ -1,9 +1,5 @@
 package org.fxmisc.richtext;
 
-import java.util.function.IntFunction;
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
-
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,9 +14,12 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-
 import org.reactfx.collection.LiveList;
 import org.reactfx.value.Val;
+
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * Graphic factory that produces labels containing line numbers and a "+" to indicate folded paragraphs.

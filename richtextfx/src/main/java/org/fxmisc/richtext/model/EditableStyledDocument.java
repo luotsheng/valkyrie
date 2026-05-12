@@ -1,7 +1,6 @@
 package org.fxmisc.richtext.model;
 
 import javafx.beans.value.ObservableValue;
-
 import org.reactfx.EventStream;
 import org.reactfx.EventStreamBase;
 import org.reactfx.Subscription;

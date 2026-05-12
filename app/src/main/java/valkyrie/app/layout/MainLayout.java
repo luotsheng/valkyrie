@@ -1,10 +1,10 @@
 package valkyrie.app.layout;
 
-import valkyrie.app.menu.AppMenuBar;
-import valkyrie.app.tool.AppToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import valkyrie.app.menu.AppMenuBar;
+import valkyrie.app.tool.AppToolBar;
 
 /**
  * @author Luo Tiansheng

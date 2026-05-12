@@ -1,5 +1,10 @@
 package valkyrie.app.explorer;
 
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import valkyrie.app.Application;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.event.bus.EventBus;
@@ -7,11 +12,6 @@ import valkyrie.app.event.workbench.OpenTableDataPaneEvent;
 import valkyrie.app.event.workbench.OpenTableDesignerPaneEvent;
 import valkyrie.driver.api.Driver;
 import valkyrie.driver.api.Table;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 /**
  * @author Luo Tiansheng

@@ -1,11 +1,11 @@
 package valkyrie.app.pane;
 
+import javafx.scene.control.Tab;
+import lombok.Getter;
 import valkyrie.driver.api.Driver;
 import valkyrie.driver.api.Index;
 import valkyrie.driver.api.Session;
 import valkyrie.driver.api.Table;
-import javafx.scene.control.Tab;
-import lombok.Getter;
 
 import java.util.Collection;
 import java.util.HashMap;

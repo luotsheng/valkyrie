@@ -1,18 +1,17 @@
 package org.fxmisc.richtext.event;
 
-import static javafx.scene.input.MouseEvent.*;
-import static org.reactfx.EventStreams.*;
-
-import java.time.Duration;
-
 import javafx.event.Event;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-
 import org.reactfx.EventStream;
 import org.reactfx.Subscription;
 import org.reactfx.util.Either;
+
+import java.time.Duration;
+
+import static javafx.scene.input.MouseEvent.MOUSE_MOVED;
+import static org.reactfx.EventStreams.eventsOf;
 
 /**
  * Helper class for setting up the code that will fire both kinds of {@link MouseStationaryEvent} when

@@ -1,12 +1,12 @@
 package valkyrie.app.event.workbench;
 
+import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import valkyrie.app.assets.Assets;
 import valkyrie.app.pane.TableDesignerPane;
 import valkyrie.driver.api.Driver;
 import valkyrie.driver.api.Session;
 import valkyrie.driver.api.Table;
-import javafx.scene.Node;
-import javafx.scene.control.Tab;
 
 import static valkyrie.utils.string.StaticLibrary.fmt;
 

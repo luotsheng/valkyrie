@@ -1,8 +1,8 @@
 package valkyrie.app.event.workbench;
 
-import valkyrie.app.event.bus.Event;
 import javafx.scene.Node;
 import lombok.Getter;
+import valkyrie.app.event.bus.Event;
 
 /**
  * 在工作区导航页 Tab 设置面板事件

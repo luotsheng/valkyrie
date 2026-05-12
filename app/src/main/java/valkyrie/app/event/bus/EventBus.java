@@ -1,11 +1,9 @@
 package valkyrie.app.event.bus;
 
-import valkyrie.app.event.workbench.ConnectionOpenedNotifyEvent;
-import valkyrie.app.event.workbench.OpenTabEvent;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import valkyrie.app.workbench.ScriptEditor;
+import valkyrie.app.event.workbench.OpenTabEvent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

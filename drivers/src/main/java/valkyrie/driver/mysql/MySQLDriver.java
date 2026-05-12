@@ -1,5 +1,11 @@
 package valkyrie.driver.mysql;
 
+import net.sf.jsqlparser.statement.alter.Alter;
+import net.sf.jsqlparser.statement.alter.AlterExpression;
+import net.sf.jsqlparser.statement.alter.AlterOperation;
+import net.sf.jsqlparser.statement.create.table.ColDataType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import valkyrie.driver.api.*;
 import valkyrie.driver.api.exception.DriverException;
 import valkyrie.driver.api.sql.SQL;
@@ -8,12 +14,6 @@ import valkyrie.driver.suggestion.Suggestion;
 import valkyrie.utils.collection.Lists;
 import valkyrie.utils.collection.Maps;
 import valkyrie.utils.collection.Sets;
-import net.sf.jsqlparser.statement.alter.Alter;
-import net.sf.jsqlparser.statement.alter.AlterExpression;
-import net.sf.jsqlparser.statement.alter.AlterOperation;
-import net.sf.jsqlparser.statement.create.table.ColDataType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
