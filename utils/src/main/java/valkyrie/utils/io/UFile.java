@@ -336,7 +336,7 @@ public class UFile extends java.io.File {
      *         否则返回 {@code false}
      */
     public boolean typeMatch(String... extensions) {
-        return StaticLibrary.strcheckin(getExtension(), extensions);
+        return StaticLibrary.strhas(getExtension(), extensions);
     }
 
     /**
