@@ -93,7 +93,7 @@ public class Application extends javafx.application.Application
         public void start(Stage stage)
         {
                 new MonacoEditor();
-                setDockIcon("/assets/icons/main.png");
+                setDockIcon("/assets/icons/main_1.png");
 
                 primaryStage = stage;
 
