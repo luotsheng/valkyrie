@@ -7,6 +7,8 @@ import javafx.scene.control.TextField;
 import valkyrie.app.model.ConnectionPropertyModel;
 import valkyrie.app.pane.PropertyGridPane;
 
+import static valkyrie.utils.string.StaticLibrary.strhas;
+
 /**
  * @author Luo Tiansheng
  * @since 2026/3/26
@@ -28,6 +30,14 @@ class ConnectionGeneralPane extends PropertyGridPane
                 this.info = info;
                 bindModelProperty();
                 setupPaneLayout();
+
+                host.textProperty().addListener((observable, oldValue, newValue) -> {
+                        if (strhas(newValue, ":")) {
+                                String[] ret = newValue.split(":");
+                                host.textProperty().set(ret[0]);
+                                port.textProperty().set(ret[1]);
+                        }
+                });
         }
 
         private void bindModelProperty()
