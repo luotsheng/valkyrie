@@ -251,7 +251,7 @@ public class StaticLibrary
      * @param cmp 要检查的子串
      * @return 如果 `wstr` 包含 `cmp`，返回 true；否则返回 false
      */
-    public static boolean strcheckin(Object wstr, String cmp) {
+    public static boolean strhas(Object wstr, String cmp) {
         return TypeConverter.atos(wstr).contains(cmp);
     }
 
@@ -265,7 +265,7 @@ public class StaticLibrary
      * @param list 要检查的字符串列表
      * @return 如果存在则返回 true，否则返回 false
      */
-    public static boolean strcheckin(Object wstr, Object... list) {
+    public static boolean strhas(Object wstr, Object... list) {
         if (list == null)
             return false;
 
@@ -286,8 +286,8 @@ public class StaticLibrary
      * @param list 要检查的字符串数组
      * @return 如果存在则返回 true，否则返回 false
      */
-    public static boolean strcheckin(Object wstr, String... list) {
-        return strcheckin(wstr, (Object[]) list);
+    public static boolean strhas(Object wstr, String... list) {
+        return strhas(wstr, (Object[]) list);
     }
 
     /**
@@ -299,8 +299,8 @@ public class StaticLibrary
      * @param list 要检查的字符串集合
      * @return 如果存在则返回 true，否则返回 false
      */
-    public static boolean strcheckin(Object wstr, Collection<String> list) {
-        return strcheckin(wstr, list.toArray());
+    public static boolean strhas(Object wstr, Collection<String> list) {
+        return strhas(wstr, list.toArray());
     }
 
     /**
@@ -312,8 +312,8 @@ public class StaticLibrary
      * @param cmp 要检查的子串
      * @return 忽略大小写后，如果 `wstr` 包含 `cmp`，返回 true；否则返回 false
      */
-    public static boolean stricheckin(Object wstr, String cmp) {
-        return strcheckin(uppercase(wstr), uppercase(cmp));
+    public static boolean strihas(Object wstr, String cmp) {
+        return strhas(uppercase(wstr), uppercase(cmp));
     }
 
     /**
@@ -325,7 +325,7 @@ public class StaticLibrary
      * @param list 要检查的字符串列表
      * @return 如果存在则返回 true，否则返回 false
      */
-    public static boolean stricheckin(Object wstr, Object... list) {
+    public static boolean strihas(Object wstr, Object... list) {
         if (list == null)
             return false;
 
@@ -345,8 +345,8 @@ public class StaticLibrary
      * @param list 要检查的字符串数组
      * @return 如果存在则返回 true，否则返回 false
      */
-    public static boolean stricheckin(Object wstr, String... list) {
-        return stricheckin(wstr, (Object[]) list);
+    public static boolean strihas(Object wstr, String... list) {
+        return strihas(wstr, (Object[]) list);
     }
 
     /**
@@ -358,8 +358,8 @@ public class StaticLibrary
      * @param list 要检查的字符串集合
      * @return 如果存在则返回 true，否则返回 false
      */
-    public static boolean stricheckin(Object wstr, Collection<String> list) {
-        return stricheckin(wstr, list.toArray());
+    public static boolean strihas(Object wstr, Collection<String> list) {
+        return strihas(wstr, list.toArray());
     }
 
     /**
